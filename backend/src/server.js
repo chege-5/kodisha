@@ -4,9 +4,9 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const compression = require('compression');
-const { PrismaClient } = require('@prisma/client');
 const cron = require('node-cron');
 
+const prisma = require('./utils/prismaClient');
 const logger = require('./utils/logger');
 const { rateLimiter, strictLimiter } = require('./middleware/rateLimiter');
 const errorHandler = require('./middleware/errorHandler');
@@ -28,6 +28,13 @@ const passportRoutes = require('./routes/passport');
 const caretakerRoutes = require('./routes/caretakers');
 const whatsappRoutes = require('./routes/whatsapp');
 
+// New Kodisha routes
+const billRoutes = require('./routes/bills');
+const meterReadingRoutes = require('./routes/meterReadings');
+const notificationRoutes = require('./routes/notifications');
+const insightRoutes = require('./routes/insights');
+const adminRoutes = require('./routes/admin');
+
 // Cron jobs
 const { scheduleRentReminders } = require('./jobs/rentReminders');
 const { scheduleTrustScoreSync } = require('./jobs/trustScoreSync');
@@ -36,8 +43,7 @@ const { scheduleMonthlyDigest } = require('./jobs/monthlyDigest');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Prisma singleton
-const prisma = new PrismaClient();
+// Share prisma with legacy code that reads from app.get('prisma')
 app.set('prisma', prisma);
 
 // ─── Core Middleware ─────────────────────────────────────────────────────────
@@ -46,7 +52,8 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
       scriptSrc: ["'self'"],
       imgSrc: ["'self'", 'data:', 'https:'],
     },
@@ -77,6 +84,8 @@ app.get('/health', async (req, res) => {
     await prisma.$queryRaw`SELECT 1`;
     res.json({
       status: 'ok',
+      platform: 'Kodisha',
+      version: '2.0.0',
       timestamp: new Date().toISOString(),
       services: { database: 'up', api: 'up' },
     });
@@ -106,6 +115,13 @@ app.use('/broadcast', broadcastRoutes);
 app.use('/airtime', airtimeRoutes);
 app.use('/passport', passportRoutes);
 
+// New Kodisha routes
+app.use('/bills', billRoutes);
+app.use('/meter-readings', meterReadingRoutes);
+app.use('/notifications', notificationRoutes);
+app.use('/insights', insightRoutes);
+app.use('/admin', adminRoutes);
+
 // Static files (generated PDFs, uploads)
 app.use('/uploads', express.static('uploads'));
 
@@ -125,6 +141,17 @@ function startCronJobs() {
   // Weekly Sunday at 7:00 AM — digest emails
   scheduleMonthlyDigest();
 
+  // Daily at 6am — mark overdue bills
+  const { markOverdueBills } = require('./services/billService');
+  cron.schedule('0 6 * * *', async () => {
+    try {
+      const count = await markOverdueBills();
+      logger.info('Overdue bills cron completed', { count });
+    } catch (err) {
+      logger.error('Overdue bills cron failed', { error: err.message });
+    }
+  });
+
   logger.info('Cron jobs scheduled');
 }
 
@@ -136,7 +163,7 @@ async function start() {
     logger.info('Database connected');
 
     app.listen(PORT, () => {
-      logger.info(`KODI API running on port ${PORT} [${process.env.NODE_ENV}]`);
+      logger.info(`Kodisha API running on port ${PORT} [${process.env.NODE_ENV}]`);
     });
 
     startCronJobs();

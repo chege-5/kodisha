@@ -56,14 +56,15 @@ router.post('/login',
         return res.status(401).json({ error: 'Invalid credentials' });
       }
 
-      const tokens = generateTokens({ id: landlord.id, role: 'LANDLORD', phone: landlord.phone });
+      const role = landlord.isAdmin ? 'ADMIN' : 'LANDLORD';
+      const tokens = generateTokens({ id: landlord.id, role, phone: landlord.phone });
       const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
       await prisma.refreshToken.create({
         data: { token: tokens.refreshToken, landlordId: landlord.id, expiresAt },
       });
 
       const { passwordHash: _, ...landlordData } = landlord;
-      res.json({ user: landlordData, role: 'LANDLORD', ...tokens });
+      res.json({ user: landlordData, role, ...tokens });
     } catch (err) {
       next(err);
     }

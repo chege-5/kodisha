@@ -1,4 +1,4 @@
-// KODI Rental Management Platform — Prisma Schema
+// KODI / Kodisha Rental Management Platform — Prisma Schema
 
 generator client {
   provider = "prisma-client-js"
@@ -63,6 +63,35 @@ enum UserRole {
   ADMIN
 }
 
+enum BillType {
+  RENT
+  WATER
+  ELECTRICITY
+  GARBAGE
+  SERVICE_CHARGE
+  OTHER
+}
+
+enum BillStatus {
+  PENDING
+  PARTIALLY_PAID
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
+enum NotificationType {
+  RENT_DUE
+  PAYMENT_RECEIVED
+  ISSUE_CREATED
+  ISSUE_UPDATED
+  METER_READING
+  WATER_BILL
+  BILL_GENERATED
+  SYSTEM_ALERT
+  BROADCAST
+}
+
 // ─── Models ─────────────────────────────────────────────────────────────────
 
 model Landlord {
@@ -72,6 +101,7 @@ model Landlord {
   email             String             @unique
   passwordHash      String
   plan              LandlordPlan       @default(FREE)
+  isAdmin           Boolean            @default(false)
   language          String             @default("en")
   currencyPref      String             @default("KES")
   monthlyAirtimeCap Int                @default(5000)
@@ -89,78 +119,81 @@ model Landlord {
 }
 
 model Caretaker {
-  id          String    @id @default(uuid())
-  landlordId  String
-  name        String
-  phone       String    @unique
+  id           String    @id @default(uuid())
+  landlordId   String
+  name         String
+  phone        String    @unique
   passwordHash String
-  permissions String[]  @default([])
-  language    String    @default("en")
-  isActive    Boolean   @default(true)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  permissions  String[]  @default([])
+  language     String    @default("en")
+  isActive     Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 
-  landlord    Landlord  @relation(fields: [landlordId], references: [id])
+  landlord      Landlord       @relation(fields: [landlordId], references: [id])
   refreshTokens RefreshToken[]
 
   @@map("caretakers")
 }
 
 model Property {
-  id         String    @id @default(uuid())
-  landlordId String
-  name       String
-  address    String
-  county     String
-  type       String    // e.g. "APARTMENT", "BEDSITTER", "MAISONETTE"
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  id             String             @id @default(uuid())
+  landlordId     String
+  name           String
+  address        String
+  county         String
+  type           String             // e.g. "APARTMENT", "BEDSITTER", "MAISONETTE"
+  waterRatePerUnit Decimal          @default(50) @db.Decimal(8, 2) // KSh per cubic meter
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
 
-  landlord   Landlord  @relation(fields: [landlordId], references: [id])
-  units      Unit[]
-  broadcasts BroadcastMessage[]
+  landlord       Landlord           @relation(fields: [landlordId], references: [id])
+  units          Unit[]
+  broadcasts     BroadcastMessage[]
 
   @@map("properties")
 }
 
 model Unit {
-  id           String        @id @default(uuid())
+  id           String              @id @default(uuid())
   propertyId   String
   unitNumber   String
-  rentAmount   Decimal       @db.Decimal(12, 2)
-  status       UnitStatus    @default(VACANT)
+  rentAmount   Decimal             @db.Decimal(12, 2)
+  status       UnitStatus          @default(VACANT)
   floor        Int?
   bedrooms     Int?
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
 
-  property     Property      @relation(fields: [propertyId], references: [id])
+  property     Property            @relation(fields: [propertyId], references: [id])
   tenants      Tenant[]
   payments     Payment[]
   tickets      MaintenanceTicket[]
+  meterReadings MeterReading[]
+  bills        Bill[]
 
   @@unique([propertyId, unitNumber])
   @@map("units")
 }
 
 model Tenant {
-  id              String         @id @default(uuid())
+  id              String            @id @default(uuid())
   unitId          String?
   name            String
-  phone           String         @unique
+  phone           String            @unique
   email           String?
-  idNumber        String         // encrypted at app level
+  idNumber        String            // encrypted at app level
   leaseStart      DateTime
   leaseEnd        DateTime?
-  depositAmount   Decimal        @db.Decimal(12, 2)
-  depositStatus   DepositStatus  @default(HELD)
+  depositAmount   Decimal           @db.Decimal(12, 2)
+  depositStatus   DepositStatus     @default(HELD)
   passwordHash    String
-  language        String         @default("en")
-  isActive        Boolean        @default(true)
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
+  language        String            @default("en")
+  isActive        Boolean           @default(true)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
 
-  unit            Unit?          @relation(fields: [unitId], references: [id])
+  unit            Unit?             @relation(fields: [unitId], references: [id])
   payments        Payment[]
   tickets         MaintenanceTicket[]
   airtimeRewards  AirtimeReward[]
@@ -168,6 +201,8 @@ model Tenant {
   creditPassport  CreditPassport?
   leases          Lease[]
   refreshTokens   RefreshToken[]
+  notifications   Notification[]
+  bills           Bill[]
 
   @@map("tenants")
 }
@@ -176,6 +211,7 @@ model Payment {
   id                   String         @id @default(uuid())
   tenantId             String
   unitId               String
+  billId               String?
   amount               Decimal        @db.Decimal(12, 2)
   mpesaTransactionId   String?        @unique
   channel              PaymentChannel
@@ -190,28 +226,101 @@ model Payment {
 
   tenant               Tenant         @relation(fields: [tenantId], references: [id])
   unit                 Unit           @relation(fields: [unitId], references: [id])
+  bill                 Bill?          @relation(fields: [billId], references: [id])
 
   @@map("payments")
 }
 
-model MaintenanceTicket {
-  id               String              @id @default(uuid())
-  unitId           String
-  tenantId         String
-  category         MaintenanceCategory
-  description      String
-  voiceRecordingUrl String?
-  status           TicketStatus        @default(OPEN)
-  priority         String              @default("NORMAL") // NORMAL | URGENT
-  assignedTo       String?             // Caretaker name / fundi
-  rating           Int?                // 1-5 stars from tenant
-  ratingComment    String?
-  createdAt        DateTime            @default(now())
-  updatedAt        DateTime            @updatedAt
-  closedAt         DateTime?
+model Bill {
+  id          String     @id @default(uuid())
+  tenantId    String
+  unitId      String
+  type        BillType
+  amount      Decimal    @db.Decimal(12, 2)
+  paidAmount  Decimal    @default(0) @db.Decimal(12, 2)
+  status      BillStatus @default(PENDING)
+  dueDate     DateTime
+  description String?
+  periodMonth Int
+  periodYear  Int
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 
-  unit             Unit                @relation(fields: [unitId], references: [id])
-  tenant           Tenant              @relation(fields: [tenantId], references: [id])
+  tenant      Tenant     @relation(fields: [tenantId], references: [id])
+  unit        Unit       @relation(fields: [unitId], references: [id])
+  payments    Payment[]
+
+  @@map("bills")
+}
+
+model MeterReading {
+  id             String   @id @default(uuid())
+  unitId         String
+  previousReading Decimal @db.Decimal(12, 2)
+  currentReading Decimal  @db.Decimal(12, 2)
+  consumption    Decimal  @db.Decimal(12, 2) // auto-calculated
+  periodMonth    Int
+  periodYear     Int
+  readingDate    DateTime @default(now())
+  readBy         String?  // caretaker name or ID
+  notes          String?
+  createdAt      DateTime @default(now())
+
+  unit           Unit     @relation(fields: [unitId], references: [id])
+
+  @@unique([unitId, periodMonth, periodYear])
+  @@map("meter_readings")
+}
+
+model Notification {
+  id        String           @id @default(uuid())
+  tenantId  String?
+  userId    String?          // generic user reference (landlord/caretaker/admin)
+  userRole  UserRole?
+  type      NotificationType
+  title     String
+  message   String
+  channel   String           @default("IN_APP") // IN_APP, SMS, BOTH
+  isRead    Boolean          @default(false)
+  metadata  Json?            // extra context (billId, ticketId, etc.)
+  createdAt DateTime         @default(now())
+
+  tenant    Tenant?          @relation(fields: [tenantId], references: [id])
+
+  @@map("notifications")
+}
+
+model SystemLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  userRole  String?
+  action    String
+  resource  String?
+  details   Json?
+  ipAddress String?
+  createdAt DateTime @default(now())
+
+  @@map("system_logs")
+}
+
+model MaintenanceTicket {
+  id                String              @id @default(uuid())
+  unitId            String
+  tenantId          String
+  category          MaintenanceCategory
+  description       String
+  voiceRecordingUrl String?
+  status            TicketStatus        @default(OPEN)
+  priority          String              @default("NORMAL") // NORMAL | URGENT
+  assignedTo        String?             // Caretaker name / fundi
+  rating            Int?                // 1-5 stars from tenant
+  ratingComment     String?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  closedAt          DateTime?
+
+  unit              Unit                @relation(fields: [unitId], references: [id])
+  tenant            Tenant              @relation(fields: [tenantId], references: [id])
 
   @@map("maintenance_tickets")
 }
