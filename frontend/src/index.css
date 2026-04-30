@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-
 @layer base {
   * {
     scrollbar-width: thin;
@@ -15,11 +13,11 @@
 
   body {
     @apply bg-kodi-navy text-kodi-text-primary font-sans antialiased;
+    margin: 0;
   }
 }
 
 @layer components {
-  /* ─── Buttons ─────────────────────────────────────── */
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-kodi-accent text-white text-sm font-semibold rounded-xl
     hover:bg-kodi-accent-light transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed
@@ -42,19 +40,20 @@
     hover:bg-kodi-card hover:text-kodi-text-primary transition-all duration-200;
   }
 
-  /* ─── Cards ──────────────────────────────────────── */
   .glass-card {
     @apply bg-kodi-card/80 backdrop-blur-xl rounded-2xl border border-kodi-border/50 p-6
     shadow-xl shadow-black/10 transition-all duration-300;
   }
   .glass-card-hover {
-    @apply glass-card hover:border-kodi-accent/30 hover:shadow-kodi-accent/5 hover:-translate-y-0.5;
+    @apply bg-kodi-card/80 backdrop-blur-xl rounded-2xl border border-kodi-border/50 p-6
+    shadow-xl shadow-black/10 transition-all duration-300 hover:border-kodi-accent/30 hover:shadow-kodi-accent/5 hover:-translate-y-0.5;
   }
   .card {
     @apply bg-kodi-card rounded-2xl border border-kodi-border p-6;
   }
   .stat-card {
-    @apply glass-card flex flex-col gap-2 relative overflow-hidden;
+    @apply bg-kodi-card/80 backdrop-blur-xl rounded-2xl border border-kodi-border/50 p-6
+    shadow-xl shadow-black/10 transition-all duration-300 flex flex-col gap-2 relative overflow-hidden;
   }
   .stat-card::before {
     content: '';
@@ -62,7 +61,6 @@
     background: linear-gradient(90deg, var(--stat-color, #6366f1), transparent);
   }
 
-  /* ─── Inputs ─────────────────────────────────────── */
   .input {
     @apply w-full bg-kodi-navy/50 border border-kodi-border rounded-xl px-4 py-3 text-sm text-kodi-text-primary
     placeholder:text-kodi-text-muted focus:outline-none focus:ring-2 focus:ring-kodi-accent/50 focus:border-kodi-accent/50
@@ -72,10 +70,11 @@
     @apply block text-sm font-medium text-kodi-text-secondary mb-1.5;
   }
   .select {
-    @apply input appearance-none cursor-pointer;
+    @apply w-full bg-kodi-navy/50 border border-kodi-border rounded-xl px-4 py-3 text-sm text-kodi-text-primary
+    placeholder:text-kodi-text-muted focus:outline-none focus:ring-2 focus:ring-kodi-accent/50 focus:border-kodi-accent/50
+    transition-all duration-200 appearance-none cursor-pointer;
   }
 
-  /* ─── Badges ─────────────────────────────────────── */
   .badge {
     @apply inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold;
   }
@@ -87,7 +86,6 @@
   .badge-purple { @apply bg-purple-500/15 text-purple-400 border border-purple-500/20; }
   .badge-cyan { @apply bg-cyan-500/15 text-cyan-400 border border-cyan-500/20; }
 
-  /* ─── Tables ─────────────────────────────────────── */
   .table-th {
     @apply px-4 py-3.5 text-left text-xs font-semibold text-kodi-text-muted uppercase tracking-wider;
   }
@@ -98,21 +96,46 @@
     @apply border-b border-kodi-border/30 hover:bg-kodi-accent/5 transition-colors;
   }
 
-  /* ─── Skeleton Loading ───────────────────────────── */
   .skeleton {
     @apply bg-kodi-border/30 rounded-xl animate-pulse;
   }
 
-  /* ─── Misc ───────────────────────────────────────── */
   .divider {
     @apply border-t border-kodi-border/50 my-4;
   }
   .glow-ring {
     @apply ring-2 ring-kodi-accent/30 ring-offset-2 ring-offset-kodi-navy;
   }
+
+  .section-eyebrow {
+    @apply text-sm font-semibold uppercase tracking-[0.28em];
+    color: rgb(110 231 183);
+  }
+  .section-title {
+    @apply text-3xl font-semibold tracking-tight md:text-4xl;
+    color: rgb(255 255 255);
+  }
+  .section-copy {
+    @apply text-base leading-8;
+    color: rgb(167 243 208);
+  }
+  .page-surface {
+    @apply rounded-[2rem] border p-6 md:p-8;
+    border-color: rgb(21 107 90 / 0.6);
+    background: rgb(15 81 69 / 0.72);
+    backdrop-filter: blur(18px);
+  }
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 600ms ease, transform 600ms ease;
+  }
+  .reveal-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* ─── Custom Animations ──────────────────────────── */
 .animate-in {
   animation: slideUp 0.4s ease-out forwards;
 }
@@ -123,13 +146,11 @@
 .stagger-4 { animation-delay: 0.2s; }
 .stagger-5 { animation-delay: 0.25s; }
 
-/* ─── Gradient Text ──────────────────────────────── */
 .gradient-text {
   @apply bg-clip-text text-transparent;
   background-image: linear-gradient(135deg, #34D399 0%, #10B981 50%, #059669 100%);
 }
 
-/* ─── Glass Morphism ─────────────────────────────── */
 .glass {
   background: rgba(15, 81, 69, 0.7);
   backdrop-filter: blur(20px);

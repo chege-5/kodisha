@@ -6,6 +6,18 @@ const { notifyBillGenerated } = require('./notificationService');
  * Bill Service — handles rent, water, and utility billing
  */
 
+function normalizePagination(page, limit, fallbackLimit) {
+  const safePage = Number.isFinite(page) && page > 0 ? Math.floor(page) : 1;
+  const safeLimit = Number.isFinite(limit) && limit > 0 ? Math.floor(limit) : fallbackLimit;
+
+  return {
+    page: safePage,
+    limit: safeLimit,
+    skip: (safePage - 1) * safeLimit,
+    take: safeLimit,
+  };
+}
+
 /**
  * Generate monthly rent bills for all active tenants of a landlord
  */
@@ -135,27 +147,31 @@ async function getTenantBills(tenantId, { type, status, page = 1, limit = 20 } =
   if (type) where.type = type;
   if (status) where.status = status;
 
+  const pagination = normalizePagination(page, limit, 20);
+
   const [bills, total] = await Promise.all([
     prisma.bill.findMany({
       where,
       include: { unit: { select: { unitNumber: true } }, payments: true },
       orderBy: { createdAt: 'desc' },
-      skip: (page - 1) * limit,
-      take: limit,
+      skip: pagination.skip,
+      take: pagination.take,
     }),
     prisma.bill.count({ where }),
   ]);
 
-  return { bills, total, page, pages: Math.ceil(total / limit) };
+  return { bills, total, page: pagination.page, pages: Math.ceil(total / pagination.limit) };
 }
 
 /**
  * Get bills for a landlord (all properties)
  */
 async function getLandlordBills(landlordId, { type, status, page = 1, limit = 50 } = {}) {
-  const where = { unit: { property: { landlordId } } };
+  const where = landlordId ? { unit: { property: { landlordId } } } : {};
   if (type) where.type = type;
   if (status) where.status = status;
+
+  const pagination = normalizePagination(page, limit, 50);
 
   const [bills, total] = await Promise.all([
     prisma.bill.findMany({
@@ -166,13 +182,13 @@ async function getLandlordBills(landlordId, { type, status, page = 1, limit = 50
         payments: { select: { id: true, amount: true, paymentDate: true, channel: true } },
       },
       orderBy: { createdAt: 'desc' },
-      skip: (page - 1) * limit,
-      take: limit,
+      skip: pagination.skip,
+      take: pagination.take,
     }),
     prisma.bill.count({ where }),
   ]);
 
-  return { bills, total, page, pages: Math.ceil(total / limit) };
+  return { bills, total, page: pagination.page, pages: Math.ceil(total / pagination.limit) };
 }
 
 /**

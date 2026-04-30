@@ -2,19 +2,19 @@ services:
   # ─── PostgreSQL ──────────────────────────────────────────────────────────────
   postgres:
     image: postgres:16-alpine
-    container_name: kodi_postgres
+    container_name: kodisha_postgres
     restart: unless-stopped
     environment:
-      POSTGRES_DB: kodi_db
-      POSTGRES_USER: kodi_user
-      POSTGRES_PASSWORD: kodi_pass
+      POSTGRES_DB: kodisha_db
+      POSTGRES_USER: kodisha_user
+      POSTGRES_PASSWORD: kodisha_pass
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./scripts/pg_backup.sh:/usr/local/bin/pg_backup.sh:ro
     ports:
       - '5432:5432'
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U kodi_user -d kodi_db']
+      test: ['CMD-SHELL', 'pg_isready -U kodisha_user -d kodisha_db']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -22,7 +22,7 @@ services:
   # ─── Redis ───────────────────────────────────────────────────────────────────
   redis:
     image: redis:7-alpine
-    container_name: kodi_redis
+    container_name: kodisha_redis
     restart: unless-stopped
     command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
     volumes:
@@ -40,11 +40,11 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: kodi_api
+    container_name: kodisha_api
     restart: unless-stopped
     env_file: ./backend/.env
     environment:
-      DATABASE_URL: postgresql://kodi_user:kodi_pass@postgres:5432/kodi_db
+      DATABASE_URL: postgresql://kodisha_user:kodisha_pass@postgres:5432/kodisha_db
       REDIS_URL: redis://redis:6379
       NODE_ENV: production
     volumes:
@@ -68,7 +68,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: kodi_frontend
+    container_name: kodisha_frontend
     restart: unless-stopped
     ports:
       - '3000:80'
@@ -78,7 +78,7 @@ services:
   # ─── Nginx Reverse Proxy ─────────────────────────────────────────────────────
   nginx:
     image: nginx:alpine
-    container_name: kodi_nginx
+    container_name: kodisha_nginx
     restart: unless-stopped
     ports:
       - '80:80'

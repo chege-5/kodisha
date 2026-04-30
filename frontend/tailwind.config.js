@@ -5,12 +5,11 @@ export default {
     extend: {
       colors: {
         kodi: {
-          // Kodisha brand palette (Enterprise Deep Green)
-          navy: '#062B25', // very dark green (bg)
+          navy: '#062B25',
           dark: '#0A3F36',
           card: '#0F5145',
           border: '#156B5A',
-          accent: '#059669', // emerald
+          accent: '#059669',
           'accent-light': '#34D399',
           cyan: '#06b6d4',
           emerald: '#10b981',
@@ -23,15 +22,16 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['Plus Jakarta Sans', 'Inter', '-apple-system', 'sans-serif'],
+        display: ['Space Grotesk', 'Plus Jakarta Sans', 'sans-serif'],
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-out',
         'slide-up': 'slideUp 0.4s ease-out',
         'slide-in-right': 'slideInRight 0.3s ease-out',
         'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
-        'shimmer': 'shimmer 2s linear infinite',
-        'float': 'float 3s ease-in-out infinite',
+        shimmer: 'shimmer 2s linear infinite',
+        float: 'float 3s ease-in-out infinite',
       },
       keyframes: {
         fadeIn: {

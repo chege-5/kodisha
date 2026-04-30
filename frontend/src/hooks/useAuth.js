@@ -18,22 +18,16 @@ export function AuthProvider({ children }) {
     setLoading(false);
   }, []);
 
-  const login = useCallback(async (email, password, loginRole = 'LANDLORD') => {
-    const endpoints = {
-      LANDLORD: '/auth/login',
-      ADMIN: '/auth/login',   // Admin logs in via landlord endpoint (isAdmin flag)
-      TENANT: '/auth/tenant/login',
-      CARETAKER: '/auth/caretaker/login',
-    };
-    const useEmail = loginRole === 'LANDLORD' || loginRole === 'ADMIN';
-    const body = useEmail ? { email, password } : { phone: email, password };
-    const { data } = await api.post(endpoints[loginRole], body);
+  const login = useCallback(async (identifier, password) => {
+    const { data } = await api.post('/auth/smart-login', { identifier, password });
     localStorage.setItem('accessToken', data.accessToken);
     localStorage.setItem('refreshToken', data.refreshToken);
-    localStorage.setItem('user', JSON.stringify(data.user));
-    localStorage.setItem('role', data.role);
-    setUser(data.user);
-    setRole(data.role);
+    const sessionRole = data.role || data.user?.role || null;
+    const sessionUser = sessionRole ? { ...data.user, role: sessionRole } : data.user;
+    localStorage.setItem('user', JSON.stringify(sessionUser));
+    localStorage.setItem('role', sessionRole);
+    setUser(sessionUser);
+    setRole(sessionRole);
     return data;
   }, []);
 

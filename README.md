@@ -1,6 +1,6 @@
-# KODI — Rental Management Platform
+# Kodisha — Rental Management Platform
 
-> Production-ready rental management system built for the Kenyan market.  
+> Production-ready AI-powered rental management system built for the Kenyan market.  
 > USSD · M-Pesa · WhatsApp · Voice IVR · Credit Passport · iTax Export
 
 ---
@@ -35,8 +35,8 @@
 ### 2. Clone & Install
 
 ```bash
-git clone <repo-url> kodi
-cd kodi
+git clone <repo-url> kodisha
+cd kodisha
 
 # Backend
 cd backend && npm install
@@ -105,7 +105,7 @@ docker compose exec api npm run seed
 |----------|-------------|---------|
 | `NODE_ENV` | Environment | `production` |
 | `PORT` | API port | `5000` |
-| `FRONTEND_URL` | Frontend origin (CORS) | `https://app.kodiapp.ke` |
+| `FRONTEND_URL` | Frontend origin (CORS) | `https://app.kodisha.ke` |
 
 ### Database
 | Variable | Description |
@@ -127,7 +127,7 @@ docker compose exec api npm run seed
 | `AT_API_KEY` | AT API key |
 | `AT_USERNAME` | `sandbox` for testing, your username in prod |
 | `AT_USSD_CODE` | Your USSD shortcode e.g. `*384*100#` |
-| `AT_SENDER_ID` | SMS sender ID e.g. `KODI` |
+| `AT_SENDER_ID` | SMS sender ID e.g. `KODISHA` |
 | `AT_WHITELISTED_IPS` | Comma-separated AT IPs for webhook validation |
 
 ### Safaricom M-Pesa Daraja
@@ -214,9 +214,7 @@ ngrok http 5000
 
 ```
 POST   /auth/register              Register landlord
-POST   /auth/login                 Landlord login
-POST   /auth/tenant/login          Tenant login
-POST   /auth/caretaker/login       Caretaker login
+POST   /auth/smart-login           Smart login with auto role detection
 POST   /auth/refresh               Refresh JWT tokens
 
 POST   /ussd                       AT USSD callback
@@ -313,7 +311,7 @@ Configurable monthly cap per landlord (default KSh 5,000).
 ## Folder Structure
 
 ```
-kodi/
+kodisha/
 ├── backend/
 │   ├── prisma/
 │   │   ├── schema.prisma

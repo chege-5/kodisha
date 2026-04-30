@@ -1,7 +1,9 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './hooks/useAuth';
+import { useEffect } from 'react';
 import { Toaster } from 'react-hot-toast';
 
+import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Properties from './pages/Properties';
@@ -20,18 +22,38 @@ import Notifications from './pages/Notifications';
 import Layout from './components/Layout';
 import AIAssistant from './components/AIAssistant';
 
+function getHomePath(role) {
+  if (role === 'TENANT') return '/tenant';
+  if (role === 'CARETAKER') return '/caretaker';
+  return '/dashboard';
+}
+
+function ThemeBootstrap() {
+  useEffect(() => {
+    const stored = localStorage.getItem('kodisha-theme');
+    const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches;
+    const theme = stored || (prefersDark ? 'dark' : 'light');
+    document.documentElement.dataset.theme = theme;
+    document.documentElement.style.colorScheme = theme;
+  }, []);
+
+  return null;
+}
+
 function PrivateRoute({ children, roles }) {
   const { user, role, loading } = useAuth();
-  if (loading) return (
-    <div className="flex items-center justify-center h-screen bg-kodi-navy">
-      <div className="flex flex-col items-center gap-3">
-        <div className="w-10 h-10 border-3 border-kodi-accent border-t-transparent rounded-full animate-spin" />
-        <p className="text-kodi-text-muted text-sm">Loading…</p>
+  if (loading) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-kodi-navy px-6">
+        <div className="glass-card flex flex-col items-center gap-3 text-center">
+          <div className="h-10 w-10 rounded-full border-2 border-kodi-accent border-t-transparent animate-spin" />
+          <p className="text-sm text-kodi-text-muted">Loading secure workspace</p>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
   if (!user) return <Navigate to="/login" replace />;
-  if (roles && !roles.includes(role)) return <Navigate to="/" replace />;
+  if (roles && !roles.includes(role)) return <Navigate to={getHomePath(role)} replace />;
   return children;
 }
 
@@ -41,11 +63,13 @@ function AppContent() {
 
   return (
     <>
+      <ThemeBootstrap />
       <Routes>
-        <Route path="/login" element={<Login />} />
+        <Route path="/" element={user ? <Navigate to={getHomePath(role)} replace /> : <Landing />} />
+        <Route path="/login" element={user ? <Navigate to="/" replace /> : <Login />} />
 
         {/* Landlord / Admin portal */}
-        <Route path="/" element={<PrivateRoute roles={['LANDLORD', 'ADMIN']}><Layout /></PrivateRoute>}>
+        <Route path="/dashboard" element={<PrivateRoute roles={['LANDLORD', 'ADMIN']}><Layout /></PrivateRoute>}>
           <Route index element={<Dashboard />} />
           <Route path="properties" element={<Properties />} />
           <Route path="tenants" element={<Tenants />} />
@@ -83,10 +107,10 @@ function AppContent() {
         position="top-right"
         toastOptions={{
           style: {
-            background: '#161b3d',
-            color: '#f1f5f9',
-            border: '1px solid #1e2452',
-            borderRadius: '12px',
+            background: 'var(--kodi-card)',
+            color: 'var(--kodi-text-primary)',
+            border: '1px solid var(--kodi-border)',
+            borderRadius: '14px',
           },
           success: { iconTheme: { primary: '#10b981', secondary: '#f1f5f9' } },
           error: { iconTheme: { primary: '#f43f5e', secondary: '#f1f5f9' } },

@@ -2,16 +2,9 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import toast from 'react-hot-toast';
-import { Bot, Eye, EyeOff, ArrowRight } from 'lucide-react';
-
-const ROLES = [
-  { id: 'LANDLORD', label: 'Landlord', hint: 'Email', icon: '🏠' },
-  { id: 'CARETAKER', label: 'Caretaker', hint: 'Phone', icon: '🔧' },
-  { id: 'TENANT', label: 'Tenant', hint: 'Phone', icon: '🏡' },
-];
+import { ArrowRight, Building2, Eye, EyeOff, ShieldCheck, Sparkles, Smartphone, Bot } from 'lucide-react';
 
 export default function Login() {
-  const [role, setRole] = useState('LANDLORD');
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -23,10 +16,10 @@ export default function Login() {
     e.preventDefault();
     setLoading(true);
     try {
-      const data = await login(identifier, password, role);
+      const data = await login(identifier, password);
       if (data.role === 'TENANT') navigate('/tenant');
       else if (data.role === 'CARETAKER') navigate('/caretaker');
-      else navigate('/');
+      else navigate('/dashboard');
     } catch (err) {
       toast.error(err.response?.data?.error || 'Login failed');
     } finally {
@@ -35,116 +28,119 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen bg-kodi-navy relative overflow-hidden flex items-center justify-center p-4">
-      {/* Animated background */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-kodi-accent/10 rounded-full blur-3xl animate-float" />
-        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-kodi-cyan/8 rounded-full blur-3xl animate-float" style={{ animationDelay: '1.5s' }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-kodi-purple/5 rounded-full blur-3xl" />
-        {/* Grid pattern */}
-        <div className="absolute inset-0 opacity-[0.03]" style={{
-          backgroundImage: 'linear-gradient(rgba(255,255,255,.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px)',
-          backgroundSize: '60px 60px',
+    <div className="min-h-screen overflow-hidden bg-kodi-navy text-kodi-text-primary">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-32 -right-24 h-72 w-72 rounded-full bg-kodi-accent/20 blur-3xl" />
+        <div className="absolute bottom-0 left-0 h-96 w-96 rounded-full bg-kodi-cyan/10 blur-3xl" />
+        <div className="absolute inset-0 opacity-[0.04]" style={{
+          backgroundImage: 'linear-gradient(rgba(255,255,255,.12) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.12) 1px, transparent 1px)',
+          backgroundSize: '56px 56px',
         }} />
       </div>
 
-      <div className="w-full max-w-md relative z-10 animate-slide-up">
-        {/* Logo & Title */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-kodi-accent to-kodi-cyan shadow-2xl shadow-kodi-accent/30 mb-4 animate-float">
-            <Bot className="w-8 h-8 text-white" />
+      <div className="relative z-10 mx-auto grid min-h-screen max-w-7xl items-center gap-10 px-4 py-8 md:grid-cols-[1.1fr_0.9fr] md:px-8">
+        <div className="space-y-8 text-center md:text-left">
+          <div className="inline-flex items-center gap-2 rounded-full border border-kodi-border/60 bg-kodi-card/70 px-4 py-2 text-sm text-kodi-text-secondary backdrop-blur">
+            <Sparkles className="h-4 w-4 text-kodi-accent-light" />
+            Automatic role detection for landlords, caretakers, and tenants
           </div>
-          <h1 className="text-3xl font-bold gradient-text">Kodisha</h1>
-          <p className="text-kodi-text-muted mt-2 text-sm">AI-Powered Rental Management</p>
-        </div>
 
-        {/* Login Card */}
-        <div className="glass-card">
-          <h2 className="text-xl font-semibold text-kodi-text-primary mb-6">Sign in to your account</h2>
+          <div className="space-y-4">
+            <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-kodi-accent to-kodi-cyan shadow-2xl shadow-kodi-accent/30">
+              <Bot className="h-8 w-8 text-white" />
+            </div>
+            <h1 className="max-w-3xl text-4xl font-semibold tracking-tight text-white md:text-6xl">
+              Sign in to Kodisha and go straight to the right workspace.
+            </h1>
+            <p className="max-w-2xl text-base leading-7 text-kodi-text-muted md:text-lg">
+              Use email or phone number. Kodisha automatically identifies the account, creates the session, and opens the correct dashboard with no manual role selection.
+            </p>
+          </div>
 
-          {/* Role selector */}
-          <div className="grid grid-cols-3 gap-2 mb-6 p-1 bg-kodi-navy/50 rounded-xl">
-            {ROLES.map((r) => (
-              <button
-                key={r.id}
-                type="button"
-                onClick={() => setRole(r.id)}
-                className={`py-2.5 px-2 text-xs font-semibold rounded-lg transition-all duration-200 ${
-                  role === r.id
-                    ? 'bg-kodi-accent text-white shadow-lg shadow-kodi-accent/30'
-                    : 'text-kodi-text-muted hover:text-kodi-text-primary hover:bg-kodi-border/20'
-                }`}
-              >
-                <span className="block text-base mb-0.5">{r.icon}</span>
-                {r.label}
-              </button>
+          <div className="grid gap-4 sm:grid-cols-3">
+            {[
+              { icon: Building2, title: 'Portfolio view', text: 'Properties, arrears, and occupancy in one place.' },
+              { icon: Smartphone, title: 'Mobile first', text: 'Fast access from phones, tablets, and desktop.' },
+              { icon: ShieldCheck, title: 'Secure sessions', text: 'JWT auth with token rotation and automatic refresh.' },
+            ].map(({ icon: Icon, title, text }) => (
+              <div key={title} className="glass-card text-left">
+                <Icon className="mb-4 h-5 w-5 text-kodi-accent-light" />
+                <h2 className="mb-2 text-sm font-semibold text-white">{title}</h2>
+                <p className="text-sm leading-6 text-kodi-text-muted">{text}</p>
+              </div>
             ))}
           </div>
+        </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="label">{role === 'LANDLORD' ? 'Email Address' : 'Phone Number'}</label>
-              <input
-                type={role === 'LANDLORD' ? 'email' : 'tel'}
-                className="input"
-                placeholder={role === 'LANDLORD' ? 'john@example.com' : '+254712000001'}
-                value={identifier}
-                onChange={(e) => setIdentifier(e.target.value)}
-                required
-                autoComplete="username"
-              />
+        <div className="relative mx-auto w-full max-w-md">
+          <div className="absolute inset-0 -z-10 rounded-[2rem] bg-kodi-accent/10 blur-2xl" />
+          <div className="glass-card border-kodi-border/70 shadow-2xl shadow-black/20">
+            <div className="mb-8">
+              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-kodi-text-muted">Secure access</p>
+              <h2 className="mt-3 text-2xl font-semibold text-white">Welcome back</h2>
+              <p className="mt-2 text-sm leading-6 text-kodi-text-muted">Enter your email or phone number and password to continue.</p>
             </div>
-            <div>
-              <label className="label">Password</label>
-              <div className="relative">
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="label">Email or phone number</label>
                 <input
-                  type={showPassword ? 'text' : 'password'}
-                  className="input pr-11"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  type="text"
+                  className="input"
+                  placeholder="name@example.com or +254712000001"
+                  value={identifier}
+                  onChange={(e) => setIdentifier(e.target.value)}
                   required
-                  autoComplete="current-password"
+                  autoComplete="username"
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-kodi-text-muted hover:text-kodi-text-primary transition-colors"
-                >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
               </div>
-            </div>
-            <button type="submit" disabled={loading} className="btn-primary w-full py-3 text-base group">
-              {loading ? (
-                <span className="flex items-center gap-2">
-                  <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  Signing in…
-                </span>
-              ) : (
-                <span className="flex items-center gap-2">
-                  Sign In
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </span>
-              )}
-            </button>
-          </form>
+              <div>
+                <label className="label">Password</label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    className="input pr-11"
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    autoComplete="current-password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-kodi-text-muted transition-colors hover:text-kodi-text-primary"
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
+              </div>
+              <button type="submit" disabled={loading} className="btn-primary w-full py-3.5 text-base">
+                {loading ? (
+                  <span className="flex items-center gap-2">
+                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                    Signing in
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-2">
+                    Continue
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </span>
+                )}
+              </button>
+            </form>
 
-          {/* Demo credentials */}
-          <div className="mt-6 p-4 rounded-xl bg-kodi-accent/5 border border-kodi-accent/10">
-            <p className="text-xs text-kodi-accent font-semibold mb-2">🔑 Demo Credentials</p>
-            <div className="space-y-1 text-xs text-kodi-text-muted">
-              <p><span className="text-kodi-text-secondary">Admin:</span> admin@Kodisha.ke / admin123</p>
-              <p><span className="text-kodi-text-secondary">Landlord:</span> john.kamau@gmail.com / password123</p>
-              <p><span className="text-kodi-text-secondary">Caretaker:</span> +254712000002 / caretaker123</p>
-              <p><span className="text-kodi-text-secondary">Tenant:</span> +254712000010 / tenant123</p>
+            <div className="mt-6 rounded-2xl border border-kodi-border/60 bg-kodi-navy/40 p-4">
+              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-kodi-text-muted">Demo accounts</p>
+              <div className="space-y-2 text-sm text-kodi-text-secondary">
+                <p><span className="text-white">Admin:</span> admin@kodisha.ke / admin123</p>
+                <p><span className="text-white">Landlord:</span> john.kamau@gmail.com / password123</p>
+                <p><span className="text-white">Caretaker:</span> +254712000002 / caretaker123</p>
+                <p><span className="text-white">Tenant:</span> +254712000010 / tenant123</p>
+              </div>
             </div>
           </div>
         </div>
-
-        <p className="text-center text-kodi-text-muted text-xs mt-6">
-          Multi-channel: Web · USSD · SMS · Voice · M-Pesa
-        </p>
       </div>
     </div>
   );

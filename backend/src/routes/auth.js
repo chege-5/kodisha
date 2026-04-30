@@ -40,91 +40,68 @@ router.post('/register',
   }
 );
 
-// ─── Landlord Login ──────────────────────────────────────────────────────────
+// ─── Smart Login ─────────────────────────────────────────────────────────────
 
-router.post('/login',
-  body('email').isEmail().normalizeEmail(),
+router.post('/smart-login',
+  body('identifier').trim().notEmpty(),
   body('password').notEmpty(),
   async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
-    const { email, password } = req.body;
+    const { identifier, password } = req.body;
     try {
-      const landlord = await prisma.landlord.findUnique({ where: { email } });
-      if (!landlord || !(await bcrypt.compare(password, landlord.passwordHash))) {
-        return res.status(401).json({ error: 'Invalid credentials' });
+      // 1. Try Landlord / Admin
+      const landlord = await prisma.landlord.findFirst({
+        where: {
+          OR: [{ email: identifier }, { phone: identifier }]
+        }
+      });
+      if (landlord && await bcrypt.compare(password, landlord.passwordHash)) {
+        const role = landlord.isAdmin ? 'ADMIN' : 'LANDLORD';
+        const tokens = generateTokens({ id: landlord.id, role, phone: landlord.phone });
+        const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+        await prisma.refreshToken.create({
+          data: { token: tokens.refreshToken, landlordId: landlord.id, expiresAt },
+        });
+        const { passwordHash: _, ...user } = landlord;
+        return res.json({ user, role, ...tokens });
       }
 
-      const role = landlord.isAdmin ? 'ADMIN' : 'LANDLORD';
-      const tokens = generateTokens({ id: landlord.id, role, phone: landlord.phone });
-      const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-      await prisma.refreshToken.create({
-        data: { token: tokens.refreshToken, landlordId: landlord.id, expiresAt },
+      // 2. Try Caretaker
+      const caretaker = await prisma.caretaker.findFirst({
+        where: { phone: identifier, isActive: true }
       });
-
-      const { passwordHash: _, ...landlordData } = landlord;
-      res.json({ user: landlordData, role, ...tokens });
-    } catch (err) {
-      next(err);
-    }
-  }
-);
-
-// ─── Tenant Login ────────────────────────────────────────────────────────────
-
-router.post('/tenant/login',
-  body('phone').trim().notEmpty(),
-  body('password').notEmpty(),
-  async (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
-
-    const { phone, password } = req.body;
-    try {
-      const tenant = await prisma.tenant.findUnique({ where: { phone } });
-      if (!tenant || !(await bcrypt.compare(password, tenant.passwordHash))) {
-        return res.status(401).json({ error: 'Invalid credentials' });
+      if (caretaker && await bcrypt.compare(password, caretaker.passwordHash)) {
+        const tokens = generateTokens({ id: caretaker.id, role: 'CARETAKER', phone: caretaker.phone, landlordId: caretaker.landlordId });
+        const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+        await prisma.refreshToken.create({
+          data: { token: tokens.refreshToken, caretakerId: caretaker.id, expiresAt },
+        });
+        const { passwordHash: _, ...user } = caretaker;
+        return res.json({ user, role: 'CARETAKER', ...tokens });
       }
 
-      const tokens = generateTokens({ id: tenant.id, role: 'TENANT', phone: tenant.phone });
-      const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-      await prisma.refreshToken.create({
-        data: { token: tokens.refreshToken, tenantId: tenant.id, expiresAt },
+      // 3. Try Tenant
+      const tenant = await prisma.tenant.findFirst({
+        where: {
+          OR: [{ phone: identifier }, { email: identifier }]
+        }
       });
-
-      const { passwordHash: _, idNumber: __, ...tenantData } = tenant;
-      res.json({ user: tenantData, role: 'TENANT', ...tokens });
-    } catch (err) {
-      next(err);
-    }
-  }
-);
-
-// ─── Caretaker Login ─────────────────────────────────────────────────────────
-
-router.post('/caretaker/login',
-  body('phone').trim().notEmpty(),
-  body('password').notEmpty(),
-  async (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
-
-    const { phone, password } = req.body;
-    try {
-      const caretaker = await prisma.caretaker.findUnique({ where: { phone } });
-      if (!caretaker || !caretaker.isActive || !(await bcrypt.compare(password, caretaker.passwordHash))) {
-        return res.status(401).json({ error: 'Invalid credentials' });
+      if (tenant && await bcrypt.compare(password, tenant.passwordHash)) {
+        if (!tenant.isActive) {
+          return res.status(403).json({ error: 'Account disabled' });
+        }
+        const tokens = generateTokens({ id: tenant.id, role: 'TENANT', phone: tenant.phone });
+        const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+        await prisma.refreshToken.create({
+          data: { token: tokens.refreshToken, tenantId: tenant.id, expiresAt },
+        });
+        const { passwordHash: _, idNumber: __, ...user } = tenant;
+        return res.json({ user, role: 'TENANT', ...tokens });
       }
 
-      const tokens = generateTokens({ id: caretaker.id, role: 'CARETAKER', phone: caretaker.phone, landlordId: caretaker.landlordId });
-      const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-      await prisma.refreshToken.create({
-        data: { token: tokens.refreshToken, caretakerId: caretaker.id, expiresAt },
-      });
-
-      const { passwordHash: _, ...caretakerData } = caretaker;
-      res.json({ user: caretakerData, role: 'CARETAKER', ...tokens });
+      return res.status(401).json({ error: 'Invalid credentials' });
     } catch (err) {
       next(err);
     }
