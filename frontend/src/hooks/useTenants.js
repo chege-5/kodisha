@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import api from '../utils/apiClient';
+import api, { getFriendlyError } from '../utils/apiClient';
 import toast from 'react-hot-toast';
 
 export function useTenants(params = {}) {
@@ -21,8 +21,12 @@ export function useAddTenant() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (data) => api.post('/tenants', data).then((r) => r.data),
-    onSuccess: () => { qc.invalidateQueries(['tenants']); toast.success('Tenant added'); },
-    onError: (err) => toast.error(err.response?.data?.error || 'Failed to add tenant'),
+    onSuccess: () => {
+      qc.invalidateQueries(['tenants']);
+      qc.invalidateQueries(['caretaker-portal']);
+      toast.success('Tenant added');
+    },
+    onError: (err) => toast.error(getFriendlyError(err, 'Failed to add tenant')),
   });
 }
 
@@ -43,7 +47,7 @@ export function useLogPayment(tenantId) {
       qc.invalidateQueries(['dashboard']);
       toast.success('Payment logged');
     },
-    onError: (err) => toast.error(err.response?.data?.error || 'Failed to log payment'),
+    onError: (err) => toast.error(getFriendlyError(err, 'Failed to log payment')),
   });
 }
 
@@ -51,6 +55,6 @@ export function useSTKPush() {
   return useMutation({
     mutationFn: (data) => api.post('/mpesa/stkpush', data).then((r) => r.data),
     onSuccess: () => toast.success('M-Pesa prompt sent to tenant\'s phone'),
-    onError: (err) => toast.error(err.response?.data?.error || 'STK push failed'),
+    onError: (err) => toast.error(getFriendlyError(err, 'STK push failed')),
   });
 }

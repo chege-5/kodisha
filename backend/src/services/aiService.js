@@ -210,6 +210,37 @@ async function processNaturalLanguageQuery(query, landlordId) {
   };
 }
 
+function generateIssueSmsDraft({ audience, ticket, tenant, unit }) {
+  const ref = ticket.id.slice(0, 8);
+  const category = {
+    PLUMBING: 'plumbing',
+    ELECTRICAL: 'electrical',
+    SECURITY: 'security',
+    OTHER: 'maintenance',
+  }[ticket.category] || 'maintenance';
+  const unitLabel = unit?.unitNumber ? `Unit ${unit.unitNumber}` : 'the tenant unit';
+  const detail = ticket.description ? ` Details: ${ticket.description}` : '';
+  const summary = `${category} issue at ${unitLabel} for ${tenant.name}.${detail}`;
+
+  if (audience === 'tenant_created') {
+    return `Kodisha: We have logged Ticket #${ref} for your ${category} issue. Your landlord/caretaker has been notified and will update you.`;
+  }
+
+  if (audience === 'landlord_created') {
+    return `Kodisha issue alert: ${summary} Ticket #${ref}. Please review and assign support.`;
+  }
+
+  if (audience === 'caretaker_created') {
+    return `Kodisha issue alert: ${summary} Ticket #${ref}. Reply DONE ${ref} when resolved.`;
+  }
+
+  if (audience === 'tenant_closed') {
+    return `Kodisha: Ticket #${ref} has been marked resolved. Reply RATE ${ref} 1-5 to rate the service.`;
+  }
+
+  return `Kodisha update: Ticket #${ref} is now ${ticket.status}.`;
+}
+
 // ─── Query Handlers ─────────────────────────────────────────────────────────
 
 async function queryUnpaidTenants(landlordId) {
@@ -360,4 +391,10 @@ async function queryBestTenants(landlordId) {
   };
 }
 
-module.exports = { predictOverdueTenants, getRevenueSummary, getOccupancyStats, processNaturalLanguageQuery };
+module.exports = {
+  predictOverdueTenants,
+  getRevenueSummary,
+  getOccupancyStats,
+  processNaturalLanguageQuery,
+  generateIssueSmsDraft,
+};

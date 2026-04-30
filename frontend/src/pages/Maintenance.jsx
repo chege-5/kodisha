@@ -5,22 +5,21 @@ import { useAuth } from '../hooks/useAuth';
 
 function useTickets() {
   const { role } = useAuth();
-  const endpoint = role === 'CARETAKER' ? '/caretakers/tickets' : '/tenants';
 
   return useQuery({
     queryKey: ['tickets', role],
     queryFn: async () => {
       if (role === 'CARETAKER') {
-        return api.get('/caretakers/tickets').then((r) => r.data);
+        return api.get('/caretakers/tickets').then((response) => response.data);
       }
-      // For landlords: collect tickets from all tenants
-      const tenantsRes = await api.get('/tenants', { params: { limit: 200 } });
+
+      const tenantsResponse = await api.get('/tenants', { params: { limit: 200 } });
       const allTickets = [];
-      for (const t of (tenantsRes.data.tenants || [])) {
-        const tenantFull = await api.get(`/tenants/${t.id}`).then((r) => r.data);
-        (tenantFull.tickets || []).forEach((tk) => allTickets.push({
-          ...tk,
-          tenant: { name: t.name, phone: t.phone },
+      for (const tenant of (tenantsResponse.data.tenants || [])) {
+        const tenantFull = await api.get(`/tenants/${tenant.id}`).then((response) => response.data);
+        (tenantFull.tickets || []).forEach((ticket) => allTickets.push({
+          ...ticket,
+          tenant: { name: tenant.name, phone: tenant.phone },
           unit: tenantFull.unit,
         }));
       }
@@ -32,14 +31,15 @@ function useTickets() {
 export default function Maintenance() {
   const { data: tickets, isLoading } = useTickets();
 
-  const open = tickets?.filter((t) => t.status === 'OPEN').length ?? 0;
-  const inProgress = tickets?.filter((t) => t.status === 'IN_PROGRESS').length ?? 0;
+  const open = tickets?.filter((ticket) => ticket.status === 'OPEN').length ?? 0;
+  const inProgress = tickets?.filter((ticket) => ticket.status === 'IN_PROGRESS').length ?? 0;
 
   return (
-    <div className="p-8 max-w-4xl mx-auto space-y-6">
+    <div className="mx-auto max-w-5xl space-y-6 p-4 lg:p-8">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Maintenance</h1>
-        <p className="text-gray-500 text-sm">{open} open · {inProgress} in progress</p>
+        <p className="section-eyebrow text-kodi-accent-light">Service desk</p>
+        <h1 className="mt-2 text-3xl font-semibold tracking-tight text-kodi-text-primary">Maintenance</h1>
+        <p className="mt-1 text-sm text-kodi-text-muted">{open} open, {inProgress} in progress</p>
       </div>
       <TicketQueue tickets={tickets || []} isLoading={isLoading} />
     </div>

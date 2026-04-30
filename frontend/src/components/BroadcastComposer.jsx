@@ -1,8 +1,15 @@
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useProperties } from '../hooks/useProperties';
-import api from '../utils/apiClient';
+import api, { getFriendlyError } from '../utils/apiClient';
 import toast from 'react-hot-toast';
+import { MessageSquare, Send, Smartphone } from 'lucide-react';
+
+const CHANNELS = [
+  { id: 'SMS', label: 'SMS', icon: Smartphone },
+  { id: 'WHATSAPP', label: 'WhatsApp', icon: MessageSquare },
+  { id: 'BOTH', label: 'Both', icon: Send },
+];
 
 export default function BroadcastComposer() {
   const qc = useQueryClient();
@@ -16,55 +23,62 @@ export default function BroadcastComposer() {
       setForm({ message: '', channel: 'SMS', propertyId: '', futureAt: '' });
       qc.invalidateQueries(['broadcasts']);
     },
-    onError: (err) => toast.error(err.response?.data?.error || 'Broadcast failed'),
+    onError: (err) => toast.error(getFriendlyError(err, 'Broadcast failed')),
   });
 
   const charCount = form.message.length;
 
   return (
-    <div className="card space-y-4">
-      <h2 className="text-base font-semibold text-gray-900">Compose Broadcast</h2>
+    <div className="glass-card space-y-4">
+      <div>
+        <h2 className="text-base font-semibold text-kodi-text-primary">Compose Broadcast</h2>
+        <p className="mt-1 text-sm text-kodi-text-muted">Send SMS updates, reminders, or notices to active tenants.</p>
+      </div>
 
       <div>
         <label className="label">Target</label>
         <select className="input" value={form.propertyId} onChange={(e) => setForm({ ...form, propertyId: e.target.value })}>
-          <option value="">All Tenants (all properties)</option>
+          <option value="">All tenants across properties</option>
           {properties.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
         </select>
       </div>
 
       <div>
         <label className="label">Channel</label>
-        <div className="flex gap-2">
-          {['SMS', 'WHATSAPP', 'BOTH'].map((ch) => (
+        <div className="grid grid-cols-3 gap-2">
+          {CHANNELS.map(({ id, label, icon: Icon }) => (
             <button
-              key={ch}
+              key={id}
               type="button"
-              onClick={() => setForm({ ...form, channel: ch })}
-              className={`flex-1 py-2 text-sm font-medium rounded-lg border transition-colors ${
-                form.channel === ch ? 'bg-kodi-navy text-white border-kodi-navy' : 'border-gray-200 text-gray-600 hover:bg-gray-50'
+              onClick={() => setForm({ ...form, channel: id })}
+              className={`inline-flex items-center justify-center gap-2 rounded-xl border py-2.5 text-sm font-semibold transition-all ${
+                form.channel === id
+                  ? 'border-kodi-accent bg-kodi-accent text-white shadow-lg shadow-kodi-accent/20'
+                  : 'border-kodi-border/70 text-kodi-text-secondary hover:border-kodi-accent/50 hover:text-kodi-text-primary'
               }`}
             >
-              {ch === 'SMS' ? '📱 SMS' : ch === 'WHATSAPP' ? '💬 WhatsApp' : '📡 Both'}
+              <Icon className="h-4 w-4" /> {label}
             </button>
           ))}
         </div>
       </div>
 
       <div>
-        <label className="label">Message <span className="text-gray-400 font-normal">({charCount}/160)</span></label>
+        <label className="label">Message <span className="font-normal text-kodi-text-muted">({charCount}/160)</span></label>
         <textarea
           className="input resize-none"
           rows={4}
-          placeholder="Dear tenants, your rent is due on the 1st of the month…"
+          placeholder="Dear tenants, rent is due on the 1st. Kindly pay via M-Pesa and keep your receipt."
           value={form.message}
           onChange={(e) => setForm({ ...form, message: e.target.value.slice(0, 320) })}
         />
-        {charCount > 160 && <p className="text-xs text-amber-600 mt-1">Over 160 chars — will be split into 2 SMS messages</p>}
+        {charCount > 160 && (
+          <p className="mt-1 text-xs text-kodi-amber">Over 160 characters. The SMS provider may split this into multiple messages.</p>
+        )}
       </div>
 
       <div>
-        <label className="label">Schedule (optional — leave blank to send now)</label>
+        <label className="label">Schedule</label>
         <input
           type="datetime-local"
           className="input"
@@ -79,7 +93,8 @@ export default function BroadcastComposer() {
         disabled={send.isPending || !form.message.trim()}
         className="btn-primary w-full justify-center"
       >
-        {send.isPending ? 'Sending…' : form.futureAt ? '📅 Schedule Broadcast' : '📤 Send Now'}
+        <Send className="h-4 w-4" />
+        {send.isPending ? 'Sending...' : form.futureAt ? 'Schedule Broadcast' : 'Send Now'}
       </button>
     </div>
   );

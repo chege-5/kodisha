@@ -5,6 +5,13 @@ const api = axios.create({
   timeout: 15000,
 });
 
+export function getFriendlyError(err, fallback = 'We could not complete that request. Please try again.') {
+  if (err.response?.data?.error) return err.response.data.error;
+  if (err.code === 'ECONNABORTED') return 'The request took too long. Please check your connection and try again.';
+  if (!err.response) return 'We could not reach the server. Please check your connection and try again.';
+  return fallback;
+}
+
 // Attach JWT on every request
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('accessToken');

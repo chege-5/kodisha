@@ -2,6 +2,7 @@ const router = require('express').Router();
 const { PrismaClient } = require('@prisma/client');
 const { authenticate } = require('../middleware/auth');
 const { requireRole } = require('../middleware/roleCheck');
+const { notifyIssueClosed } = require('../services/issueMessaging');
 
 const prisma = new PrismaClient();
 router.use(authenticate);
@@ -95,15 +96,14 @@ router.patch('/tickets/:ticketId', requireRole('CARETAKER', 'LANDLORD'), async (
     const ticket = await prisma.maintenanceTicket.update({
       where: { id: req.params.ticketId },
       data,
-      include: { tenant: { select: { phone: true, name: true } } },
+      include: {
+        tenant: { select: { id: true, phone: true, name: true } },
+        unit: { select: { id: true, unitNumber: true } },
+      },
     });
 
     if (status === 'CLOSED') {
-      const { sendSMS } = require('../services/africastalking');
-      await sendSMS(
-        ticket.tenant.phone,
-        `Hi ${ticket.tenant.name}, your ${ticket.category} issue (Ticket #${ticket.id.slice(0, 8)}) has been resolved! Reply RATE ${ticket.id.slice(0, 8)} [1-5] to rate.`
-      ).catch(() => {});
+      await notifyIssueClosed(ticket);
     }
 
     res.json(ticket);

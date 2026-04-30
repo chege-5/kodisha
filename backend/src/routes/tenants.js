@@ -5,26 +5,41 @@ const { authenticate } = require('../middleware/auth');
 const { requireRole } = require('../middleware/roleCheck');
 const { getScore } = require('../services/trustScore');
 const { sendSMS } = require('../services/africastalking');
+const { notifyIssueCreated } = require('../services/issueMessaging');
 const logger = require('../utils/logger');
 
 const prisma = new PrismaClient();
 router.use(authenticate);
+
+async function getScopedLandlordId(req) {
+  if (req.user.role === 'LANDLORD' || req.user.role === 'ADMIN') return req.user.id;
+  if (req.user.role === 'CARETAKER') {
+    const caretaker = await prisma.caretaker.findUnique({
+      where: { id: req.user.id },
+      select: { landlordId: true, isActive: true },
+    });
+    if (!caretaker?.isActive) return null;
+    return caretaker.landlordId;
+  }
+  return null;
+}
 
 // ─── List tenants ─────────────────────────────────────────────────────────────
 
 router.get('/', requireRole('LANDLORD', 'CARETAKER', 'ADMIN'), async (req, res, next) => {
   const { propertyId, search, page = 1, limit = 50 } = req.query;
   const skip = (parseInt(page) - 1) * parseInt(limit);
-  const landlordId = req.user.role === 'LANDLORD' ? req.user.id : req.user.landlordId;
-
-  const where = {
-    unit: { property: { landlordId } },
-    isActive: true,
-    ...(propertyId && { unit: { propertyId } }),
-    ...(search && { OR: [{ name: { contains: search, mode: 'insensitive' } }, { phone: { contains: search } }] }),
-  };
 
   try {
+    const landlordId = await getScopedLandlordId(req);
+    if (!landlordId) return res.status(403).json({ error: 'You do not have access to these tenants.' });
+
+    const where = {
+      unit: { property: { landlordId, ...(propertyId && { id: propertyId }) } },
+      isActive: true,
+      ...(search && { OR: [{ name: { contains: search, mode: 'insensitive' } }, { phone: { contains: search } }] }),
+    };
+
     const [tenants, total] = await Promise.all([
       prisma.tenant.findMany({
         where,
@@ -79,15 +94,22 @@ router.get('/:id', async (req, res, next) => {
 
 // ─── Add tenant ───────────────────────────────────────────────────────────────
 
-router.post('/', requireRole('LANDLORD'), async (req, res, next) => {
+router.post('/', requireRole('LANDLORD', 'CARETAKER'), async (req, res, next) => {
   const { name, phone, email, idNumber, unitId, leaseStart, leaseEnd, depositAmount, password } = req.body;
   if (!name || !phone || !idNumber || !unitId || !leaseStart || !depositAmount) {
-    return res.status(400).json({ error: 'name, phone, idNumber, unitId, leaseStart, depositAmount required' });
+    return res.status(400).json({ error: 'Please provide the tenant name, phone, ID number, unit, lease start date, and deposit amount.' });
   }
 
   try {
-    const unit = await prisma.unit.findFirst({ where: { id: unitId, property: { landlordId: req.user.id } } });
-    if (!unit) return res.status(403).json({ error: 'Unit not found or not yours' });
+    const landlordId = await getScopedLandlordId(req);
+    if (!landlordId) return res.status(403).json({ error: 'You do not have access to add tenants.' });
+
+    const unit = await prisma.unit.findFirst({
+      where: { id: unitId, property: { landlordId } },
+      include: { property: { select: { name: true, landlordId: true } } },
+    });
+    if (!unit) return res.status(403).json({ error: 'We could not find that unit under your assigned properties.' });
+    if (unit.status === 'OCCUPIED') return res.status(409).json({ error: 'That unit already has an active tenant.' });
 
     const defaultPassword = password || `KODI${phone.slice(-4)}`;
     const passwordHash = await bcrypt.hash(defaultPassword, 12);
@@ -106,7 +128,7 @@ router.post('/', requireRole('LANDLORD'), async (req, res, next) => {
       `Welcome to KODI! You have been registered as a tenant. Your login: Phone ${phone}, Password: ${defaultPassword}. Change your password at ${process.env.FRONTEND_URL}/tenant`
     ).catch(() => {});
 
-    logger.info('Tenant added', { tenantId: tenant.id });
+    logger.info('Tenant added', { tenantId: tenant.id, createdBy: req.user.role });
     res.status(201).json({ tenant, defaultPassword: password ? undefined : defaultPassword });
   } catch (err) { next(err); }
 });
@@ -215,12 +237,13 @@ router.post('/:id/tickets', requireRole('TENANT'), async (req, res, next) => {
       where: { units: { some: { id: tenant.unitId } } },
       include: { landlord: { include: { caretakers: { where: { isActive: true }, take: 1 } } } },
     });
-    const caretakerPhone = property?.landlord?.caretakers?.[0]?.phone;
-    if (caretakerPhone) {
-      await sendSMS(caretakerPhone,
-        `KODI: ${category || 'OTHER'} issue in Unit ${tenant.unit.unitNumber} (Ticket #${ticket.id.slice(0, 8)}). Tenant: ${tenant.name}. Reply DONE ${ticket.id.slice(0, 8)} when fixed.`
-      ).catch(() => {});
-    }
+    await notifyIssueCreated({
+      ticket,
+      tenant,
+      unit: tenant.unit,
+      landlord: property?.landlord,
+      caretaker: property?.landlord?.caretakers?.[0],
+    });
 
     res.status(201).json(ticket);
   } catch (err) { next(err); }

@@ -10,57 +10,74 @@ function AddTenantModal({ onClose }) {
   const { data: properties } = useProperties();
   const addTenant = useAddTenant();
   const [form, setForm] = useState({
-    name: '', phone: '', email: '', idNumber: '', unitId: '',
-    leaseStart: '', depositAmount: '', password: '',
+    name: '',
+    phone: '',
+    email: '',
+    idNumber: '',
+    unitId: '',
+    leaseStart: '',
+    depositAmount: '',
+    password: '',
   });
 
-  const allUnits = properties?.flatMap((p) => p.units.map((u) => ({ ...u, propertyName: p.name }))) || [];
-  const vacantUnits = allUnits.filter((u) => u.status === 'VACANT');
+  const allUnits = properties?.flatMap((property) => property.units.map((unit) => ({ ...unit, propertyName: property.name }))) || [];
+  const vacantUnits = allUnits.filter((unit) => unit.status === 'VACANT');
 
-  async function handleSubmit(e) {
-    e.preventDefault();
+  async function handleSubmit(event) {
+    event.preventDefault();
     await addTenant.mutateAsync(form);
     onClose();
   }
 
-  const f = (key, label, type = 'text', placeholder = '') => (
+  const field = (key, label, type = 'text', placeholder = '') => (
     <div key={key}>
       <label className="label">{label}</label>
-      <input type={type} className="input" placeholder={placeholder} value={form[key]}
-        onChange={(e) => setForm({ ...form, [key]: e.target.value })} required={['name','phone','idNumber','leaseStart','depositAmount'].includes(key)} />
+      <input
+        type={type}
+        className="input"
+        placeholder={placeholder}
+        value={form[key]}
+        onChange={(event) => setForm({ ...form, [key]: event.target.value })}
+        required={['name', 'phone', 'idNumber', 'leaseStart', 'depositAmount'].includes(key)}
+      />
     </div>
   );
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-xl w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto">
-        <h2 className="text-lg font-semibold mb-4">Add New Tenant</h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+      <div className="glass-card w-full max-w-lg overflow-y-auto p-6 max-h-[90vh]">
+        <h2 className="mb-4 text-lg font-semibold text-kodi-text-primary">Add New Tenant</h2>
         <form onSubmit={handleSubmit} className="space-y-3">
-          {f('name', 'Full Name', 'text', 'Amina Hassan')}
-          {f('phone', 'Phone', 'tel', '+254712000010')}
-          {f('email', 'Email (optional)', 'email', 'amina@email.com')}
-          {f('idNumber', 'ID Number', 'text', '12345678')}
+          {field('name', 'Full Name', 'text', 'Amina Hassan')}
+          {field('phone', 'Phone', 'tel', '+254712000010')}
+          {field('email', 'Email', 'email', 'amina@email.com')}
+          {field('idNumber', 'ID Number', 'text', '12345678')}
           <div>
             <label className="label">Unit</label>
-            <select className="input" value={form.unitId} onChange={(e) => setForm({ ...form, unitId: e.target.value })} required>
-              <option value="">Select unit…</option>
-              {vacantUnits.map((u) => (
-                <option key={u.id} value={u.id}>{u.propertyName} — Unit {u.unitNumber} ({formatCurrency(u.rentAmount)}/mo)</option>
+            <select className="input" value={form.unitId} onChange={(event) => setForm({ ...form, unitId: event.target.value })} required>
+              <option value="">Select unit</option>
+              {vacantUnits.map((unit) => (
+                <option key={unit.id} value={unit.id}>{unit.propertyName} - Unit {unit.unitNumber} ({formatCurrency(unit.rentAmount)}/mo)</option>
               ))}
             </select>
-            {vacantUnits.length === 0 && <p className="text-xs text-amber-600 mt-1">No vacant units. Add units in Properties first.</p>}
+            {vacantUnits.length === 0 && <p className="mt-1 text-xs text-kodi-amber">No vacant units. Add units in Properties first.</p>}
           </div>
-          {f('leaseStart', 'Lease Start', 'date')}
-          {f('depositAmount', 'Deposit Amount (KSh)', 'number', '24000')}
+          {field('leaseStart', 'Lease Start', 'date')}
+          {field('depositAmount', 'Deposit Amount (KSh)', 'number', '24000')}
           <div>
-            <label className="label">Initial Password <span className="text-gray-400">(optional — defaults to KODI + last 4 of phone)</span></label>
-            <input type="password" className="input" placeholder="Leave blank for default" value={form.password}
-              onChange={(e) => setForm({ ...form, password: e.target.value })} />
+            <label className="label">Initial Password <span className="font-normal text-kodi-text-muted">(optional)</span></label>
+            <input
+              type="password"
+              className="input"
+              placeholder="Leave blank for KODI + phone last 4"
+              value={form.password}
+              onChange={(event) => setForm({ ...form, password: event.target.value })}
+            />
           </div>
           <div className="flex gap-2 pt-2">
-            <button type="button" onClick={onClose} className="btn-secondary flex-1 justify-center">Cancel</button>
-            <button type="submit" disabled={addTenant.isPending} className="btn-primary flex-1 justify-center">
-              {addTenant.isPending ? 'Adding…' : 'Add Tenant'}
+            <button type="button" onClick={onClose} className="btn-secondary flex-1">Cancel</button>
+            <button type="submit" disabled={addTenant.isPending} className="btn-primary flex-1">
+              {addTenant.isPending ? 'Adding...' : 'Add Tenant'}
             </button>
           </div>
         </form>
@@ -76,67 +93,68 @@ export default function Tenants() {
   const { tenants = [], total = 0 } = data || {};
 
   return (
-    <div className="p-8 max-w-7xl mx-auto space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="mx-auto max-w-7xl space-y-6 p-4 lg:p-8">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Tenants</h1>
-          <p className="text-gray-500 text-sm">{total} total</p>
+          <p className="section-eyebrow text-kodi-accent-light">Residents</p>
+          <h1 className="mt-2 text-3xl font-semibold tracking-tight text-kodi-text-primary">Tenants</h1>
+          <p className="mt-1 text-sm text-kodi-text-muted">{total} active tenant{total !== 1 ? 's' : ''}</p>
         </div>
         <button onClick={() => setShowAdd(true)} className="btn-primary">
           <PlusIcon className="h-4 w-4" /> Add Tenant
         </button>
       </div>
 
-      {/* Search */}
       <div className="relative">
-        <MagnifyingGlassIcon className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+        <MagnifyingGlassIcon className="absolute left-3 top-3.5 h-4 w-4 text-kodi-text-muted" />
         <input
           className="input pl-9"
-          placeholder="Search by name or phone…"
+          placeholder="Search by name or phone"
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(event) => setSearch(event.target.value)}
         />
       </div>
 
-      {/* Table */}
       {isLoading ? (
         <div className="space-y-3">
-          {[...Array(5)].map((_, i) => <div key={i} className="h-14 bg-gray-100 animate-pulse rounded-lg" />)}
+          {[...Array(5)].map((_, index) => <div key={index} className="skeleton h-14" />)}
         </div>
       ) : tenants.length === 0 ? (
-        <div className="card text-center py-16">
-          <UsersIcon className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-          <p className="text-gray-500">No tenants found</p>
+        <div className="glass-card py-16 text-center">
+          <UsersIcon className="mx-auto mb-4 h-12 w-12 text-kodi-text-muted" />
+          <p className="text-kodi-text-secondary">No tenants found</p>
         </div>
       ) : (
-        <div className="card p-0 overflow-hidden">
-          <table className="w-full">
-            <thead className="bg-gray-50 border-b border-gray-100">
-              <tr>
-                {['Name', 'Unit', 'Phone', 'Lease Start', 'Trust Score', 'Actions'].map((h) => (
-                  <th key={h} className="table-th">{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-50">
-              {tenants.map((t) => (
-                <tr key={t.id} className="hover:bg-gray-50">
-                  <td className="table-td font-medium">{t.name}</td>
-                  <td className="table-td text-gray-500">{t.unit ? `${t.unit.property.name} — ${t.unit.unitNumber}` : '—'}</td>
-                  <td className="table-td text-gray-500">{t.phone}</td>
-                  <td className="table-td text-gray-500">{formatDate(t.leaseStart)}</td>
-                  <td className="table-td">
-                    {t.trustScore ? (
-                      <TrustScoreBadge score={t.trustScore.score} tier={t.trustScore.tier || 'Fair'} size="sm" />
-                    ) : <span className="text-gray-400 text-xs">—</span>}
-                  </td>
-                  <td className="table-td">
-                    <Link to={`/tenants/${t.id}`} className="text-kodi-blue text-sm hover:underline">View</Link>
-                  </td>
+        <div className="glass-card overflow-hidden p-0">
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[760px]">
+              <thead className="border-b border-kodi-border/40 bg-kodi-navy/40">
+                <tr>
+                  {['Name', 'Unit', 'Phone', 'Lease Start', 'Trust Score', 'Actions'].map((heading) => (
+                    <th key={heading} className="table-th">{heading}</th>
+                  ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-kodi-border/30">
+                {tenants.map((tenant) => (
+                  <tr key={tenant.id} className="table-row">
+                    <td className="table-td font-medium">{tenant.name}</td>
+                    <td className="table-td text-kodi-text-muted">{tenant.unit ? `${tenant.unit.property.name} - ${tenant.unit.unitNumber}` : 'Unassigned'}</td>
+                    <td className="table-td text-kodi-text-muted">{tenant.phone}</td>
+                    <td className="table-td text-kodi-text-muted">{formatDate(tenant.leaseStart)}</td>
+                    <td className="table-td">
+                      {tenant.trustScore ? (
+                        <TrustScoreBadge score={tenant.trustScore.score} tier={tenant.trustScore.tier || 'Fair'} size="sm" />
+                      ) : <span className="text-xs text-kodi-text-muted">Not scored</span>}
+                    </td>
+                    <td className="table-td">
+                      <Link to={`/dashboard/tenants/${tenant.id}`} className="text-sm font-semibold text-kodi-accent-light hover:text-kodi-text-primary">View</Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 

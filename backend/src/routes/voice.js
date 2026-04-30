@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { PrismaClient } = require('@prisma/client');
 const { validateATRequest } = require('../middleware/atValidate');
-const { sendSMS } = require('../services/africastalking');
+const { notifyIssueCreated } = require('../services/issueMessaging');
 const logger = require('../utils/logger');
 
 const prisma = new PrismaClient();
@@ -94,22 +94,18 @@ router.post('/', validateATRequest, async (req, res) => {
     const property = await prisma.property.findFirst({
       where: { units: { some: { id: tenant.unitId } } },
       include: {
-        landlord: true,
+        landlord: { include: { caretakers: { where: { isActive: true }, take: 1 } } },
         units: { where: { id: tenant.unitId } },
       },
     });
 
-    const caretaker = await prisma.caretaker.findFirst({
-      where: { landlordId: property.landlordId, isActive: true },
+    await notifyIssueCreated({
+      ticket,
+      tenant,
+      unit: tenant.unit,
+      landlord: property?.landlord,
+      caretaker: property?.landlord?.caretakers?.[0],
     });
-
-    const notifyMsg = `KODI Alert: ${CATEGORY_NAMES[category]} issue in Unit ${tenant.unit.unitNumber} (Ticket #${ticket.id.slice(0, 8)}). Tenant: ${tenant.name} ${tenant.phone}. Reply "DONE ${ticket.id.slice(0, 8)}" when resolved.`;
-
-    let caretakerReachable = false;
-    if (caretaker) {
-      await sendSMS(caretaker.phone, notifyMsg).catch(() => {});
-      caretakerReachable = true;
-    }
 
     // Offer voice description recording
     return res.send(xml(
@@ -123,7 +119,7 @@ router.post('/', validateATRequest, async (req, res) => {
   } catch (err) {
     logger.error('Voice IVR error', { error: err.message, callerNumber });
     return res.send(xml(
-      say('An error occurred. Please call back or report via USSD. Goodbye.'),
+      say('We could not log your issue right now. Please try again shortly, or send an SMS to your landlord. Goodbye.'),
       hangup()
     ));
   }

@@ -3,6 +3,7 @@ const { PrismaClient } = require('@prisma/client');
 const { validateATRequest } = require('../middleware/atValidate');
 const { sendSMS } = require('../services/africastalking');
 const { recalculate } = require('../services/trustScore');
+const { notifyIssueClosed } = require('../services/issueMessaging');
 const logger = require('../utils/logger');
 
 const prisma = new PrismaClient();
@@ -32,10 +33,7 @@ router.post('/', validateATRequest, async (req, res) => {
         data: { status: 'CLOSED', closedAt: new Date() },
       });
 
-      await sendSMS(
-        ticket.tenant.phone,
-        `Hi ${ticket.tenant.name}, your ${ticket.category} issue in Unit ${ticket.unit.unitNumber} has been resolved! Reply RATE ${ticket.id.slice(0, 8)} [1-5] to rate the service. Example: RATE ${ticket.id.slice(0, 8)} 4`
-      );
+      await notifyIssueClosed(ticket);
 
       logger.info('Ticket closed via SMS', { ticketId: ticket.id });
     }
