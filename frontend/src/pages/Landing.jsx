@@ -4,28 +4,53 @@ import {
   ArrowRight,
   BarChart3,
   BellRing,
-  Bot,
+  Building2,
+  CheckCircle2,
   CreditCard,
+  Droplets,
+  FileText,
+  Headphones,
+  KeyRound,
   MessageSquare,
   Mic,
+  Phone,
+  Receipt,
   Shield,
-  Sparkles,
-  Workflow,
+  Smartphone,
+  Users,
+  Wrench,
 } from 'lucide-react';
 
-const features = [
-  { icon: CreditCard, title: 'Smart payments', text: 'STK Push, receipts, reconciliation, and payment tracking in one flow.' },
-  { icon: MessageSquare, title: 'Communication automation', text: 'SMS, WhatsApp, email, and broadcast reminders from one queue.' },
-  { icon: Mic, title: 'Voice and USSD access', text: 'Feature-phone and voice interactions for broader tenant reach.' },
-  { icon: BarChart3, title: 'AI insights', text: 'Rent prediction, late-payment risk, and vacancy forecasting.' },
-  { icon: BellRing, title: 'Automated alerts', text: 'Lease renewal prompts, overdue notices, and maintenance updates.' },
-  { icon: Shield, title: 'Secure operations', text: 'Tokenized sessions, audit logs, and permission-aware workflows.' },
+const painCards = [
+  { title: 'Chasing tenants one by one', text: 'Calls, WhatsApp threads, and handwritten promises make rent collection hard to trust.' },
+  { title: 'Reconciling payments manually', text: 'M-Pesa references, cash notes, and partial payments get scattered across people and devices.' },
+  { title: 'Losing repair history', text: 'Maintenance issues disappear after a call, making follow-up, accountability, and ratings difficult.' },
 ];
 
-const workflow = [
-  { step: '1', title: 'Tenant pays rent', text: 'A single Pay Now action triggers an M-Pesa STK prompt.' },
-  { step: '2', title: 'System confirms payment', text: 'Callbacks update the ledger, receipt, and dashboard instantly.' },
-  { step: '3', title: 'AI reacts', text: 'Kodisha sends follow-up messages and forecasts the next cycle.' },
+const capabilities = [
+  { icon: CreditCard, title: 'Rent collection' },
+  { icon: Droplets, title: 'Bills and water meters' },
+  { icon: Wrench, title: 'Maintenance tickets' },
+  { icon: Shield, title: 'Tenant trust scoring' },
+  { icon: KeyRound, title: 'Credit passport' },
+  { icon: FileText, title: 'Lease generation' },
+  { icon: BarChart3, title: 'Reports and iTax' },
+  { icon: BellRing, title: 'Broadcasts and alerts' },
+];
+
+const channels = [
+  { icon: Building2, label: 'Web portal' },
+  { icon: CreditCard, label: 'M-Pesa' },
+  { icon: Phone, label: 'USSD' },
+  { icon: Smartphone, label: 'SMS' },
+  { icon: Mic, label: 'Voice' },
+  { icon: MessageSquare, label: 'WhatsApp' },
+];
+
+const timeline = [
+  { label: 'SMS reminder', value: 'Rent due on 1 May. Pay by M-Pesa or dial USSD.' },
+  { label: 'Payment receipt', value: 'KSh 24,000 received. Ref QKD72P. Trust score updated.' },
+  { label: 'Maintenance ticket', value: 'Plumbing issue in Unit B4 assigned to caretaker.' },
 ];
 
 function useReveal() {
@@ -40,7 +65,7 @@ function useReveal() {
           }
         });
       },
-      { threshold: 0.15 }
+      { threshold: 0.14 }
     );
 
     elements.forEach((element) => observer.observe(element));
@@ -48,153 +73,199 @@ function useReveal() {
   }, []);
 }
 
+function Logo({ light = false }) {
+  return (
+    <div className="flex items-center gap-3">
+      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-kodi-accent to-kodi-emerald shadow-lg shadow-kodi-accent/25">
+        <Building2 className="h-5 w-5 text-white" />
+      </div>
+      <div>
+        <p className={`text-xl font-black tracking-tight ${light ? 'text-white' : 'text-kodi-dark'}`}>Kodishaa</p>
+        <p className={`text-[10px] font-semibold uppercase tracking-[0.26em] ${light ? 'text-blue-100' : 'text-kodi-text-muted'}`}>Rent OS</p>
+      </div>
+    </div>
+  );
+}
+
 export default function Landing() {
   useReveal();
 
   return (
     <div className="min-h-screen overflow-hidden bg-kodi-navy text-kodi-text-primary">
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute left-[-8%] top-[-10%] h-96 w-96 rounded-full bg-kodi-accent/20 blur-3xl" />
-        <div className="absolute bottom-0 right-[-8%] h-[30rem] w-[30rem] rounded-full bg-kodi-cyan/10 blur-3xl" />
-        <div className="absolute inset-0 opacity-[0.04]" style={{
-          backgroundImage: 'linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px)',
-          backgroundSize: '72px 72px',
-        }} />
-      </div>
-
-      <nav className="relative z-10 mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-6">
-        <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-kodi-accent to-kodi-cyan shadow-lg shadow-kodi-accent/30">
-            <Bot className="h-6 w-6 text-white" />
+      <header className="relative overflow-hidden bg-kodi-dark text-white">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_20%,rgba(29,78,216,0.38),transparent_34%),linear-gradient(135deg,#14213D_0%,#1E3A8A_54%,#0F766E_100%)]" />
+        <nav className="relative z-10 mx-auto flex max-w-7xl items-center justify-between px-5 py-5 lg:px-8">
+          <Logo light />
+          <div className="hidden items-center gap-7 text-sm font-medium text-blue-100 md:flex">
+            <a href="#workflow" className="hover:text-white">Workflow</a>
+            <a href="#channels" className="hover:text-white">Channels</a>
+            <a href="#features" className="hover:text-white">Features</a>
           </div>
-          <span className="text-xl font-semibold tracking-[0.24em] text-white">KODISHA</span>
-        </div>
-        <div className="flex gap-3">
-          <Link to="/login" className="btn-ghost">Sign in</Link>
-          <Link to="/login" className="btn-primary">Open app</Link>
-        </div>
-      </nav>
+          <div className="flex items-center gap-3">
+            <Link to="/login" className="btn-ghost">Log in</Link>
+            <Link to="/login" className="btn-primary">Open Dashboard</Link>
+          </div>
+        </nav>
 
-      <main className="relative z-10 mx-auto w-full max-w-7xl px-6 pb-24 pt-10 md:pt-16">
-        <section className="grid gap-14 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
-          <div className="space-y-8" data-reveal>
-            <div className="inline-flex items-center gap-2 rounded-full border border-kodi-border/60 bg-kodi-card/70 px-4 py-2 text-sm text-kodi-text-secondary backdrop-blur">
-              <Sparkles className="h-4 w-4 text-kodi-accent-light" />
-              AI-powered rental operations for African property teams
+        <section className="relative z-10 mx-auto grid max-w-7xl gap-12 px-5 pb-20 pt-10 lg:grid-cols-[minmax(0,1fr)_minmax(420px,0.9fr)] lg:items-center lg:px-8 lg:pb-28">
+          <div className="space-y-8 reveal" data-reveal>
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm text-blue-50 backdrop-blur">
+              <Shield className="h-4 w-4 text-kodi-emerald" />
+              Built for Kenyan rentals, caretakers, tenants, and admins.
             </div>
             <div className="space-y-5">
-              <h1 className="max-w-4xl text-5xl font-semibold tracking-tight text-white md:text-7xl">
-                Run rentals with a premium SaaS platform built for payments, tenants, and automation.
+              <h1 className="max-w-4xl text-5xl font-black tracking-tight md:text-7xl">
+                Rent clarity for landlords who are tired of chasing
               </h1>
-              <p className="max-w-2xl text-lg leading-8 text-kodi-text-muted md:text-xl">
-                Kodisha unifies rent collection, tenant lifecycle management, communication, and AI assistance across web, SMS, USSD, voice, and M-Pesa.
+              <p className="max-w-2xl text-lg leading-8 text-blue-50 md:text-xl">
+                Kodishaa gives you one place to see rent, arrears, maintenance, receipts, tenant history, and field activity across web, SMS, USSD, WhatsApp, and M-Pesa.
               </p>
             </div>
             <div className="flex flex-wrap gap-4">
               <Link to="/login" className="btn-primary px-7 py-3.5 text-base">
-                Start now <ArrowRight className="h-4 w-4" />
+                Open Dashboard <ArrowRight className="h-4 w-4" />
               </Link>
-              <a href="#features" className="btn-secondary px-7 py-3.5 text-base">
-                Explore platform
+              <a href="#workflow" className="inline-flex items-center justify-center rounded-xl border border-white/20 bg-white/10 px-7 py-3.5 text-base font-semibold text-white transition hover:bg-white/15">
+                See How It Works
               </a>
-            </div>
-            <div className="grid gap-4 sm:grid-cols-3">
-              {[
-                { label: 'Automated reminders', value: 'SMS + WhatsApp' },
-                { label: 'Payment flows', value: 'M-Pesa STK Push' },
-                { label: 'AI intelligence', value: 'Risk + forecast' },
-              ].map((item) => (
-                <div key={item.label} className="glass-card">
-                  <p className="text-sm text-kodi-text-muted">{item.label}</p>
-                  <p className="mt-2 text-lg font-semibold text-white">{item.value}</p>
-                </div>
-              ))}
             </div>
           </div>
 
-          <div className="relative" data-reveal>
-            <div className="absolute inset-0 -z-10 rounded-[2rem] bg-kodi-accent/10 blur-3xl" />
-            <div className="glass-card space-y-6 border-kodi-border/70 shadow-2xl shadow-black/20">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-kodi-text-muted">Live workflow</p>
-                  <h2 className="mt-1 text-2xl font-semibold text-white">Tenant payment to receipt</h2>
-                </div>
-                <div className="rounded-2xl border border-kodi-accent/20 bg-kodi-accent/10 p-3 text-kodi-accent-light">
-                  <Workflow className="h-5 w-5" />
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                {workflow.map((item) => (
-                  <div key={item.step} className="flex gap-4 rounded-2xl border border-kodi-border/60 bg-kodi-navy/35 p-4">
-                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-kodi-accent/15 text-sm font-semibold text-kodi-accent-light">
-                      {item.step}
-                    </div>
+          <div className="reveal" data-reveal>
+            <div className="rounded-[2rem] border border-white/15 bg-white/95 p-4 text-kodi-text-primary shadow-2xl shadow-black/25">
+              <div className="grid gap-4 md:grid-cols-[1.1fr_0.9fr]">
+                <div className="rounded-3xl bg-kodi-navy p-5">
+                  <div className="mb-5 flex items-center justify-between">
                     <div>
-                      <p className="font-semibold text-white">{item.title}</p>
-                      <p className="mt-1 text-sm leading-6 text-kodi-text-muted">{item.text}</p>
+                      <p className="text-xs font-semibold uppercase tracking-[0.22em] text-kodi-text-muted">May command center</p>
+                      <h2 className="mt-1 text-xl font-bold text-kodi-dark">Portfolio health</h2>
                     </div>
+                    <Receipt className="h-5 w-5 text-kodi-accent" />
                   </div>
-                ))}
+                  <div className="grid gap-3">
+                    {[
+                      ['Collected', 'KSh 1.42M', 'text-kodi-emerald'],
+                      ['Arrears', 'KSh 186K', 'text-kodi-amber'],
+                      ['Occupancy', '94%', 'text-kodi-accent'],
+                    ].map(([label, value, color]) => (
+                      <div key={label} className="rounded-2xl border border-kodi-border bg-white p-4">
+                        <p className="text-xs text-kodi-text-muted">{label}</p>
+                        <p className={`mt-1 text-2xl font-black ${color}`}>{value}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  {timeline.map((item) => (
+                    <div key={item.label} className="rounded-2xl border border-kodi-border bg-white p-4">
+                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-kodi-accent">{item.label}</p>
+                      <p className="mt-2 text-sm leading-6 text-kodi-text-secondary">{item.value}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
         </section>
+      </header>
 
-        <section id="features" className="mt-24 space-y-8 md:mt-32" data-reveal>
+      <main>
+        <section className="mx-auto max-w-7xl px-5 py-20 lg:px-8" data-reveal>
           <div className="max-w-2xl">
-            <p className="section-eyebrow">Platform capabilities</p>
-            <h2 className="section-title mt-3">A clean operating system for property income, tenant support, and team coordination.</h2>
-            <p className="section-copy mt-4">
-              Every major workflow is designed to reduce manual follow-up, improve payment completion, and give each role a focused dashboard.
-            </p>
+            <p className="section-eyebrow">The old way is expensive</p>
+            <h2 className="section-title mt-3">Every unclear payment and forgotten issue costs time, cash flow, and trust.</h2>
           </div>
-
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {features.map(({ icon: Icon, title, text }) => (
-              <article key={title} className="glass-card-hover group p-7" data-reveal>
-                <div className="mb-5 inline-flex rounded-2xl border border-kodi-border/60 bg-kodi-card/80 p-3 text-kodi-accent-light transition-transform group-hover:-translate-y-0.5">
-                  <Icon className="h-6 w-6" />
-                </div>
-                <h3 className="text-xl font-semibold text-white">{title}</h3>
-                <p className="mt-3 text-sm leading-7 text-kodi-text-muted">{text}</p>
+          <div className="mt-10 grid gap-5 md:grid-cols-3">
+            {painCards.map((card) => (
+              <article key={card.title} className="glass-card-hover">
+                <h3 className="text-lg font-bold text-kodi-dark">{card.title}</h3>
+                <p className="mt-3 text-sm leading-7 text-kodi-text-muted">{card.text}</p>
               </article>
             ))}
           </div>
         </section>
 
-        <section className="mt-24 grid gap-6 rounded-[2rem] border border-kodi-border/60 bg-kodi-card/50 p-8 backdrop-blur md:grid-cols-3" data-reveal>
-          {[
-            { title: 'Pricing', text: 'Flexible SaaS tiers for emerging and enterprise portfolios.' },
-            { title: 'Testimonials', text: 'Customer stories, quantified results, and deployment notes.' },
-            { title: 'Contact', text: 'Sales, support, and implementation readiness in one place.' },
-          ].map((item) => (
-            <div key={item.title} className="space-y-2">
-              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-kodi-text-muted">{item.title}</p>
-              <p className="text-sm leading-7 text-kodi-text-secondary">{item.text}</p>
+        <section id="features" className="bg-white py-20" data-reveal>
+          <div className="mx-auto max-w-7xl px-5 lg:px-8">
+            <div className="max-w-3xl">
+              <p className="section-eyebrow">Everything in one system</p>
+              <h2 className="section-title mt-3">Run the full rental workflow without stitching together notebooks, spreadsheets, and chat threads.</h2>
             </div>
-          ))}
+            <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {capabilities.map(({ icon: Icon, title }) => (
+                <div key={title} className="rounded-2xl border border-kodi-border bg-kodi-navy p-5">
+                  <Icon className="h-5 w-5 text-kodi-accent" />
+                  <p className="mt-4 text-sm font-bold text-kodi-dark">{title}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         </section>
 
-        <section className="mt-24 rounded-[2rem] border border-kodi-border/60 bg-kodi-navy/35 p-8 md:p-10" data-reveal>
-          <div className="grid gap-8 md:grid-cols-[1fr_auto] md:items-center">
+        <section id="channels" className="mx-auto max-w-7xl px-5 py-20 lg:px-8" data-reveal>
+          <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
             <div>
-              <p className="section-eyebrow">Get started</p>
-              <h2 className="section-title mt-3 max-w-2xl">Build your rental operating system with Kodisha.</h2>
-              <p className="section-copy mt-4 max-w-2xl">Create the account, add your API keys, run migrations, and start managing portfolios with automated communication and payments.</p>
+              <p className="section-eyebrow">Multi-channel proof</p>
+              <h2 className="section-title mt-3">Works where your tenants already are.</h2>
+              <p className="section-copy mt-4">
+                The system meets people through money movement, messaging, feature-phone flows, and web portals instead of forcing every user into one app.
+              </p>
             </div>
-            <Link to="/login" className="btn-primary px-7 py-3.5 text-base">
-              Open login <ArrowRight className="h-4 w-4" />
-            </Link>
+            <div className="grid gap-4 sm:grid-cols-3">
+              {channels.map(({ icon: Icon, label }) => (
+                <div key={label} className="rounded-2xl border border-kodi-border bg-white p-5 text-center shadow-sm">
+                  <Icon className="mx-auto h-6 w-6 text-kodi-accent" />
+                  <p className="mt-3 text-sm font-semibold text-kodi-text-secondary">{label}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="workflow" className="bg-kodi-dark py-20 text-white" data-reveal>
+          <div className="mx-auto grid max-w-7xl gap-8 px-5 lg:grid-cols-3 lg:px-8">
+            {[
+              ['Know arrears instantly', 'See who paid, who is partial, and who needs follow-up without waiting for manual reconciliation.'],
+              ['Reduce payment excuses', 'Send reminders, trigger M-Pesa prompts, and issue receipts from the same operating record.'],
+              ['Keep maintenance history', 'Capture tickets, recordings, assignments, closure, and tenant ratings in one timeline.'],
+            ].map(([title, text]) => (
+              <div key={title} className="rounded-3xl border border-white/10 bg-white/10 p-7">
+                <CheckCircle2 className="h-6 w-6 text-kodi-emerald" />
+                <h3 className="mt-5 text-xl font-bold">{title}</h3>
+                <p className="mt-3 text-sm leading-7 text-blue-50">{text}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-7xl px-5 py-20 lg:px-8" data-reveal>
+          <div className="rounded-[2rem] border border-kodi-border bg-white p-8 shadow-xl shadow-slate-200/70 lg:p-10">
+            <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
+              <div>
+                <p className="section-eyebrow">Built for rental pressure</p>
+                <h2 className="section-title mt-3">Get the rental control you should have had already.</h2>
+                <p className="section-copy mt-4 max-w-2xl">
+                  Start with one property, prove the workflow, then extend it to caretakers, tenants, broadcasts, water billing, tax reports, and trust passports.
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-3">
+                <Link to="/login" className="btn-primary">Log in</Link>
+                <Link to="/login" className="btn-secondary">Book a demo</Link>
+                <Link to="/login" className="btn-secondary">Start with one property</Link>
+              </div>
+            </div>
           </div>
         </section>
       </main>
 
-      <footer className="relative z-10 border-t border-kodi-border/60 py-8">
-        <div className="mx-auto flex max-w-7xl flex-col gap-3 px-6 text-sm text-kodi-text-muted md:flex-row md:items-center md:justify-between">
-          <p>&copy; {new Date().getFullYear()} Kodisha. AI-powered rental management SaaS.</p>
-          <p>Web, SMS, USSD, voice, and M-Pesa automation in one platform.</p>
+      <footer className="border-t border-kodi-border bg-white py-8">
+        <div className="mx-auto flex max-w-7xl flex-col gap-5 px-5 lg:flex-row lg:items-center lg:justify-between lg:px-8">
+          <Logo />
+          <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-kodi-text-muted">
+            {['Landlord login', 'Caretaker login', 'Tenant portal', 'Contact', 'Privacy', 'Terms', 'Support', 'FAQ'].map((item) => (
+              <Link key={item} to="/login" className="hover:text-kodi-accent">{item}</Link>
+            ))}
+          </div>
         </div>
       </footer>
     </div>

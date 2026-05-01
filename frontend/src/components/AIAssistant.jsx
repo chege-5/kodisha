@@ -19,7 +19,7 @@ export default function AIAssistant() {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [messages, setMessages] = useState([
-    { role: 'assistant', content: "Hi! I'm your Kodisha AI assistant. Ask me anything about your properties, tenants, or payments.", type: 'text' },
+    { role: 'assistant', content: "Hi! I'm your Kodishaa insights assistant. Ask about arrears, vacancies, tickets, payments, or risky tenants.", type: 'text' },
   ]);
 
   const askAI = useMutation({
@@ -76,7 +76,7 @@ export default function AIAssistant() {
             <Sparkles className="w-4 h-4 text-white" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-kodi-text-primary">Kodisha AI</p>
+            <p className="text-sm font-semibold text-kodi-text-primary">Kodishaa Insights</p>
             <p className="text-[10px] text-kodi-emerald">Online</p>
           </div>
         </div>

@@ -180,3 +180,4 @@
 {"level":"info","message":"Database connected","timestamp":"2026-04-30T13:16:06.024Z"}
 {"level":"info","message":"Cron jobs scheduled","timestamp":"2026-04-30T13:16:06.051Z"}
 {"level":"info","message":"Kodisha API running on port 5000 [development]","timestamp":"2026-04-30T13:16:06.052Z"}
+{"error":"Authentication failed against database server at `localhost`, the provided database credentials for `postgres` are not valid.\n\nPlease make sure to provide valid database credentials for the database server at `localhost`.","level":"error","message":"Startup failed","timestamp":"2026-05-01T09:54:23.272Z"}

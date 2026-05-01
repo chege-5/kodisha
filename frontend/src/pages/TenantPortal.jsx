@@ -8,6 +8,7 @@ import toast from 'react-hot-toast';
 import {
   Wallet, Receipt, CreditCard, Wrench, Bell, LogOut,
   Send, ChevronRight, Droplets, Bot, Shield,
+  UserCircle,
 } from 'lucide-react';
 
 const TABS = [
@@ -16,6 +17,7 @@ const TABS = [
   { id: 'payments', label: 'Payments', icon: CreditCard },
   { id: 'issues', label: 'Issues', icon: Wrench },
   { id: 'notify', label: 'Alerts', icon: Bell },
+  { id: 'profile', label: 'Profile', icon: UserCircle },
 ];
 
 export default function TenantPortal() {
@@ -75,7 +77,7 @@ export default function TenantPortal() {
                 <Bot className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h1 className="text-lg font-bold text-white">Kodisha</h1>
+                <h1 className="text-lg font-bold text-white">Kodishaa</h1>
                 <p className="text-xs text-kodi-text-muted">Welcome, {user?.name?.split(' ')[0]}</p>
               </div>
             </div>
@@ -263,6 +265,29 @@ export default function TenantPortal() {
                 <p className="text-[10px] text-kodi-text-muted mt-1">{formatDate(n.createdAt)}</p>
               </div>
             ))}
+          </div>
+        )}
+
+        {tab === 'profile' && (
+          <div className="space-y-3 animate-fade-in">
+            <div className="glass-card space-y-4">
+              <h2 className="flex items-center gap-2 font-semibold text-kodi-dark">
+                <UserCircle className="h-4 w-4 text-kodi-accent" /> Profile
+              </h2>
+              {[
+                ['Name', tenant?.name || user?.name],
+                ['Phone', tenant?.phone || user?.phone],
+                ['Email', tenant?.email || 'Not provided'],
+                ['Unit', tenant?.unit ? `${tenant.unit.property?.name} - ${tenant.unit.unitNumber}` : 'Unassigned'],
+                ['Lease start', tenant?.leaseStart ? formatDate(tenant.leaseStart) : 'Not set'],
+                ['Deposit status', tenant?.depositStatus || 'Not set'],
+              ].map(([label, value]) => (
+                <div key={label} className="flex items-center justify-between border-b border-kodi-border py-2 last:border-0">
+                  <span className="text-sm text-kodi-text-muted">{label}</span>
+                  <span className="text-right text-sm font-semibold text-kodi-text-secondary">{value}</span>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>

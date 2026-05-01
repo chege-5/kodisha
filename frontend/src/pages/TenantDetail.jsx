@@ -31,7 +31,7 @@ export default function TenantDetail() {
   return (
     <div className="p-8 max-w-5xl mx-auto space-y-6">
       <div className="flex items-center gap-3">
-        <Link to="/tenants" className="text-gray-400 hover:text-gray-600 text-sm">← Tenants</Link>
+        <Link to="/dashboard/tenants" className="text-gray-400 hover:text-gray-600 text-sm">Back to Tenants</Link>
         <span className="text-gray-300">/</span>
         <span className="text-gray-900 font-medium">{tenant.name}</span>
       </div>

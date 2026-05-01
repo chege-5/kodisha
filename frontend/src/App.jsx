@@ -19,6 +19,8 @@ import CaretakerPortal from './pages/CaretakerPortal';
 import AdminDashboard from './pages/AdminDashboard';
 import Billing from './pages/Billing';
 import Notifications from './pages/Notifications';
+import Units from './pages/Units';
+import TrustPassport from './pages/TrustPassport';
 import Layout from './components/Layout';
 import AIAssistant from './components/AIAssistant';
 
@@ -72,6 +74,7 @@ function AppContent() {
         <Route path="/dashboard" element={<PrivateRoute roles={['LANDLORD', 'ADMIN']}><Layout /></PrivateRoute>}>
           <Route index element={<Dashboard />} />
           <Route path="properties" element={<Properties />} />
+          <Route path="units" element={<Units />} />
           <Route path="tenants" element={<Tenants />} />
           <Route path="tenants/:id" element={<TenantDetail />} />
           <Route path="payments" element={<Payments />} />
@@ -82,14 +85,20 @@ function AppContent() {
           <Route path="settings" element={<Settings />} />
           <Route path="notifications" element={<Notifications />} />
           <Route path="meter-readings" element={<Billing />} />
+          <Route path="insights" element={<Dashboard />} />
+          <Route path="trust-passport" element={<TrustPassport />} />
           <Route path="admin" element={<AdminDashboard />} />
         </Route>
 
         {/* Caretaker portal */}
         <Route path="/caretaker" element={<PrivateRoute roles={['CARETAKER']}><Layout caretakerMode /></PrivateRoute>}>
           <Route index element={<CaretakerPortal />} />
+          <Route path="properties" element={<CaretakerPortal />} />
+          <Route path="units" element={<CaretakerPortal />} />
+          <Route path="tenants" element={<CaretakerPortal />} />
           <Route path="maintenance" element={<Maintenance />} />
           <Route path="meter-readings" element={<CaretakerPortal />} />
+          <Route path="payments" element={<CaretakerPortal />} />
           <Route path="notifications" element={<Notifications />} />
         </Route>
 

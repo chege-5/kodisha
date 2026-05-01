@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import toast from 'react-hot-toast';
-import { ArrowRight, Building2, Eye, EyeOff, ShieldCheck, Sparkles, Smartphone, Bot } from 'lucide-react';
+import { ArrowRight, Building2, Eye, EyeOff, ShieldCheck, Sparkles, CreditCard, Wrench } from 'lucide-react';
 
 export default function Login() {
   const [identifier, setIdentifier] = useState('');
@@ -29,43 +29,34 @@ export default function Login() {
 
   return (
     <div className="min-h-screen overflow-hidden bg-kodi-navy text-kodi-text-primary">
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -top-32 -right-24 h-72 w-72 rounded-full bg-kodi-accent/20 blur-3xl" />
-        <div className="absolute bottom-0 left-0 h-96 w-96 rounded-full bg-kodi-cyan/10 blur-3xl" />
-        <div className="absolute inset-0 opacity-[0.04]" style={{
-          backgroundImage: 'linear-gradient(rgba(255,255,255,.12) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.12) 1px, transparent 1px)',
-          backgroundSize: '56px 56px',
-        }} />
-      </div>
-
-      <div className="relative z-10 mx-auto grid min-h-screen max-w-7xl items-center gap-10 px-4 py-8 md:grid-cols-[1.1fr_0.9fr] md:px-8">
+      <div className="relative mx-auto grid min-h-screen max-w-7xl items-center gap-10 px-4 py-8 md:grid-cols-[1.05fr_0.95fr] md:px-8">
         <div className="space-y-8 text-center md:text-left">
-          <div className="inline-flex items-center gap-2 rounded-full border border-kodi-border/60 bg-kodi-card/70 px-4 py-2 text-sm text-kodi-text-secondary backdrop-blur">
+          <div className="inline-flex items-center gap-2 rounded-full border border-kodi-border bg-white px-4 py-2 text-sm text-kodi-text-secondary shadow-sm">
             <Sparkles className="h-4 w-4 text-kodi-accent-light" />
             Automatic role detection for landlords, caretakers, and tenants
           </div>
 
           <div className="space-y-4">
-            <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-kodi-accent to-kodi-cyan shadow-2xl shadow-kodi-accent/30">
-              <Bot className="h-8 w-8 text-white" />
+            <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-kodi-accent to-kodi-emerald shadow-2xl shadow-kodi-accent/25">
+              <Building2 className="h-8 w-8 text-white" />
             </div>
-            <h1 className="max-w-3xl text-4xl font-semibold tracking-tight text-white md:text-6xl">
-              Sign in to Kodisha and go straight to the right workspace.
+            <h1 className="max-w-3xl text-4xl font-black tracking-tight text-kodi-dark md:text-6xl">
+              Sign in to Kodishaa and go straight to the right workspace.
             </h1>
             <p className="max-w-2xl text-base leading-7 text-kodi-text-muted md:text-lg">
-              Use email or phone number. Kodisha automatically identifies the account, creates the session, and opens the correct dashboard with no manual role selection.
+              Use email or phone number. Kodishaa identifies the account, creates the secure session, and opens the correct workspace with no manual role selection.
             </p>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-3">
             {[
-              { icon: Building2, title: 'Portfolio view', text: 'Properties, arrears, and occupancy in one place.' },
-              { icon: Smartphone, title: 'Mobile first', text: 'Fast access from phones, tablets, and desktop.' },
-              { icon: ShieldCheck, title: 'Secure sessions', text: 'JWT auth with token rotation and automatic refresh.' },
+              { icon: CreditCard, title: 'Rent certainty', text: 'Collections, arrears, receipts, and partial payments stay visible.' },
+              { icon: Wrench, title: 'Field control', text: 'Caretakers, tickets, meter readings, and tenant follow-up stay organized.' },
+              { icon: ShieldCheck, title: 'Secure sessions', text: 'JWT auth with token rotation and automatic refresh keeps roles separated.' },
             ].map(({ icon: Icon, title, text }) => (
               <div key={title} className="glass-card text-left">
                 <Icon className="mb-4 h-5 w-5 text-kodi-accent-light" />
-                <h2 className="mb-2 text-sm font-semibold text-white">{title}</h2>
+                <h2 className="mb-2 text-sm font-semibold text-kodi-dark">{title}</h2>
                 <p className="text-sm leading-6 text-kodi-text-muted">{text}</p>
               </div>
             ))}
@@ -74,10 +65,10 @@ export default function Login() {
 
         <div className="relative mx-auto w-full max-w-md">
           <div className="absolute inset-0 -z-10 rounded-[2rem] bg-kodi-accent/10 blur-2xl" />
-          <div className="glass-card border-kodi-border/70 shadow-2xl shadow-black/20">
+          <div className="glass-card border-kodi-border shadow-2xl shadow-slate-300/50">
             <div className="mb-8">
               <p className="text-sm font-semibold uppercase tracking-[0.24em] text-kodi-text-muted">Secure access</p>
-              <h2 className="mt-3 text-2xl font-semibold text-white">Welcome back</h2>
+              <h2 className="mt-3 text-2xl font-bold text-kodi-dark">Welcome back</h2>
               <p className="mt-2 text-sm leading-6 text-kodi-text-muted">Enter your email or phone number and password to continue.</p>
             </div>
 
@@ -130,13 +121,19 @@ export default function Login() {
               </button>
             </form>
 
-            <div className="mt-6 rounded-2xl border border-kodi-border/60 bg-kodi-navy/40 p-4">
+            <div className="mt-5 grid grid-cols-3 gap-2 rounded-2xl border border-kodi-border bg-kodi-navy p-2 text-center text-[11px] font-semibold text-kodi-text-muted">
+              <span>Landlord / Admin</span>
+              <span>Caretaker</span>
+              <span>Tenant</span>
+            </div>
+
+            <div className="mt-6 rounded-2xl border border-kodi-border bg-kodi-navy p-4">
               <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-kodi-text-muted">Demo accounts</p>
               <div className="space-y-2 text-sm text-kodi-text-secondary">
-                <p><span className="text-white">Admin:</span> admin@kodisha.ke / admin123</p>
-                <p><span className="text-white">Landlord:</span> john.kamau@gmail.com / password123</p>
-                <p><span className="text-white">Caretaker:</span> +254712000002 / caretaker123</p>
-                <p><span className="text-white">Tenant:</span> +254712000010 / tenant123</p>
+                <p><span className="font-semibold text-kodi-dark">Admin:</span> admin@kodisha.ke / admin123</p>
+                <p><span className="font-semibold text-kodi-dark">Landlord:</span> john.kamau@gmail.com / password123</p>
+                <p><span className="font-semibold text-kodi-dark">Caretaker:</span> +254712000002 / caretaker123</p>
+                <p><span className="font-semibold text-kodi-dark">Tenant:</span> +254712000010 / tenant123</p>
               </div>
             </div>
           </div>
