@@ -66,8 +66,21 @@ router.post('/', requireRole('LANDLORD', 'CARETAKER'), async (req, res, next) =>
 router.post('/generate-rent', requireRole('LANDLORD', 'ADMIN'), async (req, res, next) => {
   try {
     const landlordId = req.user.role === 'LANDLORD' ? req.user.id : req.body.landlordId;
-    const bills = await generateMonthlyRentBills(landlordId);
-    res.json({ message: `${bills.length} rent bill(s) generated`, bills });
+    if (!landlordId) return res.status(400).json({ error: 'landlordId required' });
+
+    const result = await generateMonthlyRentBills(landlordId);
+    res.json({
+      message: `${result.bills.length} rent bill(s) generated and SMS notifications sent immediately`,
+      generatedCount: result.bills.length,
+      skippedCount: result.skipped.length,
+      smsSentCount: result.notified.length,
+      smsFailedCount: result.notificationFailures.length,
+      periodMonth: result.periodMonth,
+      periodYear: result.periodYear,
+      bills: result.bills,
+      skipped: result.skipped,
+      notificationFailures: result.notificationFailures,
+    });
   } catch (err) { next(err); }
 });
 
