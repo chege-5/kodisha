@@ -125,6 +125,13 @@ router.post('/properties', requireRole('LANDLORD'), async (req, res, next) => {
 router.post('/properties/:propertyId/units', requireRole('LANDLORD'), async (req, res, next) => {
   const { unitNumber, rentAmount, floor, bedrooms } = req.body;
   if (!unitNumber || !rentAmount) return res.status(400).json({ error: 'unitNumber and rentAmount required' });
+
+  const parsedFloor = parseOptionalInt(floor);
+  const parsedBedrooms = parseOptionalInt(bedrooms);
+  if (parsedFloor === undefined || parsedBedrooms === undefined) {
+    return res.status(400).json({ error: 'floor and bedrooms must be valid whole numbers when provided' });
+  }
+
   try {
     // Verify ownership
     const property = await prisma.property.findFirst({
@@ -133,7 +140,13 @@ router.post('/properties/:propertyId/units', requireRole('LANDLORD'), async (req
     if (!property) return res.status(403).json({ error: 'Not your property' });
 
     const unit = await prisma.unit.create({
-      data: { propertyId: req.params.propertyId, unitNumber, rentAmount, floor, bedrooms },
+      data: {
+        propertyId: req.params.propertyId,
+        unitNumber,
+        rentAmount,
+        floor: parsedFloor,
+        bedrooms: parsedBedrooms,
+      },
     });
     res.status(201).json(unit);
   } catch (err) { next(err); }
@@ -232,6 +245,12 @@ async function getArrearsDetail(landlordId, now) {
     })
     .filter((t) => t.arrears > 0)
     .sort((a, b) => b.arrears - a.arrears);
+}
+
+function parseOptionalInt(value) {
+  if (value === undefined || value === null || value === '') return null;
+  const parsed = Number(value);
+  return Number.isInteger(parsed) ? parsed : undefined;
 }
 
 module.exports = router;

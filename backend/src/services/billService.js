@@ -36,12 +36,19 @@ async function generateMonthlyRentBills(landlordId) {
   });
 
   const bills = [];
+  const skipped = [];
+  const notified = [];
+  const notificationFailures = [];
+
   for (const tenant of tenants) {
     // Check if bill already exists for this period
     const existing = await prisma.bill.findFirst({
       where: { tenantId: tenant.id, type: 'RENT', periodMonth: month, periodYear: year },
     });
-    if (existing) continue;
+    if (existing) {
+      skipped.push(existing);
+      continue;
+    }
 
     const bill = await prisma.bill.create({
       data: {
@@ -59,11 +66,41 @@ async function generateMonthlyRentBills(landlordId) {
     bills.push(bill);
 
     // Notify tenant
-    await notifyBillGenerated(tenant, bill).catch(() => {});
+    try {
+      const notification = await notifyBillGenerated(tenant, bill);
+      if (notification.smsSent) {
+        notified.push({ tenantId: tenant.id, billId: bill.id, phone: tenant.phone });
+      } else {
+        notificationFailures.push({
+          tenantId: tenant.id,
+          billId: bill.id,
+          phone: tenant.phone,
+          error: notification.smsError || notification.error || 'SMS was not sent',
+        });
+      }
+    } catch (err) {
+      notificationFailures.push({ tenantId: tenant.id, billId: bill.id, phone: tenant.phone, error: err.message });
+    }
   }
 
-  logger.info('Monthly rent bills generated', { landlordId, count: bills.length, month, year });
-  return bills;
+  logger.info('Monthly rent bills generated', {
+    landlordId,
+    count: bills.length,
+    skipped: skipped.length,
+    notified: notified.length,
+    notificationFailures: notificationFailures.length,
+    month,
+    year,
+  });
+
+  return {
+    bills,
+    skipped,
+    notified,
+    notificationFailures,
+    periodMonth: month,
+    periodYear: year,
+  };
 }
 
 /**

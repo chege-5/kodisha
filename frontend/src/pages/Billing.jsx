@@ -1,14 +1,16 @@
-import { useQuery } from '@tanstack/react-query';
-import api from '../utils/apiClient';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import api, { getFriendlyError } from '../utils/apiClient';
 import { formatCurrency, formatDate } from '../utils/formatters';
 import { useState } from 'react';
-import { Receipt, Droplets, Zap, Trash2, Filter } from 'lucide-react';
+import { Receipt, Droplets, Zap, Trash2, Filter, Send } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 const TYPE_ICON = { RENT: Receipt, WATER: Droplets, ELECTRICITY: Zap, GARBAGE: Trash2, OTHER: Receipt };
 const TYPE_COLOR = { RENT: 'text-indigo-400 bg-indigo-500/10', WATER: 'text-cyan-400 bg-cyan-500/10', ELECTRICITY: 'text-amber-400 bg-amber-500/10' };
 
 export default function Billing() {
   const [filter, setFilter] = useState({ type: '', status: '' });
+  const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
     queryKey: ['bills', filter],
@@ -18,6 +20,18 @@ export default function Billing() {
       if (filter.status) params.set('status', filter.status);
       return api.get(`/bills?${params}`).then((r) => r.data);
     },
+  });
+
+  const generateRentBills = useMutation({
+    mutationFn: () => api.post('/bills/generate-rent').then((r) => r.data),
+    onSuccess: (result) => {
+      queryClient.invalidateQueries({ queryKey: ['bills'] });
+      const generated = result.generatedCount || 0;
+      const sent = result.smsSentCount || 0;
+      const skipped = result.skippedCount || 0;
+      toast.success(`${generated} rent bill(s) generated. ${sent} SMS sent.${skipped ? ` ${skipped} already existed.` : ''}`);
+    },
+    onError: (err) => toast.error(getFriendlyError(err, 'Failed to generate rent bills')),
   });
 
   const bills = data?.bills || [];
@@ -37,6 +51,15 @@ export default function Billing() {
           </h1>
           <p className="text-kodi-text-muted text-sm mt-0.5">{bills.length} bill(s)</p>
         </div>
+        <button
+          type="button"
+          onClick={() => generateRentBills.mutate()}
+          disabled={generateRentBills.isPending}
+          className="btn-primary"
+        >
+          <Send className="w-4 h-4" />
+          {generateRentBills.isPending ? 'Sending...' : 'Generate & SMS rent bills'}
+        </button>
       </div>
 
       {/* Filters */}

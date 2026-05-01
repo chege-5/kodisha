@@ -47,7 +47,7 @@ export default function UnitGrid({ units = [] }) {
             <div className="mt-3 pt-3 border-t border-gray-100">
               <p className="text-xs text-gray-500 mb-1">Current Tenant</p>
               <Link
-                to={`/tenants/${selected.tenants[0].id}`}
+                to={`/dashboard/tenants/${selected.tenants[0].id}`}
                 className="text-sm font-medium text-kodi-blue hover:underline"
               >
                 {selected.tenants[0].name}

@@ -11,8 +11,12 @@ function AddPropertyModal({ onClose }) {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    await addProperty.mutateAsync(form);
-    onClose();
+    try {
+      await addProperty.mutateAsync(form);
+      onClose();
+    } catch {
+      // Error toast is handled by the mutation hook.
+    }
   }
 
   return (
@@ -48,8 +52,12 @@ function AddUnitModal({ propertyId, onClose }) {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    await addUnit.mutateAsync(form);
-    onClose();
+    try {
+      await addUnit.mutateAsync(form);
+      onClose();
+    } catch {
+      // Error toast is handled by the mutation hook.
+    }
   }
 
   return (

@@ -22,25 +22,35 @@ async function notify({
   metadata = null,
   phone = null,
 }) {
+  const result = { inAppCreated: false, smsSent: false, smsError: null };
+
   try {
     // Save in-app notification
     if (channel === 'IN_APP' || channel === 'BOTH') {
       await prisma.notification.create({
         data: { tenantId, userId, userRole, type, title, message, channel, metadata },
       });
+      result.inAppCreated = true;
     }
 
     // Send SMS
     if ((channel === 'SMS' || channel === 'BOTH') && phone) {
-      await sendSMS(phone, `Kodisha: ${message}`).catch((err) =>
-        logger.error('Notification SMS failed', { error: err.message, phone })
-      );
+      try {
+        await sendSMS(phone, `Kodisha: ${message}`);
+        result.smsSent = true;
+      } catch (err) {
+        result.smsError = err.message;
+        logger.error('Notification SMS failed', { error: err.message, phone });
+      }
     }
 
-    logger.info('Notification dispatched', { type, channel, tenantId, userId });
+    logger.info('Notification dispatched', { type, channel, tenantId, userId, smsSent: result.smsSent });
   } catch (err) {
     logger.error('Notification dispatch failed', { error: err.message, type });
+    result.error = err.message;
   }
+
+  return result;
 }
 
 /**
@@ -62,7 +72,7 @@ async function notifyPaymentReceived(tenant, amount, ref) {
  * Notify on bill generated
  */
 async function notifyBillGenerated(tenant, bill) {
-  await notify({
+  return notify({
     tenantId: tenant.id,
     type: 'BILL_GENERATED',
     title: `${bill.type} Bill Generated`,

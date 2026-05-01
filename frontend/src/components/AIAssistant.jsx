@@ -19,7 +19,7 @@ export default function AIAssistant() {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [messages, setMessages] = useState([
-    { role: 'assistant', content: "Hi! I'm your Kodisha AI assistant. Ask me anything about your properties, tenants, or payments.", type: 'text' },
+    { role: 'assistant', content: "Hi! I'm your Kodishaa insights assistant. Ask about arrears, vacancies, tickets, payments, or risky tenants.", type: 'text' },
   ]);
 
   const askAI = useMutation({
@@ -60,7 +60,7 @@ export default function AIAssistant() {
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 w-14 h-14 rounded-2xl bg-gradient-to-br from-kodi-accent to-kodi-cyan text-white shadow-2xl shadow-kodi-accent/30 flex items-center justify-center hover:scale-105 transition-all duration-200 z-50 animate-pulse-glow"
+        className="fixed bottom-6 right-6 w-14 h-14 rounded-2xl bg-kodi-accent text-white shadow-2xl shadow-kodi-accent/30 flex items-center justify-center hover:scale-105 transition-all duration-200 z-50"
       >
         <Bot className="w-6 h-6" />
       </button>
@@ -76,7 +76,7 @@ export default function AIAssistant() {
             <Sparkles className="w-4 h-4 text-white" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-kodi-text-primary">Kodisha AI</p>
+            <p className="text-sm font-semibold text-kodi-text-primary">Kodishaa Insights</p>
             <p className="text-[10px] text-kodi-emerald">Online</p>
           </div>
         </div>
