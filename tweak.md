@@ -40,7 +40,7 @@ Use a trust-heavy, premium palette with one energetic accent. The goal is to fee
 - **Error Red** `#EF4444`  
   Overdue, failed payments, critical maintenance.
 
-#### Optional dark mode palette
+ dark mode palette
 - Background: `#0B1220`
 - Card: `#111827`
 - Border: `#1F2937`

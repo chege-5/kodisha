@@ -20,11 +20,12 @@ import {
   Users,
   Wrench,
 } from 'lucide-react';
+import heroImage from '../utils/l-ph.jpg';
 
-const painCards = [
-  { title: 'Chasing tenants one by one', text: 'Calls, WhatsApp threads, and handwritten promises make rent collection hard to trust.' },
-  { title: 'Reconciling payments manually', text: 'M-Pesa references, cash notes, and partial payments get scattered across people and devices.' },
-  { title: 'Losing repair history', text: 'Maintenance issues disappear after a call, making follow-up, accountability, and ratings difficult.' },
+const painRows = [
+  ['Rent follow-up', 'See who has paid, who is partial, and who still needs a reminder.'],
+  ['M-Pesa records', 'Match payments to houses and months without hunting through messages.'],
+  ['Repairs', 'Keep every issue, caretaker update, and tenant rating in one trail.'],
 ];
 
 const capabilities = [
@@ -81,7 +82,7 @@ function Logo({ light = false }) {
       </div>
       <div>
         <p className={`text-xl font-black tracking-tight ${light ? 'text-white' : 'text-kodi-dark'}`}>Kodishaa</p>
-        <p className={`text-[10px] font-semibold uppercase tracking-[0.26em] ${light ? 'text-blue-100' : 'text-kodi-text-muted'}`}>Rent OS</p>
+        <p className={`text-[10px] font-semibold uppercase tracking-[0.26em] ${light ? 'text-blue-100' : 'text-kodi-text-muted'}`}>Easy Renting</p>
       </div>
     </div>
   );
@@ -92,14 +93,13 @@ export default function Landing() {
 
   return (
     <div className="min-h-screen overflow-hidden bg-kodi-navy text-kodi-text-primary">
-      <header className="relative overflow-hidden bg-kodi-dark text-white">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_20%,rgba(29,78,216,0.38),transparent_34%),linear-gradient(135deg,#14213D_0%,#1E3A8A_54%,#0F766E_100%)]" />
+      <header className="relative overflow-hidden bg-white">
         <nav className="relative z-10 mx-auto flex max-w-7xl items-center justify-between px-5 py-5 lg:px-8">
-          <Logo light />
-          <div className="hidden items-center gap-7 text-sm font-medium text-blue-100 md:flex">
-            <a href="#workflow" className="hover:text-white">Workflow</a>
-            <a href="#channels" className="hover:text-white">Channels</a>
-            <a href="#features" className="hover:text-white">Features</a>
+          <Logo />
+          <div className="hidden items-center gap-7 text-sm font-medium text-kodi-text-muted md:flex">
+            <a href="#workflow" className="hover:text-kodi-accent">Workflow</a>
+            <a href="#channels" className="hover:text-kodi-accent">Channels</a>
+            <a href="#features" className="hover:text-kodi-accent">Features</a>
           </div>
           <div className="flex items-center gap-3">
             <Link to="/login" className="btn-ghost">Log in</Link>
@@ -107,18 +107,14 @@ export default function Landing() {
           </div>
         </nav>
 
-        <section className="relative z-10 mx-auto grid max-w-7xl gap-12 px-5 pb-20 pt-10 lg:grid-cols-[minmax(0,1fr)_minmax(420px,0.9fr)] lg:items-center lg:px-8 lg:pb-28">
+        <section className="relative z-10 mx-auto grid max-w-7xl gap-12 px-5 pb-20 pt-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(460px,1.1fr)] lg:items-center lg:px-8 lg:pb-24">
           <div className="space-y-8 reveal" data-reveal>
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm text-blue-50 backdrop-blur">
-              <Shield className="h-4 w-4 text-kodi-emerald" />
-              Built for Kenyan rentals, caretakers, tenants, and admins.
-            </div>
             <div className="space-y-5">
-              <h1 className="max-w-4xl text-5xl font-black tracking-tight md:text-7xl">
-                Rent clarity for landlords who are tired of chasing
+              <h1 className="max-w-4xl text-5xl font-black tracking-tight text-kodi-dark md:text-7xl">
+                Rent on time. Every time.
               </h1>
-              <p className="max-w-2xl text-lg leading-8 text-blue-50 md:text-xl">
-                Kodishaa gives you one place to see rent, arrears, maintenance, receipts, tenant history, and field activity across web, SMS, USSD, WhatsApp, and M-Pesa.
+              <p className="max-w-2xl text-lg leading-8 text-kodi-text-secondary md:text-xl">
+                One clear place for rent, arrears, repairs, receipts, tenants, caretakers, M-Pesa, SMS, USSD, and WhatsApp.
               </p>
             </div>
             <div className="flex flex-wrap gap-4">
@@ -132,36 +128,36 @@ export default function Landing() {
           </div>
 
           <div className="reveal" data-reveal>
-            <div className="rounded-[2rem] border border-white/15 bg-white/95 p-4 text-kodi-text-primary shadow-2xl shadow-black/25">
-              <div className="grid gap-4 md:grid-cols-[1.1fr_0.9fr]">
-                <div className="rounded-3xl bg-kodi-navy p-5">
-                  <div className="mb-5 flex items-center justify-between">
-                    <div>
-                      <p className="text-xs font-semibold uppercase tracking-[0.22em] text-kodi-text-muted">May command center</p>
-                      <h2 className="mt-1 text-xl font-bold text-kodi-dark">Portfolio health</h2>
-                    </div>
-                    <Receipt className="h-5 w-5 text-kodi-accent" />
-                  </div>
-                  <div className="grid gap-3">
+            <div className="relative min-h-[560px] overflow-hidden rounded-[2rem] border border-kodi-border bg-kodi-dark shadow-2xl shadow-slate-300/70">
+              <img
+                src={heroImage}
+                alt="Apartment building in Nairobi, Kenya"
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-kodi-dark via-kodi-dark/45 to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 p-5 md:p-7">
+                <div className="max-w-md rounded-3xl border border-white/15 bg-white/95 p-5 text-kodi-text-primary shadow-xl">
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-kodi-text-muted">This month</p>
+                  <div className="mt-4 grid grid-cols-3 gap-3">
                     {[
-                      ['Collected', 'KSh 1.42M', 'text-kodi-emerald'],
-                      ['Arrears', 'KSh 186K', 'text-kodi-amber'],
-                      ['Occupancy', '94%', 'text-kodi-accent'],
+                      ['Collected', '1.42M', 'text-kodi-emerald'],
+                      ['Owed', '186K', 'text-kodi-amber'],
+                      ['Full', '94%', 'text-kodi-accent'],
                     ].map(([label, value, color]) => (
-                      <div key={label} className="rounded-2xl border border-kodi-border bg-white p-4">
-                        <p className="text-xs text-kodi-text-muted">{label}</p>
-                        <p className={`mt-1 text-2xl font-black ${color}`}>{value}</p>
+                      <div key={label} className="rounded-2xl bg-kodi-navy p-3">
+                        <p className="text-[11px] text-kodi-text-muted">{label}</p>
+                        <p className={`mt-1 text-xl font-black ${color}`}>{value}</p>
                       </div>
                     ))}
                   </div>
-                </div>
-                <div className="space-y-3">
-                  {timeline.map((item) => (
-                    <div key={item.label} className="rounded-2xl border border-kodi-border bg-white p-4">
-                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-kodi-accent">{item.label}</p>
-                      <p className="mt-2 text-sm leading-6 text-kodi-text-secondary">{item.value}</p>
-                    </div>
-                  ))}
+                  <div className="mt-4 space-y-2">
+                    {timeline.slice(0, 2).map((item) => (
+                      <div key={item.label} className="rounded-2xl border border-kodi-border bg-white p-3">
+                        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-kodi-accent">{item.label}</p>
+                        <p className="mt-1 text-xs leading-5 text-kodi-text-secondary">{item.value}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
@@ -173,13 +169,16 @@ export default function Landing() {
         <section className="mx-auto max-w-7xl px-5 py-20 lg:px-8" data-reveal>
           <div className="max-w-2xl">
             <p className="section-eyebrow">The old way is expensive</p>
-            <h2 className="section-title mt-3">Every unclear payment and forgotten issue costs time, cash flow, and trust.</h2>
+            <h2 className="section-title mt-3">The gaps are simple. They are just costly.</h2>
           </div>
           <div className="mt-10 grid gap-5 md:grid-cols-3">
-            {painCards.map((card) => (
-              <article key={card.title} className="glass-card-hover">
-                <h3 className="text-lg font-bold text-kodi-dark">{card.title}</h3>
-                <p className="mt-3 text-sm leading-7 text-kodi-text-muted">{card.text}</p>
+            {painRows.map(([title, text], index) => (
+              <article key={title} className="glass-card-hover min-h-[190px]">
+                <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-kodi-navy text-xs font-black text-kodi-accent">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                <h3 className="mt-5 text-lg font-bold text-kodi-dark">{title}</h3>
+                <p className="mt-3 text-sm leading-7 text-kodi-text-muted">{text}</p>
               </article>
             ))}
           </div>

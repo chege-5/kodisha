@@ -33,7 +33,7 @@ export default function Login() {
         <div className="space-y-8 text-center md:text-left">
           <div className="inline-flex items-center gap-2 rounded-full border border-kodi-border bg-white px-4 py-2 text-sm text-kodi-text-secondary shadow-sm">
             <Sparkles className="h-4 w-4 text-kodi-accent-light" />
-            Automatic role detection for landlords, caretakers, and tenants
+            Auto role detection for landlords, caretakers, and tenants
           </div>
 
           <div className="space-y-4">
@@ -41,18 +41,15 @@ export default function Login() {
               <Building2 className="h-8 w-8 text-white" />
             </div>
             <h1 className="max-w-3xl text-4xl font-black tracking-tight text-kodi-dark md:text-6xl">
-              Sign in to Kodishaa and go straight to the right workspace.
+              kodishaa
             </h1>
-            <p className="max-w-2xl text-base leading-7 text-kodi-text-muted md:text-lg">
-              Use email or phone number. Kodishaa identifies the account, creates the secure session, and opens the correct workspace with no manual role selection.
-            </p>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-3">
             {[
               { icon: CreditCard, title: 'Rent certainty', text: 'Collections, arrears, receipts, and partial payments stay visible.' },
-              { icon: Wrench, title: 'Field control', text: 'Caretakers, tickets, meter readings, and tenant follow-up stay organized.' },
-              { icon: ShieldCheck, title: 'Secure sessions', text: 'JWT auth with token rotation and automatic refresh keeps roles separated.' },
+              { icon: Wrench, title: 'Field control', text: 'Caretakers, repairs, meter readings, and tenant follow-up stay organized.' },
+              { icon: ShieldCheck, title: 'Private records', text: 'Only the right person sees the right workspace and rental records.' },
             ].map(({ icon: Icon, title, text }) => (
               <div key={title} className="glass-card text-left">
                 <Icon className="mb-4 h-5 w-5 text-kodi-accent-light" />
@@ -67,9 +64,7 @@ export default function Login() {
           <div className="absolute inset-0 -z-10 rounded-[2rem] bg-kodi-accent/10 blur-2xl" />
           <div className="glass-card border-kodi-border shadow-2xl shadow-slate-300/50">
             <div className="mb-8">
-              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-kodi-text-muted">Secure access</p>
               <h2 className="mt-3 text-2xl font-bold text-kodi-dark">Welcome back</h2>
-              <p className="mt-2 text-sm leading-6 text-kodi-text-muted">Enter your email or phone number and password to continue.</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -78,7 +73,7 @@ export default function Login() {
                 <input
                   type="text"
                   className="input"
-                  placeholder="name@example.com or +254712000001"
+                  placeholder="john@Kamau.com or +254712000001"
                   value={identifier}
                   onChange={(e) => setIdentifier(e.target.value)}
                   required

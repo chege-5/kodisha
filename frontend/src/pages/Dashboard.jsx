@@ -292,7 +292,7 @@ export default function Dashboard() {
           <div className="glass-card">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="flex items-center gap-2 text-base font-bold text-kodi-dark"><Zap className="h-4 w-4 text-kodi-amber" /> Insight panel</h2>
-              <span className="badge badge-blue"><Brain className="mr-1 h-3 w-3" /> Smart analysis</span>
+              <span className="badge badge-blue"><Brain className="mr-1 h-3 w-3" /> Rent signals</span>
             </div>
             <div className="space-y-3">
               {(insights?.high || []).slice(0, 3).map((tenant) => (

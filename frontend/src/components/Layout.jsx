@@ -22,7 +22,7 @@ const landlordNav = [
   { to: '/dashboard/trust-passport', label: 'Trust Passport', icon: KeyRound },
   { to: '/dashboard/notifications', label: 'Notifications', icon: Bell },
   { to: '/dashboard/settings', label: 'Settings', icon: Settings },
-  { to: '/dashboard/insights', label: 'AI Insights', icon: Brain },
+  { to: '/dashboard/insights', label: 'Insights', icon: Brain },
 ];
 
 const caretakerNav = [
