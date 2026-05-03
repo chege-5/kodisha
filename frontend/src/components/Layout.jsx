@@ -3,6 +3,7 @@ import { useAuth } from '../hooks/useAuth';
 import { useQuery } from '@tanstack/react-query';
 import api from '../utils/apiClient';
 import { useEffect, useState } from 'react';
+import SiteFooter from './SiteFooter';
 import {
   LayoutDashboard, Building2, Users, CreditCard, Wrench, Megaphone, BarChart3,
   Settings, LogOut, Bell, ChevronLeft, ChevronRight, Receipt,
@@ -206,6 +207,7 @@ export default function Layout({ caretakerMode }) {
         {/* Page content */}
         <main className="flex-1 overflow-y-auto">
           <Outlet />
+          <SiteFooter compact />
         </main>
       </div>
     </div>
