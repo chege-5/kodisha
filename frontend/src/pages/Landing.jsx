@@ -21,6 +21,7 @@ import {
   Wrench,
 } from 'lucide-react';
 import heroImage from '../utils/l-ph.jpg';
+import SiteFooter from '../components/SiteFooter';
 
 const painRows = [
   ['Rent follow-up', 'See who has paid, who is partial, and who still needs a reminder.'],
@@ -257,16 +258,7 @@ export default function Landing() {
         </section>
       </main>
 
-      <footer className="border-t border-kodi-border bg-white py-8">
-        <div className="mx-auto flex max-w-7xl flex-col gap-5 px-5 lg:flex-row lg:items-center lg:justify-between lg:px-8">
-          <Logo />
-          <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-kodi-text-muted">
-            {['Landlord login', 'Caretaker login', 'Tenant portal', 'Contact', 'Privacy', 'Terms', 'Support', 'FAQ'].map((item) => (
-              <Link key={item} to="/login" className="hover:text-kodi-accent">{item}</Link>
-            ))}
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }
