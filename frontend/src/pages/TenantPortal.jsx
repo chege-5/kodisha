@@ -30,6 +30,7 @@ import {
   X,
   Zap,
 } from 'lucide-react';
+import SiteFooter from '../components/SiteFooter';
 
 const NAV_ITEMS = [
   { id: 'overview', label: 'Overview', icon: LayoutDashboard },
@@ -764,6 +765,7 @@ export default function TenantPortal() {
           </div>
         </nav>
       </div>
+      <SiteFooter compact />
     </div>
   );
 }

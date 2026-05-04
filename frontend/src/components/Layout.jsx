@@ -3,6 +3,7 @@ import { useAuth } from '../hooks/useAuth';
 import { useQuery } from '@tanstack/react-query';
 import api from '../utils/apiClient';
 import { useEffect, useState } from 'react';
+import SiteFooter from './SiteFooter';
 import {
   LayoutDashboard, Building2, Users, CreditCard, Wrench, Megaphone, BarChart3,
   Settings, LogOut, Bell, ChevronLeft, ChevronRight, Receipt,

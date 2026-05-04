@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import toast from 'react-hot-toast';
 import { ArrowRight, Building2, Eye, EyeOff, ShieldCheck, Sparkles, CreditCard, Wrench } from 'lucide-react';
+import SiteFooter from '../components/SiteFooter';
 
 export default function Login() {
   const [identifier, setIdentifier] = useState('');
@@ -135,6 +136,7 @@ export default function Login() {
           </div>
         </div>
       </div>
+      <SiteFooter compact />
     </div>
   );
 }
