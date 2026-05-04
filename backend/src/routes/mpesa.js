@@ -17,8 +17,13 @@ router.post('/stkpush', authenticate, requireRole('LANDLORD', 'CARETAKER'), asyn
   if (!tenantId) return res.status(400).json({ error: 'tenantId required' });
 
   try {
-    const tenant = await prisma.tenant.findUnique({
-      where: { id: tenantId },
+    const landlordId = await getLandlordIdFromUser(req.user);
+    if (!landlordId) return res.status(403).json({ error: 'You do not have access to that tenant.' });
+    const tenant = await prisma.tenant.findFirst({
+      where: {
+        id: tenantId,
+        unit: { property: { landlordId } },
+      },
       include: { unit: true },
     });
     if (!tenant) return res.status(404).json({ error: 'Tenant not found' });
@@ -43,8 +48,17 @@ router.post('/callback', async (req, res) => {
   // Acknowledge immediately — Safaricom requires fast 200
   res.json({ ResultCode: 0, ResultDesc: 'Success' });
 
+  if (!isValidMpesaCallback(req)) {
+    logger.warn('Rejected M-Pesa callback without valid token', { path: req.path });
+    return;
+  }
+
   try {
     const body = req.body?.Body?.stkCallback || req.body;
+    if (!body?.CheckoutRequestID || !body?.ResultCode) {
+      logger.warn('Invalid M-Pesa callback shape', { hasBody: Boolean(req.body) });
+      return;
+    }
     const resultCode = body?.ResultCode;
 
     if (resultCode !== 0) {
@@ -58,10 +72,8 @@ router.post('/callback', async (req, res) => {
     const amount = get('Amount');
     const mpesaRef = get('MpesaReceiptNumber');
     const phone = String(get('PhoneNumber') || '');
-    const transactionDate = get('TransactionDate');
-
     if (!mpesaRef || !phone || !amount) {
-      logger.warn('Incomplete M-Pesa callback data', { body });
+      logger.warn('Incomplete M-Pesa callback data', { hasMetadata: Boolean(items.length) });
       return;
     }
 
@@ -130,7 +142,7 @@ router.post('/callback', async (req, res) => {
     }
 
   } catch (err) {
-    logger.error('M-Pesa callback processing error', { error: err.message, stack: err.stack });
+    logger.error('M-Pesa callback processing error', { error: err.message });
   }
 });
 
@@ -151,12 +163,14 @@ router.post('/b2c', authenticate, requireRole('LANDLORD', 'ADMIN'), async (req, 
 // B2C Result callback
 router.post('/b2c/result', async (req, res) => {
   res.json({ ResultCode: 0, ResultDesc: 'Success' });
-  logger.info('B2C result received', { body: req.body });
+  if (!isValidMpesaCallback(req)) return;
+  logger.info('B2C result received');
 });
 
 router.post('/b2c/timeout', async (req, res) => {
   res.json({ ResultCode: 0, ResultDesc: 'Success' });
-  logger.warn('B2C timeout', { body: req.body });
+  if (!isValidMpesaCallback(req)) return;
+  logger.warn('B2C timeout');
 });
 
 // ─── Transaction Status ───────────────────────────────────────────────────────
@@ -177,10 +191,26 @@ function normalizeForSearch(phone) {
   return clean.slice(-9); // last 9 digits
 }
 
+function isValidMpesaCallback(req) {
+  const expected = process.env.MPESA_CALLBACK_TOKEN;
+  if (!expected) return process.env.NODE_ENV === 'development';
+  const token = req.query?.token || req.headers['x-callback-token'];
+  return token === expected;
+}
+
+async function getLandlordIdFromUser(user) {
+  if (user.role === 'LANDLORD' || user.role === 'ADMIN') return user.id;
+  if (user.role === 'CARETAKER') {
+    const caretaker = await prisma.caretaker.findUnique({ where: { id: user.id }, select: { landlordId: true, isActive: true } });
+    return caretaker?.isActive ? caretaker.landlordId : null;
+  }
+  return null;
+}
+
 async function issueAirtimeReward(tenant, amount) {
   try {
     // Check landlord monthly cap
-    const landlordId = await getLandlordId(tenant.unitId);
+    const landlordId = await getLandlordIdFromUnit(tenant.unitId);
     const landlord = await prisma.landlord.findUnique({ where: { id: landlordId } });
     const cap = landlord?.monthlyAirtimeCap || parseInt(process.env.DEFAULT_MONTHLY_AIRTIME_CAP_KES) || 5000;
 
@@ -224,7 +254,7 @@ async function issueAirtimeReward(tenant, amount) {
   }
 }
 
-async function getLandlordId(unitId) {
+async function getLandlordIdFromUnit(unitId) {
   const unit = await prisma.unit.findUnique({
     where: { id: unitId },
     include: { property: { select: { landlordId: true } } },

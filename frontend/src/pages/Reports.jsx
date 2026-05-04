@@ -14,8 +14,11 @@ export default function Reports() {
   const { data: usage } = useApiUsage();
 
   return (
-    <div className="p-8 max-w-7xl mx-auto space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">Reports & Analytics</h1>
+    <div className="page-shell p-8 max-w-7xl mx-auto space-y-6 animate-fade-in">
+      <div>
+        <p className="section-eyebrow">Reports</p>
+        <h1 className="mt-2 text-3xl font-black tracking-tight text-kodi-dark">Reports & Analytics</h1>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* iTax */}
@@ -25,27 +28,27 @@ export default function Reports() {
 
         {/* Trust Leaderboard */}
         <div className="card lg:col-span-1">
-          <h2 className="text-base font-semibold text-gray-900 mb-4">Trust Score Leaderboard</h2>
+          <h2 className="text-base font-semibold text-kodi-dark mb-4">Trust Score Leaderboard</h2>
           <div className="space-y-2">
             {leaderboard.map((t, i) => (
               <div key={t.tenantId} className="flex items-center gap-3">
-                <span className="text-lg font-bold text-gray-300 w-6 text-center">{i + 1}</span>
+                <span className="text-lg font-bold text-slate-300 w-6 text-center">{i + 1}</span>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 truncate">{t.name}</p>
-                  <p className="text-xs text-gray-400">Unit {t.unit}</p>
+                  <p className="text-sm font-medium text-kodi-dark truncate">{t.name}</p>
+                  <p className="text-xs text-kodi-text-muted">Unit {t.unit}</p>
                 </div>
                 <span className={`px-2 py-0.5 rounded text-xs font-bold ${trustTierColor(t.tier)}`}>
                   {t.score}
                 </span>
               </div>
             ))}
-            {leaderboard.length === 0 && <p className="text-gray-400 text-sm">No data yet</p>}
+            {leaderboard.length === 0 && <p className="text-kodi-text-muted text-sm">No data yet</p>}
           </div>
         </div>
 
         {/* API Usage */}
         <div className="card lg:col-span-1 space-y-4">
-          <h2 className="text-base font-semibold text-gray-900">API Usage This Month</h2>
+          <h2 className="text-base font-semibold text-kodi-dark">API Usage This Month</h2>
           {usage ? (
             <div className="space-y-3">
               {[
@@ -54,23 +57,23 @@ export default function Reports() {
                 ['Broadcasts', usage.broadcastsSent],
               ].map(([label, val]) => (
                 <div key={label} className="flex justify-between text-sm">
-                  <span className="text-gray-600">{label}</span>
-                  <span className="font-semibold text-gray-900">{val ?? 0}</span>
+                  <span className="text-kodi-text-muted">{label}</span>
+                  <span className="font-semibold text-kodi-dark">{val ?? 0}</span>
                 </div>
               ))}
             </div>
-          ) : <p className="text-gray-400 text-sm">Loading…</p>}
+          ) : <p className="text-kodi-text-muted text-sm">Loading…</p>}
 
           {airtime && (
-            <div className="border-t border-gray-100 pt-4">
-              <h3 className="text-sm font-medium text-gray-900 mb-2">Airtime Rewards</h3>
+            <div className="border-t border-kodi-border/50 pt-4">
+              <h3 className="text-sm font-medium text-kodi-dark mb-2">Airtime Rewards</h3>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Issued this month</span>
+                <span className="text-kodi-text-muted">Issued this month</span>
                 <span className="font-semibold text-green-700">{formatCurrency(airtime.monthlyTotal)}</span>
               </div>
               <div className="flex justify-between text-sm mt-1">
-                <span className="text-gray-600">Monthly cap</span>
-                <span className="text-gray-500">{formatCurrency(airtime.cap)}</span>
+                <span className="text-kodi-text-muted">Monthly cap</span>
+                <span className="text-kodi-text-muted">{formatCurrency(airtime.cap)}</span>
               </div>
             </div>
           )}

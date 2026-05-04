@@ -30,7 +30,8 @@ router.get('/unread-count', async (req, res, next) => {
 
 router.patch('/:id/read', async (req, res, next) => {
   try {
-    const notification = await markAsRead(req.params.id);
+    const notification = await markAsRead(req.params.id, req.user.id, req.user.role);
+    if (!notification) return res.status(404).json({ error: 'Notification not found' });
     res.json(notification);
   } catch (err) { next(err); }
 });

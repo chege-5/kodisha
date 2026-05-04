@@ -9,6 +9,8 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
     const stored = localStorage.getItem('user');
     const storedRole = localStorage.getItem('role');
     if (stored && storedRole) {
@@ -20,8 +22,6 @@ export function AuthProvider({ children }) {
 
   const login = useCallback(async (identifier, password) => {
     const { data } = await api.post('/auth/smart-login', { identifier, password });
-    localStorage.setItem('accessToken', data.accessToken);
-    localStorage.setItem('refreshToken', data.refreshToken);
     const sessionRole = data.role || data.user?.role || null;
     const sessionUser = sessionRole ? { ...data.user, role: sessionRole } : data.user;
     localStorage.setItem('user', JSON.stringify(sessionUser));
@@ -32,9 +32,11 @@ export function AuthProvider({ children }) {
   }, []);
 
   const logout = useCallback(async () => {
-    const refreshToken = localStorage.getItem('refreshToken');
-    await api.post('/auth/logout', { refreshToken }).catch(() => {});
-    localStorage.clear();
+    await api.post('/auth/logout', {}).catch(() => {});
+    localStorage.removeItem('user');
+    localStorage.removeItem('role');
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
     setUser(null);
     setRole(null);
   }, []);

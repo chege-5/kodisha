@@ -12,6 +12,16 @@ const PASSPORT_DIR = path.join(__dirname, '../../uploads/passports');
 
 router.use(authenticate);
 
+async function getScopedLandlordId(req) {
+  if (req.user.role === 'LANDLORD' || req.user.role === 'ADMIN') return req.user.id;
+  if (req.user.role === 'CARETAKER') {
+    const caretaker = await prisma.caretaker.findUnique({ where: { id: req.user.id }, select: { landlordId: true, isActive: true } });
+    if (!caretaker?.isActive) return null;
+    return caretaker.landlordId;
+  }
+  return null;
+}
+
 function ensureDir(d) { if (!fs.existsSync(d)) fs.mkdirSync(d, { recursive: true }); }
 
 // ─── Get Credit Passport ──────────────────────────────────────────────────────
@@ -24,10 +34,17 @@ router.get('/:tenantId', async (req, res, next) => {
     return res.status(403).json({ error: 'Forbidden' });
   }
 
+  const landlordId = req.user.role === 'TENANT' ? null : await getScopedLandlordId(req);
+  if (req.user.role !== 'TENANT' && !landlordId) {
+    return res.status(403).json({ error: 'Forbidden' });
+  }
+
   try {
     const [tenant, passport, trustScore, payments] = await Promise.all([
-      prisma.tenant.findUnique({
-        where: { id: tenantId },
+      prisma.tenant.findFirst({
+        where: req.user.role === 'TENANT'
+          ? { id: tenantId }
+          : { id: tenantId, unit: { property: { landlordId } } },
         select: { id: true, name: true, phone: true, leaseStart: true, unit: { select: { unitNumber: true, property: { select: { name: true } } } } },
       }),
       prisma.creditPassport.findUnique({ where: { tenantId } }),
@@ -74,10 +91,21 @@ router.post('/:tenantId/share', async (req, res, next) => {
   const { tenantId } = req.params;
   ensureDir(PASSPORT_DIR);
 
+  if (req.user.role === 'TENANT' && req.user.id !== tenantId) {
+    return res.status(403).json({ error: 'Forbidden' });
+  }
+
+  const landlordId = req.user.role === 'TENANT' ? null : await getScopedLandlordId(req);
+  if (req.user.role !== 'TENANT' && !landlordId) {
+    return res.status(403).json({ error: 'Forbidden' });
+  }
+
   try {
     const [tenant, passport, trustScore] = await Promise.all([
-      prisma.tenant.findUnique({
-        where: { id: tenantId },
+      prisma.tenant.findFirst({
+        where: req.user.role === 'TENANT'
+          ? { id: tenantId }
+          : { id: tenantId, unit: { property: { landlordId } } },
         include: { unit: { include: { property: true } } },
       }),
       prisma.creditPassport.findUnique({ where: { tenantId } }),

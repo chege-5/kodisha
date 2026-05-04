@@ -325,7 +325,9 @@ export default function TenantPortal() {
                   ? `${tenant.unit.property?.name || 'Your property'}, Unit ${tenant.unit.unitNumber}`
                   : 'Your unit assignment will appear here once it is active.'}
               </p>
-              <div className="mt-6 grid gap-3 sm:grid-cols-3">
+
+
+              <div className="mt-8 grid gap-3 sm:grid-cols-3">
                 <div className="rounded-2xl bg-slate-50 p-4">
                   <p className="text-xs text-kodi-text-muted">Rent balance</p>
                   <p className="mt-1 text-xl font-bold text-kodi-text-primary">{formatCurrency(rentBalance)}</p>
@@ -740,7 +742,7 @@ export default function TenantPortal() {
         </header>
 
         <main className="flex-1 overflow-y-auto px-4 py-6 pb-24 sm:px-6 lg:px-8 lg:pb-8">
-          <div className="mx-auto max-w-7xl">
+          <div className="page-shell mx-auto max-w-7xl animate-fade-in">
             {renderPage()}
           </div>
         </main>

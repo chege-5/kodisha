@@ -2,11 +2,12 @@ const logger = require('../utils/logger');
 
 function errorHandler(err, req, res, next) {
   const requestId = req.headers['x-request-id'] || `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+  const isProduction = process.env.NODE_ENV === 'production';
 
   logger.error('Unhandled error', {
     requestId,
     error: err.message,
-    stack: err.stack,
+    stack: isProduction ? undefined : err.stack,
     path: req.path,
     method: req.method,
   });

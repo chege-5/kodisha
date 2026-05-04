@@ -23,6 +23,7 @@ import Units from './pages/Units';
 import TrustPassport from './pages/TrustPassport';
 import Layout from './components/Layout';
 import AIAssistant from './components/AIAssistant';
+import Loading from './components/Loading';
 
 function getHomePath(role) {
   if (role === 'TENANT') return '/tenant';
@@ -45,14 +46,7 @@ function ThemeBootstrap() {
 function PrivateRoute({ children, roles }) {
   const { user, role, loading } = useAuth();
   if (loading) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-kodi-navy px-6">
-        <div className="glass-card flex flex-col items-center gap-3 text-center">
-          <div className="h-10 w-10 rounded-full border-2 border-kodi-accent border-t-transparent animate-spin" />
-          <p className="text-sm text-kodi-text-muted">Loading secure workspace</p>
-        </div>
-      </div>
-    );
+    return <Loading message="Authenticating secure session..." />;
   }
   if (!user) return <Navigate to="/login" replace />;
   if (roles && !roles.includes(role)) return <Navigate to={getHomePath(role)} replace />;

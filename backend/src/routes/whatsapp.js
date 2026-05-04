@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { PrismaClient } = require('@prisma/client');
+const twilio = require('twilio');
 const { sendWhatsApp } = require('../services/whatsapp');
 const { stkPush } = require('../services/mpesa');
 const logger = require('../utils/logger');
@@ -9,13 +10,18 @@ const prisma = new PrismaClient();
 // ─── Twilio WhatsApp Webhook ──────────────────────────────────────────────────
 
 router.post('/webhook', async (req, res) => {
+  if (!isValidTwilioRequest(req)) {
+    logger.warn('Rejected WhatsApp webhook with invalid signature', { ip: req.ip });
+    return res.status(403).send('Invalid signature');
+  }
+
   res.sendStatus(200); // Acknowledge immediately
 
   const from = req.body.From?.replace('whatsapp:', '') || '';
   const body = (req.body.Body || '').trim();
   const keyword = body.split(' ')[0].toUpperCase();
 
-  logger.info('Inbound WhatsApp', { from, body });
+  logger.info('Inbound WhatsApp received', { from: from ? `***${String(from).slice(-4)}` : undefined, keyword });
 
   try {
     // ─── Tenant commands ──────────────────────────────────────────────────
@@ -159,12 +165,26 @@ router.post('/webhook', async (req, res) => {
 
     // Unknown number
     await sendWhatsApp(from,
-      `👋 Welcome to KODI!\n\nYour number isn't registered. Ask your landlord to add you to the KODI platform.\n\nFor landlords, visit: ${process.env.FRONTEND_URL}`
+      `👋 Thanks for contacting KODI.\n\nIf your number is registered, you'll receive a response shortly. For support, visit: ${process.env.FRONTEND_URL}`
     );
 
   } catch (err) {
-    logger.error('WhatsApp webhook error', { error: err.message, from });
+    logger.error('WhatsApp webhook error', { error: err.message, from: from ? `***${String(from).slice(-4)}` : undefined });
   }
 });
+
+function isValidTwilioRequest(req) {
+  const authToken = process.env.TWILIO_AUTH_TOKEN;
+  if (!authToken) return process.env.NODE_ENV !== 'production';
+
+  const signature = req.headers['x-twilio-signature'];
+  if (!signature) return false;
+
+  const protocol = req.headers['x-forwarded-proto'] || req.protocol;
+  const host = req.headers['x-forwarded-host'] || req.get('host');
+  const url = `${protocol}://${host}${req.originalUrl}`;
+
+  return twilio.validateRequest(authToken, signature, url, req.body || {});
+}
 
 module.exports = router;

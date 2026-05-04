@@ -44,12 +44,13 @@ export default function AdminDashboard() {
   const logs = logsData?.logs || [];
 
   return (
-    <div className="p-4 lg:p-8 max-w-[1400px] mx-auto space-y-6 animate-fade-in">
+    <div className="page-shell p-4 lg:p-8 max-w-[1400px] mx-auto space-y-6 animate-fade-in">
       <div>
-        <h1 className="text-2xl font-bold text-kodi-text-primary flex items-center gap-2">
+        <p className="section-eyebrow">Admin</p>
+        <h1 className="mt-2 text-3xl font-black tracking-tight text-kodi-dark flex items-center gap-2">
           <Shield className="w-6 h-6 text-kodi-accent" /> Admin Dashboard
         </h1>
-        <p className="text-kodi-text-muted text-sm mt-0.5">Platform-wide overview and management</p>
+        <p className="text-kodi-text-muted text-sm mt-1">Platform-wide overview and management</p>
       </div>
 
       {/* Stats */}

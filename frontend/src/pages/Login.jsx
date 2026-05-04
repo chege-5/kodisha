@@ -29,9 +29,10 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen overflow-hidden bg-kodi-navy text-kodi-text-primary">
+    <div className="min-h-screen overflow-hidden bg-slate-50 text-kodi-text-primary">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(29,78,216,0.15),_transparent_30%),radial-gradient(circle_at_bottom_right,_rgba(16,185,129,0.12),_transparent_28%)]" />
       <div className="relative mx-auto grid min-h-screen max-w-7xl items-center gap-10 px-4 py-8 md:grid-cols-[1.05fr_0.95fr] md:px-8">
-        <div className="space-y-8 text-center md:text-left">
+        <div className="space-y-8 text-center md:text-left animate-fade-up">
           <div className="inline-flex items-center gap-2 rounded-full border border-kodi-border bg-white px-4 py-2 text-sm text-kodi-text-secondary shadow-sm">
             <Sparkles className="h-4 w-4 text-kodi-accent-light" />
             Auto role detection for landlords, caretakers, and tenants
@@ -52,8 +53,10 @@ export default function Login() {
               { icon: Wrench, title: 'Field control', text: 'Caretakers, repairs, meter readings, and tenant follow-up stay organized.' },
               { icon: ShieldCheck, title: 'Private records', text: 'Only the right person sees the right workspace and rental records.' },
             ].map(({ icon: Icon, title, text }) => (
-              <div key={title} className="glass-card text-left">
-                <Icon className="mb-4 h-5 w-5 text-kodi-accent-light" />
+              <div key={title} className="glass-card-hover text-left">
+                <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-kodi-navy">
+                  <Icon className="h-5 w-5 text-kodi-accent-light" />
+                </div>
                 <h2 className="mb-2 text-sm font-semibold text-kodi-dark">{title}</h2>
                 <p className="text-sm leading-6 text-kodi-text-muted">{text}</p>
               </div>
@@ -61,11 +64,12 @@ export default function Login() {
           </div>
         </div>
 
-        <div className="relative mx-auto w-full max-w-md">
+        <div className="relative mx-auto w-full max-w-md animate-fade-in">
           <div className="absolute inset-0 -z-10 rounded-[2rem] bg-kodi-accent/10 blur-2xl" />
           <div className="glass-card border-kodi-border shadow-2xl shadow-slate-300/50">
             <div className="mb-8">
               <h2 className="mt-3 text-2xl font-bold text-kodi-dark">Welcome back</h2>
+              <p className="mt-2 text-sm text-kodi-text-muted">Sign in to your workspace and pick up exactly where you left off.</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -74,7 +78,7 @@ export default function Login() {
                 <input
                   type="text"
                   className="input"
-                  placeholder="john@Kamau.com or +254712000001"
+                  placeholder="Enter email or phone number"
                   value={identifier}
                   onChange={(e) => setIdentifier(e.target.value)}
                   required
@@ -87,7 +91,7 @@ export default function Login() {
                   <input
                     type={showPassword ? 'text' : 'password'}
                     className="input pr-11"
-                    placeholder="Enter your password"
+                    placeholder="Enter your security password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
@@ -124,13 +128,10 @@ export default function Login() {
             </div>
 
             <div className="mt-6 rounded-2xl border border-kodi-border bg-kodi-navy p-4">
-              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-kodi-text-muted">Demo accounts</p>
-              <div className="space-y-2 text-sm text-kodi-text-secondary">
-                <p><span className="font-semibold text-kodi-dark">Admin:</span> admin@kodisha.ke / admin123</p>
-                <p><span className="font-semibold text-kodi-dark">Landlord:</span> john.kamau@gmail.com / password123</p>
-                <p><span className="font-semibold text-kodi-dark">Caretaker:</span> +254712000002 / caretaker123</p>
-                <p><span className="font-semibold text-kodi-dark">Tenant:</span> +254712000010 / tenant123</p>
-              </div>
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-kodi-text-muted">Access control</p>
+              <p className="mt-3 text-sm text-kodi-text-secondary">
+                Ask your administrator for credentials or use the password reset flow after your account is created.
+              </p>
             </div>
           </div>
         </div>

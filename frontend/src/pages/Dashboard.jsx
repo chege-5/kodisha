@@ -12,6 +12,7 @@ import {
   AlertTriangle, BarChart3, Brain, Building2, CreditCard, Droplets,
   FileText, Home, Megaphone, Receipt, TrendingUp, Users, Wrench, Zap,
 } from 'lucide-react';
+import Loading from '../components/Loading';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend, Filler, ArcElement);
 
@@ -81,20 +82,7 @@ export default function Dashboard() {
     queryFn: () => api.get('/bills?status=OVERDUE&limit=6').then((response) => response.data),
   });
 
-  if (isLoading) {
-    return (
-      <div className="space-y-6 p-8">
-        <div className="h-10 w-72 skeleton" />
-        <div className="grid grid-cols-2 gap-4 xl:grid-cols-6">
-          {[...Array(6)].map((_, index) => <div key={index} className="h-28 skeleton" />)}
-        </div>
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          <div className="h-80 skeleton lg:col-span-2" />
-          <div className="h-80 skeleton" />
-        </div>
-      </div>
-    );
-  }
+  if (isLoading) return <Loading message="Preparing your financial overview..." />;
 
   const { overview = {}, monthlyTrend = [], arrears = [] } = data || {};
   const totalUnits = (overview.occupiedUnits || 0) + (overview.vacantUnits || 0) + (overview.maintenanceUnits || 0);
@@ -151,7 +139,7 @@ export default function Dashboard() {
       type: 'Overdue tenant',
       detail: `Unit ${tenant.unit} owes ${formatCurrency(tenant.arrears)}`,
       icon: AlertTriangle,
-      tone: 'text-kodi-rose bg-red-50',
+      tone: 'text-kodi-rose bg-kodi-rose/10',
       to: `/dashboard/tenants/${tenant.tenantId}`,
     })),
     ...(overview.vacantUnits ? [{
@@ -159,7 +147,7 @@ export default function Dashboard() {
       type: 'Vacancy',
       detail: 'Review inventory and add tenants',
       icon: Home,
-      tone: 'text-kodi-amber bg-amber-50',
+      tone: 'text-kodi-amber bg-kodi-amber/10',
       to: '/dashboard/units',
     }] : []),
     ...overdueBills.slice(0, 2).map((bill) => ({
@@ -167,7 +155,7 @@ export default function Dashboard() {
       type: 'Pending bill',
       detail: `${bill.tenant?.name || 'Tenant'} - ${formatCurrency(bill.amount)} due ${formatDate(bill.dueDate)}`,
       icon: Receipt,
-      tone: 'text-kodi-accent bg-blue-50',
+      tone: 'text-kodi-accent bg-kodi-accent/10',
       to: '/dashboard/billing',
     })),
     ...(atRisk ? [{
@@ -175,13 +163,13 @@ export default function Dashboard() {
       type: 'Insight',
       detail: 'Review likely late payers',
       icon: Brain,
-      tone: 'text-kodi-accent bg-blue-50',
+      tone: 'text-kodi-accent bg-kodi-accent/10',
       to: '/dashboard/insights',
     }] : []),
   ];
 
   return (
-    <div className="mx-auto max-w-[1480px] space-y-6 p-4 lg:p-8">
+    <div className="page-shell mx-auto max-w-[1480px] space-y-6 p-4 lg:p-8 animate-fade-in">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="section-eyebrow">Overview</p>
@@ -195,13 +183,14 @@ export default function Dashboard() {
         </Link>
       </div>
 
+
       <div className="grid grid-cols-2 gap-4 xl:grid-cols-6">
         <StatCard icon={Building2} label="Properties" value={properties.length || occupancy?.properties?.length || 0} color="#14213D" sub="managed" />
         <StatCard icon={Home} label="Occupied units" value={overview.occupiedUnits || 0} color="#1D4ED8" sub={`${occupancyRate}% occupied`} />
         <StatCard icon={AlertTriangle} label="Vacancy rate" value={`${vacancyRate}%`} color="#F59E0B" sub={`${overview.vacantUnits || 0} empty`} />
         <StatCard icon={TrendingUp} label="Collections" value={formatCurrency(overview.collectedThisMonth)} color="#10B981" sub="this month" />
-        <StatCard icon={Receipt} label="Arrears" value={formatCurrency(overview.totalArrears)} color="#EF4444" sub={`${arrears.length} tenants`} />
-        <StatCard icon={Wrench} label="Open tickets" value={overview.openTickets || 0} color="#F59E0B" sub="maintenance backlog" />
+        <StatCard icon={Receipt} label="Arrears" value={formatCurrency(overview.totalArrears)} color="var(--kodi-rose)" sub={`${arrears.length} tenants`} />
+        <StatCard icon={Wrench} label="Open tickets" value={overview.openTickets || 0} color="var(--kodi-amber)" sub="maintenance backlog" />
       </div>
 
       <div className="glass-card">
@@ -296,18 +285,18 @@ export default function Dashboard() {
             </div>
             <div className="space-y-3">
               {(insights?.high || []).slice(0, 3).map((tenant) => (
-                <div key={tenant.tenantId} className="rounded-2xl border border-red-100 bg-red-50 p-4">
+                <div key={tenant.tenantId} className="rounded-2xl border border-kodi-rose/20 bg-kodi-rose/10 p-4">
                   <div className="flex items-center justify-between">
-                    <p className="text-sm font-semibold text-kodi-dark">{tenant.name}</p>
+                    <p className="text-sm font-bold text-kodi-dark">{tenant.name}</p>
                     <span className="badge badge-red">High risk</span>
                   </div>
                   <p className="mt-1 text-xs text-kodi-text-muted">{tenant.riskFactors?.join(' - ')}</p>
                 </div>
               ))}
               {(insights?.medium || []).slice(0, 2).map((tenant) => (
-                <div key={tenant.tenantId} className="rounded-2xl border border-amber-100 bg-amber-50 p-4">
+                <div key={tenant.tenantId} className="rounded-2xl border border-kodi-amber/20 bg-kodi-amber/10 p-4">
                   <div className="flex items-center justify-between">
-                    <p className="text-sm font-semibold text-kodi-dark">{tenant.name}</p>
+                    <p className="text-sm font-bold text-kodi-dark">{tenant.name}</p>
                     <span className="badge badge-amber">Medium risk</span>
                   </div>
                   <p className="mt-1 text-xs text-kodi-text-muted">{tenant.riskFactors?.join(' - ')}</p>
