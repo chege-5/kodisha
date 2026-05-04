@@ -485,3 +485,6 @@
 {"level":"http","message":"::1 - - [01/May/2026:12:09:35 +0000] \"GET /notifications/unread-count HTTP/1.1\" 304 - \"http://localhost:3000/dashboard/tenants\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Edg/147.0.0.0\"","timestamp":"2026-05-01T12:09:35.324Z"}
 {"level":"http","message":"::1 - - [01/May/2026:12:13:35 +0000] \"GET /tenants HTTP/1.1\" 304 - \"http://localhost:3000/dashboard/tenants\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Edg/147.0.0.0\"","timestamp":"2026-05-01T12:13:35.384Z"}
 {"level":"http","message":"::1 - - [01/May/2026:12:13:35 +0000] \"GET /notifications/unread-count HTTP/1.1\" 304 - \"http://localhost:3000/dashboard/tenants\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Edg/147.0.0.0\"","timestamp":"2026-05-01T12:13:35.386Z"}
+{"level":"info","message":"Database connected","timestamp":"2026-05-04T20:05:50.855Z"}
+{"level":"info","message":"Cron jobs scheduled","timestamp":"2026-05-04T20:05:50.892Z"}
+{"level":"info","message":"Kodisha API running on port 5000 [development]","timestamp":"2026-05-04T20:05:50.894Z"}
