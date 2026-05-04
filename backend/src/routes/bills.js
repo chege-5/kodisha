@@ -7,6 +7,16 @@ const logger = require('../utils/logger');
 
 router.use(authenticate);
 
+async function getScopedLandlordId(req) {
+  if (req.user.role === 'LANDLORD' || req.user.role === 'ADMIN') return req.user.id;
+  if (req.user.role === 'CARETAKER') {
+    const caretaker = await prisma.caretaker.findUnique({ where: { id: req.user.id }, select: { landlordId: true, isActive: true } });
+    if (!caretaker?.isActive) return null;
+    return caretaker.landlordId;
+  }
+  return null;
+}
+
 // ─── Get bills (role-aware) ──────────────────────────────────────────────────
 
 router.get('/', async (req, res, next) => {
@@ -16,7 +26,8 @@ router.get('/', async (req, res, next) => {
       const result = await getTenantBills(req.user.id, { type, status, page: Number(page), limit: Number(limit) });
       return res.json(result);
     }
-    const landlordId = req.user.role === 'LANDLORD' ? req.user.id : req.user.landlordId;
+    const landlordId = await getScopedLandlordId(req);
+    if (!landlordId) return res.status(403).json({ error: 'You do not have access to these bills.' });
     const result = await getLandlordBills(landlordId, { type, status, page: Number(page), limit: Number(limit) });
     res.json(result);
   } catch (err) { next(err); }
@@ -26,8 +37,16 @@ router.get('/', async (req, res, next) => {
 
 router.get('/:id', async (req, res, next) => {
   try {
-    const bill = await prisma.bill.findUnique({
-      where: { id: req.params.id },
+    const where = req.user.role === 'TENANT'
+      ? { id: req.params.id, tenantId: req.user.id }
+      : { id: req.params.id, unit: { property: { landlordId: await getScopedLandlordId(req) } } };
+
+    if (!where.unit?.property?.landlordId && req.user.role !== 'TENANT') {
+      return res.status(403).json({ error: 'You do not have access to this bill.' });
+    }
+
+    const bill = await prisma.bill.findFirst({
+      where,
       include: {
         tenant: { select: { id: true, name: true, phone: true } },
         unit: { select: { unitNumber: true, property: { select: { name: true } } } },
@@ -47,6 +66,20 @@ router.post('/', requireRole('LANDLORD', 'CARETAKER'), async (req, res, next) =>
     return res.status(400).json({ error: 'tenantId, unitId, type, amount required' });
   }
   try {
+    const landlordId = await getScopedLandlordId(req);
+    if (!landlordId) return res.status(403).json({ error: 'You do not have access to this property.' });
+
+    const unit = await prisma.unit.findFirst({
+      where: { id: unitId, property: { landlordId } },
+      include: { property: { select: { landlordId: true } } },
+    });
+    if (!unit) return res.status(403).json({ error: 'That unit does not belong to your property portfolio.' });
+
+    const tenant = await prisma.tenant.findFirst({
+      where: { id: tenantId, unitId, unit: { property: { landlordId } } },
+    });
+    if (!tenant) return res.status(403).json({ error: 'That tenant is not assigned to the selected unit.' });
+
     const now = new Date();
     const bill = await prisma.bill.create({
       data: {
@@ -65,8 +98,8 @@ router.post('/', requireRole('LANDLORD', 'CARETAKER'), async (req, res, next) =>
 
 router.post('/generate-rent', requireRole('LANDLORD', 'ADMIN'), async (req, res, next) => {
   try {
-    const landlordId = req.user.role === 'LANDLORD' ? req.user.id : req.body.landlordId;
-    if (!landlordId) return res.status(400).json({ error: 'landlordId required' });
+    const landlordId = await getScopedLandlordId(req);
+    if (!landlordId) return res.status(403).json({ error: 'You do not have access to this landlord account.' });
 
     const result = await generateMonthlyRentBills(landlordId);
     res.json({
@@ -90,6 +123,17 @@ router.post('/:id/link-payment', requireRole('LANDLORD', 'CARETAKER', 'ADMIN'), 
   const { paymentId } = req.body;
   if (!paymentId) return res.status(400).json({ error: 'paymentId required' });
   try {
+    const landlordId = await getScopedLandlordId(req);
+    const bill = await prisma.bill.findFirst({
+      where: { id: req.params.id, unit: { property: { landlordId } } },
+    });
+    if (!bill) return res.status(403).json({ error: 'You do not have access to this bill.' });
+
+    const payment = await prisma.payment.findFirst({
+      where: { id: paymentId, tenant: { unit: { property: { landlordId } } } },
+    });
+    if (!payment) return res.status(403).json({ error: 'You do not have access to that payment.' });
+
     const result = await linkPaymentToBill(paymentId, req.params.id);
     res.json(result);
   } catch (err) { next(err); }
@@ -100,6 +144,10 @@ router.post('/:id/link-payment', requireRole('LANDLORD', 'CARETAKER', 'ADMIN'), 
 router.patch('/:id', requireRole('LANDLORD', 'ADMIN'), async (req, res, next) => {
   const { status } = req.body;
   try {
+    const landlordId = await getScopedLandlordId(req);
+    const existing = await prisma.bill.findFirst({ where: { id: req.params.id, unit: { property: { landlordId } } } });
+    if (!existing) return res.status(403).json({ error: 'You do not have access to this bill.' });
+
     const bill = await prisma.bill.update({
       where: { id: req.params.id },
       data: { status },

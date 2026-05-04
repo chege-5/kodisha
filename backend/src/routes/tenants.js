@@ -69,8 +69,11 @@ router.get('/', requireRole('LANDLORD', 'CARETAKER', 'ADMIN'), async (req, res, 
 
 router.get('/:id', async (req, res, next) => {
   try {
-    const tenant = await prisma.tenant.findUnique({
-      where: { id: req.params.id },
+    const landlordId = await getScopedLandlordId(req);
+    const tenant = await prisma.tenant.findFirst({
+      where: req.user.role === 'TENANT'
+        ? { id: req.params.id }
+        : { id: req.params.id, unit: { property: { landlordId } } },
       include: {
         unit: { include: { property: true } },
         payments: { orderBy: { paymentDate: 'desc' }, take: 24 },
@@ -84,6 +87,9 @@ router.get('/:id', async (req, res, next) => {
     if (!tenant) return res.status(404).json({ error: 'Tenant not found' });
 
     if (req.user.role === 'TENANT' && req.user.id !== tenant.id) {
+      return res.status(403).json({ error: 'Forbidden' });
+    }
+    if (req.user.role !== 'TENANT' && !landlordId) {
       return res.status(403).json({ error: 'Forbidden' });
     }
 
@@ -139,6 +145,10 @@ router.patch('/:id', requireRole('LANDLORD'), async (req, res, next) => {
   const allowed = ['name', 'phone', 'email', 'leaseEnd', 'depositStatus', 'language'];
   const data = Object.fromEntries(Object.entries(req.body).filter(([k]) => allowed.includes(k)));
   try {
+    const landlordId = await getScopedLandlordId(req);
+    const owned = await prisma.tenant.findFirst({ where: { id: req.params.id, unit: { property: { landlordId } } } });
+    if (!owned) return res.status(403).json({ error: 'Forbidden' });
+
     const updated = await prisma.tenant.update({ where: { id: req.params.id }, data, select: { id: true, name: true, phone: true, email: true, leaseEnd: true, depositStatus: true } });
     res.json(updated);
   } catch (err) { next(err); }
@@ -148,7 +158,8 @@ router.patch('/:id', requireRole('LANDLORD'), async (req, res, next) => {
 
 router.delete('/:id', requireRole('LANDLORD'), async (req, res, next) => {
   try {
-    const tenant = await prisma.tenant.findUnique({ where: { id: req.params.id } });
+    const landlordId = await getScopedLandlordId(req);
+    const tenant = await prisma.tenant.findFirst({ where: { id: req.params.id, unit: { property: { landlordId } } } });
     if (!tenant) return res.status(404).json({ error: 'Tenant not found' });
     await prisma.tenant.update({ where: { id: req.params.id }, data: { isActive: false, unitId: null } });
     if (tenant.unitId) await prisma.unit.update({ where: { id: tenant.unitId }, data: { status: 'VACANT' } });
@@ -160,6 +171,13 @@ router.delete('/:id', requireRole('LANDLORD'), async (req, res, next) => {
 
 router.get('/:id/trustscore', async (req, res, next) => {
   try {
+    if (req.user.role !== 'TENANT') {
+      const landlordId = await getScopedLandlordId(req);
+      const tenant = await prisma.tenant.findFirst({ where: { id: req.params.id, unit: { property: { landlordId } } } });
+      if (!tenant) return res.status(403).json({ error: 'Forbidden' });
+    } else if (req.user.id !== req.params.id) {
+      return res.status(403).json({ error: 'Forbidden' });
+    }
     const result = await getScore(req.params.id);
     res.json(result);
   } catch (err) { next(err); }
@@ -172,6 +190,11 @@ router.get('/:id/payments', async (req, res, next) => {
     return res.status(403).json({ error: 'Forbidden' });
   }
   try {
+    if (req.user.role !== 'TENANT') {
+      const landlordId = await getScopedLandlordId(req);
+      const tenant = await prisma.tenant.findFirst({ where: { id: req.params.id, unit: { property: { landlordId } } } });
+      if (!tenant) return res.status(403).json({ error: 'Forbidden' });
+    }
     const payments = await prisma.payment.findMany({
       where: { tenantId: req.params.id },
       orderBy: [{ periodYear: 'desc' }, { periodMonth: 'desc' }],
@@ -187,7 +210,8 @@ router.post('/:id/payments', requireRole('LANDLORD', 'CARETAKER'), async (req, r
   if (!amount || !channel) return res.status(400).json({ error: 'amount and channel required' });
 
   try {
-    const tenant = await prisma.tenant.findUnique({ where: { id: req.params.id }, include: { unit: true } });
+    const landlordId = await getScopedLandlordId(req);
+    const tenant = await prisma.tenant.findFirst({ where: { id: req.params.id, unit: { property: { landlordId } } }, include: { unit: true } });
     if (!tenant) return res.status(404).json({ error: 'Tenant not found' });
 
     const date = paymentDate ? new Date(paymentDate) : new Date();

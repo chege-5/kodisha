@@ -58,7 +58,7 @@ function AddTenantPanel({ units }) {
         </div>
         <div>
           <label className="label">Phone</label>
-          <input className="input" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="+254712000010" required />
+          <input className="input" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="e.g. +254 7XX XXX XXX" required />
         </div>
         <div>
           <label className="label">Email</label>
@@ -140,7 +140,7 @@ export default function CaretakerPortal() {
   );
 
   return (
-    <div className="mx-auto max-w-6xl space-y-6 p-4 lg:p-8">
+    <div className="page-shell mx-auto max-w-6xl space-y-6 p-4 lg:p-8 animate-fade-in">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div>
           <p className="section-eyebrow text-kodi-accent-light">Field operations</p>
@@ -150,6 +150,7 @@ export default function CaretakerPortal() {
           </p>
         </div>
       </div>
+
 
       <div className="grid gap-4 md:grid-cols-3">
         <div className="stat-card" style={{ '--stat-color': '#06b6d4' }}>

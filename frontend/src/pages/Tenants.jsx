@@ -5,6 +5,7 @@ import { useProperties } from '../hooks/useProperties';
 import { formatCurrency, formatDate } from '../utils/formatters';
 import TrustScoreBadge from '../components/TrustScoreBadge';
 import { PlusIcon, MagnifyingGlassIcon, UsersIcon } from '@heroicons/react/24/outline';
+import Loading from '../components/Loading';
 
 function AddTenantModal({ onClose }) {
   const { data: properties } = useProperties();
@@ -48,10 +49,10 @@ function AddTenantModal({ onClose }) {
       <div className="glass-card w-full max-w-lg overflow-y-auto p-6 max-h-[90vh]">
         <h2 className="mb-4 text-lg font-semibold text-kodi-text-primary">Add New Tenant</h2>
         <form onSubmit={handleSubmit} className="space-y-3">
-          {field('name', 'Full Name', 'text', 'Amina Hassan')}
-          {field('phone', 'Phone', 'tel', '+254712000010')}
-          {field('email', 'Email', 'email', 'amina@email.com')}
-          {field('idNumber', 'ID Number', 'text', '12345678')}
+          {field('name', 'Full Name', 'text', 'Enter tenant\'s full legal name')}
+          {field('phone', 'Phone', 'tel', 'e.g. +254 7XX XXX XXX')}
+          {field('email', 'Email', 'email', 'e.g. tenant@example.com')}
+          {field('idNumber', 'ID Number', 'text', 'Enter National ID or Passport number')}
           <div>
             <label className="label">Unit</label>
             <select className="input" value={form.unitId} onChange={(event) => setForm({ ...form, unitId: event.target.value })} required>
@@ -116,9 +117,7 @@ export default function Tenants() {
       </div>
 
       {isLoading ? (
-        <div className="space-y-3">
-          {[...Array(5)].map((_, index) => <div key={index} className="skeleton h-14" />)}
-        </div>
+        <Loading message="Fetching residents..." />
       ) : tenants.length === 0 ? (
         <div className="glass-card py-16 text-center">
           <UsersIcon className="mx-auto mb-4 h-12 w-12 text-kodi-text-muted" />

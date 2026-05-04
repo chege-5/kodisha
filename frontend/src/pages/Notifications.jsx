@@ -51,13 +51,14 @@ export default function Notifications() {
   );
 
   return (
-    <div className="p-4 lg:p-8 max-w-3xl mx-auto space-y-6 animate-fade-in">
+    <div className="page-shell p-4 lg:p-8 max-w-3xl mx-auto space-y-6 animate-fade-in">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-kodi-text-primary flex items-center gap-2">
+          <p className="section-eyebrow">Notifications</p>
+          <h1 className="mt-2 text-3xl font-black tracking-tight text-kodi-dark flex items-center gap-2">
             <Bell className="w-6 h-6 text-kodi-accent" /> Notifications
           </h1>
-          <p className="text-kodi-text-muted text-sm mt-0.5">{unreadCount} unread</p>
+          <p className="text-kodi-text-muted text-sm mt-1">{unreadCount} unread</p>
         </div>
         {unreadCount > 0 && (
           <button onClick={() => markAllRead.mutate()} className="btn-ghost text-xs">

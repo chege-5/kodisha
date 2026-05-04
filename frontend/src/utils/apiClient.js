@@ -3,6 +3,7 @@ import axios from 'axios';
 const api = axios.create({
   baseURL: '/api',
   timeout: 15000,
+  withCredentials: true,
 });
 
 export function getFriendlyError(err, fallback = 'We could not complete that request. Please try again.') {
@@ -12,33 +13,19 @@ export function getFriendlyError(err, fallback = 'We could not complete that req
   return fallback;
 }
 
-// Attach JWT on every request
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('accessToken');
-  if (token) config.headers.Authorization = `Bearer ${token}`;
-  return config;
-});
-
 // Auto-refresh on 401
 api.interceptors.response.use(
   (res) => res,
   async (err) => {
     const original = err.config;
-    if (err.response?.status === 401 && !original._retry) {
+    if (err.response?.status === 401 && !original._retry && !String(original?.url || '').includes('/auth/refresh')) {
       original._retry = true;
-      const refreshToken = localStorage.getItem('refreshToken');
-      if (!refreshToken) {
-        window.location.href = '/login';
-        return Promise.reject(err);
-      }
       try {
-        const { data } = await axios.post('/api/auth/refresh', { refreshToken });
-        localStorage.setItem('accessToken', data.accessToken);
-        localStorage.setItem('refreshToken', data.refreshToken);
-        original.headers.Authorization = `Bearer ${data.accessToken}`;
+        await axios.post('/api/auth/refresh', {}, { withCredentials: true });
         return api(original);
       } catch {
-        localStorage.clear();
+        localStorage.removeItem('user');
+        localStorage.removeItem('role');
         window.location.href = '/login';
         return Promise.reject(err);
       }

@@ -167,11 +167,17 @@ async function getUserNotifications(userId, userRole, { page = 1, limit = 20 } =
 /**
  * Mark notification as read
  */
-async function markAsRead(notificationId) {
-  return prisma.notification.update({
-    where: { id: notificationId },
+async function markAsRead(notificationId, userId, userRole) {
+  const where = userRole === 'TENANT'
+    ? { id: notificationId, tenantId: userId }
+    : { id: notificationId, userId, userRole };
+
+  const result = await prisma.notification.updateMany({
+    where,
     data: { isRead: true },
   });
+
+  return result.count > 0 ? prisma.notification.findUnique({ where: { id: notificationId } }) : null;
 }
 
 /**

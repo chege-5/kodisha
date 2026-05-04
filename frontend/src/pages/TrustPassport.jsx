@@ -34,7 +34,7 @@ export default function TrustPassport() {
   });
 
   return (
-    <div className="mx-auto max-w-7xl space-y-6 p-4 lg:p-8">
+    <div className="page-shell mx-auto max-w-7xl space-y-6 p-4 lg:p-8 animate-fade-in">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div>
           <p className="section-eyebrow">Trust Passport</p>

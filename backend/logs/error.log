@@ -29,3 +29,6 @@
 {"error":"To is invalid; ","level":"error","message":"SMS send failed","timestamp":"2026-05-01T11:34:09.956Z","to":"0706510150"}
 {"error":"To is invalid; ","level":"error","message":"SMS send failed","timestamp":"2026-05-01T11:39:13.613Z","to":"0706510150"}
 {"error":"To is invalid; ","level":"error","message":"Notification SMS failed","phone":"0706510150","timestamp":"2026-05-01T11:39:13.613Z"}
+{"error":"To is invalid; ","level":"error","message":"SMS send failed","timestamp":"2026-05-04T19:24:35.892Z","to":"0768506913"}
+{"error":"To is invalid; ","level":"error","message":"SMS send failed","timestamp":"2026-05-04T19:47:29.315Z","to":"0768506913"}
+{"error":"To is invalid; ","level":"error","message":"Notification SMS failed","phone":"0768506913","timestamp":"2026-05-04T19:47:29.316Z"}

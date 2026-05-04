@@ -4,6 +4,7 @@ import { formatCurrency, formatDate } from '../utils/formatters';
 import { useState } from 'react';
 import { Receipt, Droplets, Zap, Trash2, Filter, Send } from 'lucide-react';
 import toast from 'react-hot-toast';
+import Loading from '../components/Loading';
 
 const TYPE_ICON = { RENT: Receipt, WATER: Droplets, ELECTRICITY: Zap, GARBAGE: Trash2, OTHER: Receipt };
 const TYPE_COLOR = { RENT: 'text-indigo-400 bg-indigo-500/10', WATER: 'text-cyan-400 bg-cyan-500/10', ELECTRICITY: 'text-amber-400 bg-amber-500/10' };
@@ -36,20 +37,17 @@ export default function Billing() {
 
   const bills = data?.bills || [];
 
-  if (isLoading) return (
-    <div className="p-8 space-y-3">
-      {[...Array(5)].map((_, i) => <div key={i} className="h-16 skeleton" />)}
-    </div>
-  );
+  if (isLoading) return <Loading message="Retrieving billing history..." />;
 
   return (
-    <div className="p-4 lg:p-8 max-w-5xl mx-auto space-y-6 animate-fade-in">
+    <div className="page-shell p-4 lg:p-8 max-w-5xl mx-auto space-y-6 animate-fade-in">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-kodi-text-primary flex items-center gap-2">
+          <p className="section-eyebrow">Billing</p>
+          <h1 className="mt-2 text-3xl font-black tracking-tight text-kodi-dark flex items-center gap-2">
             <Receipt className="w-6 h-6 text-kodi-accent" /> Billing
           </h1>
-          <p className="text-kodi-text-muted text-sm mt-0.5">{bills.length} bill(s)</p>
+          <p className="text-kodi-text-muted text-sm mt-1">{bills.length} bill(s)</p>
         </div>
         <button
           type="button"

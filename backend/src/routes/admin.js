@@ -83,6 +83,12 @@ router.get('/users', async (req, res, next) => {
 router.patch('/users/:id/admin', async (req, res, next) => {
   const { isAdmin } = req.body;
   try {
+    const landlord = await prisma.landlord.findUnique({
+      where: { id: req.params.id },
+      select: { id: true, name: true, email: true, isAdmin: true },
+    });
+    if (!landlord) return res.status(404).json({ error: 'User not found' });
+
     const updated = await prisma.landlord.update({
       where: { id: req.params.id },
       data: { isAdmin: Boolean(isAdmin) },

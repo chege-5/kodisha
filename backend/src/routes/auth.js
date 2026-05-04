@@ -2,8 +2,9 @@ const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const { PrismaClient } = require('@prisma/client');
 const { body, validationResult } = require('express-validator');
-const { generateTokens, rotateRefreshToken } = require('../middleware/auth');
+const { generateTokens, rotateRefreshToken, setAuthCookies, clearAuthCookies, readCookie } = require('../middleware/auth');
 const logger = require('../utils/logger');
+const { authenticate } = require('../middleware/auth');
 
 const prisma = new PrismaClient();
 
@@ -32,8 +33,10 @@ router.post('/register',
         data: { token: tokens.refreshToken, landlordId: landlord.id, expiresAt },
       });
 
+      setAuthCookies(res, tokens);
+
       logger.info('Landlord registered', { landlordId: landlord.id });
-      res.status(201).json({ landlord, ...tokens });
+      res.status(201).json({ landlord, role: 'LANDLORD' });
     } catch (err) {
       next(err);
     }
@@ -64,8 +67,9 @@ router.post('/smart-login',
         await prisma.refreshToken.create({
           data: { token: tokens.refreshToken, landlordId: landlord.id, expiresAt },
         });
+        setAuthCookies(res, tokens);
         const { passwordHash: _, ...user } = landlord;
-        return res.json({ user, role, ...tokens });
+        return res.json({ user, role });
       }
 
       // 2. Try Caretaker
@@ -78,8 +82,9 @@ router.post('/smart-login',
         await prisma.refreshToken.create({
           data: { token: tokens.refreshToken, caretakerId: caretaker.id, expiresAt },
         });
+        setAuthCookies(res, tokens);
         const { passwordHash: _, ...user } = caretaker;
-        return res.json({ user, role: 'CARETAKER', ...tokens });
+        return res.json({ user, role: 'CARETAKER' });
       }
 
       // 3. Try Tenant
@@ -97,8 +102,9 @@ router.post('/smart-login',
         await prisma.refreshToken.create({
           data: { token: tokens.refreshToken, tenantId: tenant.id, expiresAt },
         });
+        setAuthCookies(res, tokens);
         const { passwordHash: _, idNumber: __, ...user } = tenant;
-        return res.json({ user, role: 'TENANT', ...tokens });
+        return res.json({ user, role: 'TENANT' });
       }
 
       return res.status(401).json({ error: 'Invalid credentials' });
@@ -113,11 +119,44 @@ router.post('/refresh', rotateRefreshToken);
 
 // ─── Logout ──────────────────────────────────────────────────────────────────
 router.post('/logout', async (req, res, next) => {
-  const { refreshToken } = req.body;
+  const refreshToken = req.body?.refreshToken || readCookie(req, 'refreshToken');
   if (refreshToken) {
     await prisma.refreshToken.deleteMany({ where: { token: refreshToken } }).catch(() => {});
   }
+  clearAuthCookies(res);
   res.json({ message: 'Logged out' });
 });
+
+router.post('/change-password', authenticate,
+  body('currentPassword').isLength({ min: 1 }),
+  body('newPassword').isLength({ min: 12 }).withMessage('Use at least 12 characters'),
+  async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+
+    const { currentPassword, newPassword } = req.body;
+
+    try {
+      const model = req.user.role === 'TENANT' ? 'tenant' : req.user.role === 'CARETAKER' ? 'caretaker' : 'landlord';
+      const record = await prisma[model].findUnique({ where: { id: req.user.id } });
+      if (!record) return res.status(404).json({ error: 'Account not found' });
+
+      const valid = await bcrypt.compare(currentPassword, record.passwordHash);
+      if (!valid) return res.status(401).json({ error: 'Current password is incorrect' });
+
+      const passwordHash = await bcrypt.hash(newPassword, 12);
+      await prisma[model].update({ where: { id: req.user.id }, data: { passwordHash } });
+
+      await prisma.refreshToken.deleteMany({
+        where: model === 'landlord' ? { landlordId: req.user.id } : model === 'caretaker' ? { caretakerId: req.user.id } : { tenantId: req.user.id },
+      });
+
+      clearAuthCookies(res);
+      res.json({ message: 'Password updated. Please sign in again.' });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
 
 module.exports = router;

@@ -1,4 +1,4 @@
-import { Outlet, NavLink, useNavigate } from 'react-router-dom';
+import { Outlet, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useQuery } from '@tanstack/react-query';
 import api from '../utils/apiClient';
@@ -54,6 +54,7 @@ const adminNav = [
 export default function Layout({ caretakerMode }) {
   const { user, role, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [theme, setTheme] = useState(() => localStorage.getItem('kodisha-theme') || 'light');
@@ -104,7 +105,7 @@ export default function Layout({ caretakerMode }) {
             end={exact}
             onClick={() => setMobileOpen(false)}
             className={({ isActive }) =>
-              `group flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm font-medium transition-all duration-200 ${
+              `flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm font-medium transition-all ${
                 isActive
                   ? 'bg-white/12 text-white border border-white/15 shadow-lg shadow-black/10'
                   : 'text-blue-100/80 hover:bg-white/10 hover:text-white'
@@ -116,7 +117,6 @@ export default function Layout({ caretakerMode }) {
           </NavLink>
         ))}
       </nav>
-
       {/* User */}
       <div className="px-3 py-4 border-t border-white/10">
         {!collapsed && (
@@ -142,7 +142,11 @@ export default function Layout({ caretakerMode }) {
   );
 
   return (
-    <div className="flex h-screen bg-kodi-navy overflow-hidden text-kodi-text-primary">
+    <div className="flex h-screen bg-kodi-navy overflow-hidden text-kodi-text-primary relative isolate">
+      {/* Decorative Background Blobs */}
+      <div className="pointer-events-none absolute -left-20 top-40 h-96 w-96 rounded-full bg-kodi-accent/10 blur-[120px] animate-pulse" />
+      <div className="pointer-events-none absolute -right-20 bottom-20 h-80 w-80 rounded-full bg-kodi-emerald/10 blur-[100px] animate-pulse" style={{ animationDelay: '1s' }} />
+      
       {/* Mobile overlay */}
       {mobileOpen && (
         <div className="fixed inset-0 bg-black/60 z-40 lg:hidden" onClick={() => setMobileOpen(false)} />
@@ -169,26 +173,36 @@ export default function Layout({ caretakerMode }) {
       </aside>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="relative z-10 flex flex-1 flex-col overflow-hidden">
         {/* Top bar */}
-        <header className="flex h-16 flex-shrink-0 items-center justify-between border-b border-kodi-border bg-white/85 px-4 backdrop-blur-xl lg:px-8">
-          <div className="flex items-center gap-3">
-            <button onClick={() => setMobileOpen(true)} className="text-kodi-text-muted hover:text-white lg:hidden">
+        <header className="flex h-18 flex-shrink-0 items-center justify-between border-b border-kodi-border/50 bg-kodi-card/40 px-4 shadow-sm backdrop-blur-2xl lg:px-8 z-30 sticky top-0">
+          <div className="flex items-center gap-4">
+            <button onClick={() => setMobileOpen(true)} className="flex h-10 w-10 items-center justify-center rounded-xl bg-kodi-navy text-kodi-text-muted hover:text-white lg:hidden">
               <Menu className="w-5 h-5" />
             </button>
-            <div className="hidden rounded-full border border-kodi-border bg-kodi-navy px-4 py-2 text-xs font-medium uppercase tracking-[0.22em] text-kodi-text-muted lg:block">
-              {new Date().toLocaleDateString('en-KE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+            <div className="hidden items-center gap-2 rounded-2xl border border-kodi-border/60 bg-kodi-card/50 px-4 py-2 text-xs font-semibold tracking-wide text-kodi-text-muted shadow-sm lg:flex">
+              <div className="h-1.5 w-1.5 rounded-full bg-kodi-emerald animate-pulse" />
+              {new Date().toLocaleDateString('en-KE', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setTheme((current) => (current === 'dark' ? 'light' : 'dark'))}
-              className="inline-flex items-center gap-2 rounded-xl border border-kodi-border bg-white px-3 py-2 text-sm text-kodi-text-secondary transition-colors hover:text-kodi-accent"
-            >
-              {theme === 'dark' ? <SunMedium className="h-4 w-4" /> : <MoonStar className="h-4 w-4" />}
-              <span className="hidden sm:inline">{theme === 'dark' ? 'Light mode' : 'Dark mode'}</span>
-            </button>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center p-1 rounded-2xl bg-kodi-navy/50 border border-kodi-border/40 backdrop-blur-md">
+              <button
+                onClick={() => setTheme('light')}
+                className={`p-2 rounded-xl transition-all ${theme === 'light' ? 'bg-white text-kodi-accent shadow-md scale-110' : 'text-kodi-text-muted hover:text-white'}`}
+                title="Light Mode"
+              >
+                <SunMedium className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => setTheme('dark')}
+                className={`p-2 rounded-xl transition-all ${theme === 'dark' ? 'bg-kodi-card text-kodi-emerald shadow-md scale-110' : 'text-kodi-text-muted hover:text-white'}`}
+                title="Dark Mode"
+              >
+                <MoonStar className="h-4 w-4" />
+              </button>
+            </div>
             <button
               onClick={() => navigate(caretakerMode ? '/caretaker/notifications' : '/dashboard/notifications')}
               className="relative rounded-xl p-2.5 text-kodi-text-muted hover:bg-kodi-navy hover:text-kodi-accent transition-all"
@@ -204,8 +218,10 @@ export default function Layout({ caretakerMode }) {
         </header>
 
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto">
-          <Outlet />
+        <main className="relative flex-1 overflow-y-auto">
+          <div key={location.pathname} className="page-stage min-h-full animate-fade-in">
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>

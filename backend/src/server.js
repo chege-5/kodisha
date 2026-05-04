@@ -43,12 +43,19 @@ const { scheduleMonthlyDigest } = require('./jobs/monthlyDigest');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+app.disable('x-powered-by');
+app.set('trust proxy', 1);
+
 // Share prisma with legacy code that reads from app.get('prisma')
 app.set('prisma', prisma);
 
 // ─── Core Middleware ─────────────────────────────────────────────────────────
 
 app.use(helmet({
+  frameguard: { action: 'deny' },
+  referrerPolicy: { policy: 'no-referrer' },
+  crossOriginOpenerPolicy: { policy: 'same-origin' },
+  crossOriginResourcePolicy: { policy: 'same-site' },
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
@@ -66,8 +73,8 @@ app.use(cors({
 }));
 
 app.use(compression());
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.json({ limit: '1mb' }));
+app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
 // HTTP request logging
 app.use(morgan('combined', {
@@ -122,8 +129,9 @@ app.use('/notifications', notificationRoutes);
 app.use('/insights', insightRoutes);
 app.use('/admin', adminRoutes);
 
-// Static files (generated PDFs, uploads)
-app.use('/uploads', express.static('uploads'));
+// Static files (generated PDFs, uploads) - auth required
+const { authenticate } = require('./middleware/auth');
+app.use('/uploads', authenticate, express.static('uploads'));
 
 // ─── Error Handler ───────────────────────────────────────────────────────────
 

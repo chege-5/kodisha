@@ -1,25 +1,26 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./index.html', './src/**/*.{js,jsx}'],
+  darkMode: ['selector', '[data-theme="dark"]'],
   theme: {
     extend: {
       colors: {
         kodi: {
-          navy: '#F8FAFC',
-          dark: '#14213D',
-          card: '#FFFFFF',
-          border: '#E2E8F0',
-          accent: '#1D4ED8',
-          'accent-light': '#60A5FA',
-          cyan: '#06b6d4',
-          emerald: '#10B981',
-          amber: '#F59E0B',
-          rose: '#EF4444',
-          purple: '#a855f7',
-          slate: '#334155',
-          'text-primary': '#0F172A',
-          'text-secondary': '#334155',
-          'text-muted': '#64748B',
+          navy: 'var(--kodi-navy)',
+          dark: 'var(--kodi-dark)',
+          card: 'var(--kodi-card)',
+          border: 'var(--kodi-border)',
+          accent: 'var(--kodi-accent)',
+          'accent-light': 'var(--kodi-accent-light)',
+          cyan: 'var(--kodi-cyan)',
+          emerald: 'var(--kodi-emerald)',
+          amber: 'var(--kodi-amber)',
+          rose: 'var(--kodi-rose)',
+          purple: 'var(--kodi-purple)',
+          slate: 'var(--kodi-slate)',
+          'text-primary': 'var(--kodi-text-primary)',
+          'text-secondary': 'var(--kodi-text-secondary)',
+          'text-muted': 'var(--kodi-text-muted)',
         },
       },
       fontFamily: {

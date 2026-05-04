@@ -13,19 +13,40 @@ router.post('/', validateATRequest, async (req, res) => {
 
   const { from, text, date } = req.body;
   const message = (text || '').trim().toUpperCase();
+  const senderPhone = normalizePhone(from || '');
 
-  logger.info('Inbound SMS', { from, message });
+  logger.info('Inbound SMS received', { from: from ? `***${String(from).slice(-4)}` : undefined });
+
+  async function getStaffSender() {
+    if (!senderPhone) return null;
+    const caretaker = await prisma.caretaker.findFirst({
+      where: { phone: senderPhone, isActive: true },
+      select: { id: true, landlordId: true, phone: true },
+    });
+    if (caretaker) return { role: 'CARETAKER', landlordId: caretaker.landlordId, phone: caretaker.phone };
+
+    const landlord = await prisma.landlord.findFirst({
+      where: { phone: senderPhone },
+      select: { id: true, phone: true },
+    });
+    if (landlord) return { role: 'LANDLORD', landlordId: landlord.id, phone: landlord.phone };
+
+    return null;
+  }
 
   try {
     // ─── "Done [TicketID]" — close maintenance ticket ─────────────────────
     if (/^DONE\s+\S+/.test(message)) {
+      const sender = await getStaffSender();
+      if (!sender) return;
       const ticketPrefix = message.split(/\s+/)[1];
       const ticket = await prisma.maintenanceTicket.findFirst({
         where: { id: { startsWith: ticketPrefix.toLowerCase() } },
-        include: { tenant: true, unit: true },
+        include: { tenant: true, unit: { include: { property: { select: { landlordId: true } } } } },
       });
 
       if (!ticket) return;
+      if (ticket.unit?.property?.landlordId !== sender.landlordId) return;
       if (ticket.status === 'CLOSED') return;
 
       await prisma.maintenanceTicket.update({
@@ -40,6 +61,8 @@ router.post('/', validateATRequest, async (req, res) => {
 
     // ─── "PAID [TenantPhone] [Amount]" — log cash payment ─────────────────
     else if (/^PAID\s+\S+\s+\d+/.test(message)) {
+      const sender = await getStaffSender();
+      if (!sender) return;
       const parts = message.split(/\s+/);
       const tenantPhone = normalizePhone(parts[1]);
       const amount = parseFloat(parts[2]);
@@ -51,10 +74,7 @@ router.post('/', validateATRequest, async (req, res) => {
         include: { unit: true },
       });
 
-      if (!tenant) {
-        await sendSMS(from, `Tenant with phone ${parts[1]} not found in KODI.`);
-        return;
-      }
+      if (!tenant || tenant.unit?.property?.landlordId !== sender.landlordId) return;
 
       const now = new Date();
       const dueDate = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -86,7 +106,7 @@ router.post('/', validateATRequest, async (req, res) => {
     // ─── "VACANT [UnitNumber]" — mark unit vacant ─────────────────────────
     else if (/^VACANT\s+\S+/.test(message)) {
       const unitNumber = message.split(/\s+/)[1];
-      const caretaker = await prisma.caretaker.findUnique({ where: { phone: from } });
+      const caretaker = await prisma.caretaker.findFirst({ where: { phone: senderPhone, isActive: true } });
       if (!caretaker) return;
 
       const unit = await prisma.unit.findFirst({
@@ -145,7 +165,7 @@ router.post('/', validateATRequest, async (req, res) => {
     }
 
   } catch (err) {
-    logger.error('SMS handler error', { error: err.message, from, message: text });
+    logger.error('SMS handler error', { error: err.message, from: from ? `***${String(from).slice(-4)}` : undefined });
   }
 });
 

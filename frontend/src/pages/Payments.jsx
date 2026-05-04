@@ -44,11 +44,12 @@ export default function Payments() {
   const totalCollected = payments.reduce((s, p) => s + parseFloat(p.amount), 0);
 
   return (
-    <div className="p-8 max-w-7xl mx-auto space-y-6">
+    <div className="page-shell p-8 max-w-7xl mx-auto space-y-6 animate-fade-in">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Payment Ledger</h1>
-          <p className="text-gray-500 text-sm">{payments.length} transactions · {formatCurrency(totalCollected)} total</p>
+          <p className="section-eyebrow">Payments</p>
+          <h1 className="mt-2 text-3xl font-black tracking-tight text-kodi-dark">Payment Ledger</h1>
+          <p className="mt-1 text-sm text-kodi-text-muted">{payments.length} transactions · {formatCurrency(totalCollected)} total</p>
         </div>
         <div className="flex gap-2">
           <select className="input w-36" value={channel} onChange={(e) => setChannel(e.target.value)}>
@@ -68,22 +69,22 @@ export default function Payments() {
       ) : (
         <div className="card p-0 overflow-hidden">
           <table className="w-full">
-            <thead className="bg-gray-50 border-b">
+            <thead className="border-b border-kodi-border/50 bg-slate-50">
               <tr>
                 {['Date', 'Tenant', 'Unit', 'Amount', 'Channel', 'M-Pesa Ref', 'Status'].map((h) => (
                   <th key={h} className="table-th">{h}</th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-50">
+            <tbody className="divide-y divide-slate-100">
               {payments.map((p) => (
-                <tr key={p.id} className={`hover:bg-gray-50 ${p.daysLate > 0 ? 'bg-red-50/50' : ''}`}>
+                <tr key={p.id} className={`table-row ${p.daysLate > 0 ? 'bg-rose-50/50' : ''}`}>
                   <td className="table-td">{formatDate(p.paymentDate)}</td>
                   <td className="table-td font-medium">{p.tenantName}</td>
-                  <td className="table-td text-gray-500">Unit {p.unitNumber}</td>
+                  <td className="table-td text-kodi-text-muted">Unit {p.unitNumber}</td>
                   <td className="table-td font-semibold">{formatCurrency(p.amount)}</td>
                   <td className="table-td"><span className="badge badge-blue">{p.channel}</span></td>
-                  <td className="table-td text-xs text-gray-400">{p.mpesaTransactionId || '—'}</td>
+                  <td className="table-td text-xs text-kodi-text-muted">{p.mpesaTransactionId || '—'}</td>
                   <td className="table-td">
                     {p.isPartial
                       ? <span className="badge badge-amber">Partial</span>
