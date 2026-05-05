@@ -102,7 +102,7 @@ app.get('/health', async (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  res.send("Kodisha API running");
+  res.send("good, Kodisha API running");
 });
 
 // ─── Public Routes (no auth needed) ─────────────────────────────────────────

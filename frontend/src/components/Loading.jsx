@@ -9,7 +9,7 @@ export default function Loading({ message = 'Loading workspace...' }) {
         {/* Animated logo container */}
         <div className="relative mb-8">
           <div className="absolute inset-0 animate-ping rounded-3xl bg-kodi-accent/20 opacity-75" />
-          <div className="relative flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-kodi-accent to-kodi-emerald shadow-2xl shadow-kodi-accent/25">
+          <div className="relative flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-kodi-accent to-kodi-emerald shadow-kodi-accent-25">
             <Building2 className="h-10 w-10 text-white animate-pulse" />
           </div>
         </div>

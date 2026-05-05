@@ -97,7 +97,7 @@ function useReveal() {
 function Logo({ light = false }) {
   return (
     <div className="flex items-center gap-3">
-      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-kodi-accent to-kodi-emerald shadow-lg shadow-kodi-accent/25">
+      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-kodi-accent to-kodi-emerald shadow-kodi-accent-25">
         <Building2 className="h-5 w-5 text-white" />
       </div>
       <div>

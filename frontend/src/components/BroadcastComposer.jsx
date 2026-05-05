@@ -53,7 +53,7 @@ export default function BroadcastComposer() {
               onClick={() => setForm({ ...form, channel: id })}
               className={`inline-flex items-center justify-center gap-2 rounded-xl border py-2.5 text-sm font-semibold transition-all ${
                 form.channel === id
-                  ? 'border-kodi-accent bg-kodi-accent text-white shadow-lg shadow-kodi-accent/20'
+                  ? 'border-kodi-accent bg-kodi-accent text-white shadow-kodi-accent-20'
                   : 'border-kodi-border/70 text-kodi-text-secondary hover:border-kodi-accent/50 hover:text-kodi-text-primary'
               }`}
             >

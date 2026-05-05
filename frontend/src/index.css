@@ -3,21 +3,21 @@
 @tailwind utilities;
 
 :root {
-  --kodi-navy: #F8FAFC;
-  --kodi-dark: #14213D;
-  --kodi-card: #FFFFFF;
-  --kodi-border: #E2E8F0;
-  --kodi-accent: #1D4ED8;
-  --kodi-accent-light: #60A5FA;
-  --kodi-cyan: #06b6d4;
-  --kodi-emerald: #10B981;
-  --kodi-amber: #F59E0B;
-  --kodi-rose: #EF4444;
-  --kodi-purple: #a855f7;
-  --kodi-slate: #334155;
-  --kodi-text-primary: #0F172A;
-  --kodi-text-secondary: #334155;
-  --kodi-text-muted: #64748B;
+  --kodi-navy: 248 250 252;
+  --kodi-dark: 20 33 61;
+  --kodi-card: 255 255 255;
+  --kodi-border: 226 232 240;
+  --kodi-accent: 29 78 216;
+  --kodi-accent-light: 96 165 250;
+  --kodi-cyan: 6 182 212;
+  --kodi-emerald: 16 185 129;
+  --kodi-amber: 245 158 11;
+  --kodi-rose: 239 68 68;
+  --kodi-purple: 168 85 247;
+  --kodi-slate: 51 65 85;
+  --kodi-text-primary: 15 23 42;
+  --kodi-text-secondary: 51 65 85;
+  --kodi-text-muted: 100 116 139;
   --bg-gradient-1: rgba(29, 78, 216, 0.16);
   --bg-gradient-2: rgba(16, 185, 129, 0.14);
   --bg-main-start: #f8fafc;
@@ -26,21 +26,21 @@
 }
 
 [data-theme="dark"] {
-  --kodi-navy: #0F172A;
-  --kodi-dark: #F8FAFC;
-  --kodi-card: #1E293B;
-  --kodi-border: #334155;
-  --kodi-accent: #3B82F6;
-  --kodi-accent-light: #93C5FD;
-  --kodi-cyan: #22d3ee;
-  --kodi-emerald: #34d399;
-  --kodi-amber: #fbbf24;
-  --kodi-rose: #fb7185;
-  --kodi-purple: #c084fc;
-  --kodi-slate: #94A3B8;
-  --kodi-text-primary: #F8FAFC;
-  --kodi-text-secondary: #CBD5E1;
-  --kodi-text-muted: #94A3B8;
+  --kodi-navy: 15 23 42;
+  --kodi-dark: 248 250 252;
+  --kodi-card: 30 41 59;
+  --kodi-border: 51 65 85;
+  --kodi-accent: 59 130 246;
+  --kodi-accent-light: 147 197 253;
+  --kodi-cyan: 34 211 238;
+  --kodi-emerald: 52 211 153;
+  --kodi-amber: 251 191 36;
+  --kodi-rose: 251 113 133;
+  --kodi-purple: 192 132 252;
+  --kodi-slate: 148 163 184;
+  --kodi-text-primary: 248 250 252;
+  --kodi-text-secondary: 203 213 225;
+  --kodi-text-muted: 148 163 184;
   --bg-gradient-1: rgba(59, 130, 246, 0.2);
   --bg-gradient-2: rgba(52, 211, 153, 0.15);
   --bg-main-start: #0F172A;
@@ -57,11 +57,11 @@
 
   * {
     scrollbar-width: thin;
-    scrollbar-color: var(--kodi-text-muted) transparent;
+    scrollbar-color: rgb(var(--kodi-text-muted) / 1) transparent;
   }
   *::-webkit-scrollbar { width: 6px; }
   *::-webkit-scrollbar-track { background: transparent; }
-  *::-webkit-scrollbar-thumb { background: var(--kodi-text-muted); border-radius: 10px; }
+  *::-webkit-scrollbar-thumb { background: rgb(var(--kodi-text-muted) / 1); border-radius: 10px; }
 
   html {
     scroll-behavior: smooth;
@@ -100,7 +100,7 @@
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-kodi-accent text-white text-sm font-bold rounded-2xl
     transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed
-    shadow-lg shadow-kodi-accent/25 hover:bg-kodi-accent-light hover:shadow-kodi-accent/40 hover:-translate-y-1 hover:scale-[1.02] active:translate-y-0 active:scale-95;
+    shadow-kodi-accent-25 hover:bg-kodi-accent-light hover:shadow-kodi-accent-40 hover:-translate-y-1 hover:scale-[1.02] active:translate-y-0 active:scale-95;
   }
   .btn-secondary {
     @apply inline-flex items-center justify-center gap-2 px-6 py-2.5 border border-kodi-border bg-kodi-card text-kodi-text-primary text-sm font-bold rounded-2xl
@@ -108,11 +108,11 @@
   }
   .btn-danger {
     @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-kodi-rose text-white text-sm font-semibold rounded-xl
-    hover:bg-rose-400 transition-all duration-200 shadow-lg shadow-kodi-rose/20;
+    hover:bg-rose-400 transition-all duration-200 shadow-kodi-rose-20;
   }
   .btn-success {
     @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-kodi-emerald text-white text-sm font-semibold rounded-xl
-    hover:bg-emerald-400 transition-all duration-200 shadow-lg shadow-kodi-emerald/20;
+    hover:bg-emerald-400 transition-all duration-200 shadow-kodi-emerald-20;
   }
   .btn-ghost {
     @apply inline-flex items-center justify-center gap-2 px-4 py-2 text-kodi-text-secondary text-sm font-medium rounded-xl
@@ -123,7 +123,7 @@
     @apply bg-kodi-card/90 backdrop-blur-xl rounded-3xl border border-kodi-border p-6 shadow-xl shadow-slate-200/50 dark:shadow-black/20;
   }
   .glass-card-hover {
-    @apply glass-card cursor-pointer transition-all duration-500 hover:scale-[1.01] hover:border-kodi-accent/40 hover:bg-kodi-card hover:shadow-2xl hover:shadow-kodi-accent/10;
+    @apply glass-card cursor-pointer transition-all duration-500 hover:scale-[1.01] hover:border-kodi-accent/40 hover:bg-kodi-card hover:shadow-kodi-accent-10;
   }
   .card {
     @apply bg-white rounded-2xl border border-kodi-border p-6 shadow-sm shadow-slate-200/70 transition-all duration-300;
@@ -132,7 +132,7 @@
   .stat-card {
     @apply bg-kodi-card backdrop-blur-xl rounded-3xl border border-kodi-border p-6
     shadow-xl shadow-slate-200/60 transition-all duration-500 flex flex-col gap-2 relative overflow-hidden
-    hover:-translate-y-2 hover:shadow-2xl hover:shadow-kodi-accent/10;
+    hover:-translate-y-2 hover:shadow-kodi-accent-10;
     will-change: transform;
   }
   .stat-card::before {
@@ -291,6 +291,33 @@
   .reveal-visible {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@layer utilities {
+  .shadow-kodi-accent-5 {
+    box-shadow: 0 4px 12px rgba(29, 78, 216, 0.05);
+  }
+  .shadow-kodi-accent-10 {
+    box-shadow: 0 8px 18px rgba(29, 78, 216, 0.1);
+  }
+  .shadow-kodi-accent-20 {
+    box-shadow: 0 10px 20px rgba(29, 78, 216, 0.2);
+  }
+  .shadow-kodi-accent-25 {
+    box-shadow: 0 18px 36px rgba(29, 78, 216, 0.25);
+  }
+  .shadow-kodi-accent-30 {
+    box-shadow: 0 20px 42px rgba(29, 78, 216, 0.3);
+  }
+  .shadow-kodi-accent-40 {
+    box-shadow: 0 24px 52px rgba(29, 78, 216, 0.4);
+  }
+  .shadow-kodi-rose-20 {
+    box-shadow: 0 10px 20px rgba(239, 68, 68, 0.2);
+  }
+  .shadow-kodi-emerald-20 {
+    box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2);
   }
 }
 
