@@ -39,7 +39,7 @@ export default function Login() {
           </div>
 
           <div className="space-y-4">
-            <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-kodi-accent to-kodi-emerald shadow-2xl shadow-kodi-accent/25">
+            <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-kodi-accent to-kodi-emerald shadow-kodi-accent-25">
               <Building2 className="h-8 w-8 text-white" />
             </div>
             <h1 className="max-w-3xl text-4xl font-black tracking-tight text-kodi-dark md:text-6xl">

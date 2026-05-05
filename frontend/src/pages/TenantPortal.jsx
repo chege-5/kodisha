@@ -134,7 +134,7 @@ function Sidebar({ activePage, setActivePage, user, tenant, onLogout, mobileOpen
             }}
             className={`flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-sm font-semibold transition-all ${
               activePage === id
-                ? 'bg-kodi-accent text-white shadow-lg shadow-kodi-accent/20'
+                ? 'bg-kodi-accent text-white shadow-kodi-accent-20'
                 : 'text-kodi-text-secondary hover:bg-white hover:text-kodi-text-primary'
             }`}
           >
