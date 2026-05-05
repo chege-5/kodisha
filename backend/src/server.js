@@ -101,6 +101,10 @@ app.get('/health', async (req, res) => {
   }
 });
 
+app.get("/", (req, res) => {
+  res.send("Kodisha API running");
+});
+
 // ─── Public Routes (no auth needed) ─────────────────────────────────────────
 
 app.use('/auth', strictLimiter, authRoutes);
