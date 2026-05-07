@@ -42,6 +42,17 @@ const { scheduleMonthlyDigest } = require('./jobs/monthlyDigest');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const DEFAULT_FRONTEND_URL = process.env.NODE_ENV === 'production'
+  ? 'https://kodisha-blue.vercel.app'
+  : 'http://localhost:3000';
+const FRONTEND_URL = process.env.FRONTEND_URL || DEFAULT_FRONTEND_URL;
+process.env.FRONTEND_URL = FRONTEND_URL;
+const allowedOrigins = new Set([
+  FRONTEND_URL,
+  'https://kodisha-blue.vercel.app',
+  'http://localhost:3000',
+  'http://localhost:5173',
+].map((origin) => origin.replace(/\/$/, '')));
 
 app.disable('x-powered-by');
 app.set('trust proxy', 1);
@@ -68,7 +79,12 @@ app.use(helmet({
 }));
 
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.has(origin.replace(/\/$/, ''))) {
+      return callback(null, true);
+    }
+    return callback(new Error('Not allowed by CORS'));
+  },
   credentials: true,
 }));
 
