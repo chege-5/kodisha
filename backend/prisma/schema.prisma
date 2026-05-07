@@ -1,4 +1,4 @@
-// KODI / Kodisha Rental Management Platform — Prisma Schema
+// KODI / Kodisha Rental Management Platform - Prisma Schema
 
 generator client {
   provider = "prisma-client-js"
@@ -9,7 +9,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// ─── Enums ──────────────────────────────────────────────────────────────────
+// Enums
 
 enum UnitStatus {
   OCCUPIED
@@ -92,7 +92,7 @@ enum NotificationType {
   BROADCAST
 }
 
-// ─── Models ─────────────────────────────────────────────────────────────────
+// Models
 
 model Landlord {
   id                String             @id @default(uuid())
