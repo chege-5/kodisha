@@ -35,7 +35,7 @@ export default function Login() {
         <div className="space-y-8 text-center md:text-left animate-fade-up">
           <div className="inline-flex items-center gap-2 rounded-full border border-kodi-border bg-white px-4 py-2 text-sm text-kodi-text-secondary shadow-sm">
             <Sparkles className="h-4 w-4 text-kodi-accent-light" />
-            Auto role detection for landlords, caretakers, and tenants
+            Auto role detection for admins, landlords, caretakers, and tenants
           </div>
 
           <div className="space-y-4">
@@ -122,7 +122,7 @@ export default function Login() {
             </form>
 
             <div className="mt-5 grid grid-cols-3 gap-2 rounded-2xl border border-kodi-border bg-kodi-navy p-2 text-center text-[11px] font-semibold text-kodi-text-muted">
-              <span>Landlord / Admin</span>
+              <span>Admin / Landlord</span>
               <span>Caretaker</span>
               <span>Tenant</span>
             </div>

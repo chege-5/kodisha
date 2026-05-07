@@ -5,21 +5,25 @@ const prisma = new PrismaClient();
 
 async function main() {
   console.log('🌱 Seeding Kodisha database...');
+  const superAdminEmail = process.env.SUPER_ADMIN_EMAIL || 'admin@kodisha.ke';
+  const superAdminPassword = process.env.SUPER_ADMIN_PASSWORD || 'admin12345';
+  const superAdminPhone = process.env.SUPER_ADMIN_PHONE || '+254700000000';
+  const superAdminName = process.env.SUPER_ADMIN_NAME || 'Super Admin';
 
-  // ─── Admin / Landlord ──────────────────────────────────────────────────────
+  // ─── Super Admin ──────────────────────────────────────────────────────────
   const admin = await prisma.landlord.upsert({
-    where: { email: 'admin@Kodisha.ke' },
-    update: {},
+    where: { email: superAdminEmail },
+    update: { isAdmin: true, plan: 'ENTERPRISE' },
     create: {
-      name: 'System Admin',
-      phone: '+254700000000',
-      email: 'admin@Kodisha.ke',
-      passwordHash: await bcrypt.hash('admin123', 12),
+      name: superAdminName,
+      phone: superAdminPhone,
+      email: superAdminEmail,
+      passwordHash: await bcrypt.hash(superAdminPassword, 12),
       plan: 'ENTERPRISE',
       isAdmin: true,
     },
   });
-  console.log('✅ Admin:', admin.name);
+  console.log('✅ Super Admin:', admin.name);
 
   const landlord = await prisma.landlord.upsert({
     where: { email: 'john.kamau@gmail.com' },
@@ -325,7 +329,7 @@ async function main() {
   console.log('\n🎉 Seeding complete!\n');
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
   console.log('Kodisha LOGIN CREDENTIALS:');
-  console.log('  Admin    : admin@Kodisha.ke / admin123');
+  console.log(`  Super Admin: ${superAdminEmail} / ${superAdminPassword}`);
   console.log('  Landlord : john.kamau@gmail.com / password123');
   console.log('  Caretaker: +254712000002 / caretaker123');
   console.log('  Tenant 1 : +254712000010 / tenant123 (Amina — 3 on-time)');

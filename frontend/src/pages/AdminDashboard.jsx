@@ -1,24 +1,25 @@
-import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '../utils/apiClient';
-import { Shield, Users, Building2, CreditCard, Wrench, Activity, ChevronRight } from 'lucide-react';
+import toast from 'react-hot-toast';
+import { Shield, Users, Building2, CreditCard, Wrench, Activity, UserPlus, KeyRound, Copy } from 'lucide-react';
 
-function StatCard({ icon: Icon, label, value, color }) {
-  return (
-    <div className="glass-card">
-      <div className="flex items-center gap-3">
-        <div className={`p-2.5 rounded-xl bg-${color}-500/10`}>
-          <Icon className={`w-5 h-5 text-${color}-400`} />
-        </div>
-        <div>
-          <p className="text-xs text-kodi-text-muted">{label}</p>
-          <p className="text-2xl font-bold text-kodi-text-primary">{value}</p>
-        </div>
-      </div>
-    </div>
-  );
+function makeInitialPassword() {
+  const stamp = Math.random().toString(36).slice(2, 8);
+  return `Kodisha-${stamp}-2026`;
 }
 
 export default function AdminDashboard() {
+  const queryClient = useQueryClient();
+  const [suggestedPassword, setSuggestedPassword] = useState(makeInitialPassword);
+  const [ownerForm, setOwnerForm] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    password: '',
+    plan: 'STARTER',
+  });
+
   const { data: stats, isLoading } = useQuery({
     queryKey: ['admin-stats'],
     queryFn: () => api.get('/admin/stats').then((r) => r.data),
@@ -34,6 +35,40 @@ export default function AdminDashboard() {
     queryFn: () => api.get('/admin/logs?limit=10').then((r) => r.data),
   });
 
+  const createOwner = useMutation({
+    mutationFn: (payload) => api.post('/admin/landlords', payload).then((r) => r.data),
+    onSuccess: ({ landlord }) => {
+      toast.success(`${landlord.name} can now sign in as a landlord.`);
+      setOwnerForm({ name: '', phone: '', email: '', password: '', plan: 'STARTER' });
+      setSuggestedPassword(makeInitialPassword());
+      queryClient.invalidateQueries({ queryKey: ['admin-stats'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-users'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-logs'] });
+    },
+    onError: (err) => {
+      const message = err.response?.data?.error || err.response?.data?.errors?.[0]?.msg || 'Could not create landlord.';
+      toast.error(message);
+    },
+  });
+
+  function updateOwnerField(key, value) {
+    setOwnerForm((current) => ({ ...current, [key]: value }));
+  }
+
+  function submitOwner(event) {
+    event.preventDefault();
+    createOwner.mutate({
+      ...ownerForm,
+      password: ownerForm.password || suggestedPassword,
+    });
+  }
+
+  function copyPassword() {
+    const value = ownerForm.password || suggestedPassword;
+    navigator.clipboard?.writeText(value);
+    toast.success('Initial password copied.');
+  }
+
   if (isLoading) return (
     <div className="p-8 space-y-4">
       {[...Array(6)].map((_, i) => <div key={i} className="h-24 skeleton" />)}
@@ -48,9 +83,9 @@ export default function AdminDashboard() {
       <div>
         <p className="section-eyebrow">Admin</p>
         <h1 className="mt-2 text-3xl font-black tracking-tight text-kodi-dark flex items-center gap-2">
-          <Shield className="w-6 h-6 text-kodi-accent" /> Admin Dashboard
+          <Shield className="w-6 h-6 text-kodi-accent" /> Super Admin Dashboard
         </h1>
-        <p className="text-kodi-text-muted text-sm mt-1">Platform-wide overview and management</p>
+        <p className="text-kodi-text-muted text-sm mt-1">Create home owners, then they add properties, units, caretakers, and tenants.</p>
       </div>
 
       {/* Stats */}
@@ -98,7 +133,89 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-[0.9fr_1.1fr] gap-6">
+        {/* Create Owner */}
+        <div className="glass-card">
+          <div className="mb-5 flex items-start justify-between gap-4">
+            <div>
+              <h2 className="text-base font-semibold text-kodi-text-primary flex items-center gap-2">
+                <UserPlus className="w-4 h-4 text-kodi-accent" /> Add Home Owner
+              </h2>
+              <p className="mt-1 text-sm text-kodi-text-muted">Create the landlord account that starts a new rental workspace.</p>
+            </div>
+            <span className="badge badge-purple">Super admin</span>
+          </div>
+
+          <form onSubmit={submitOwner} className="space-y-4">
+            <div>
+              <label className="label">Owner name</label>
+              <input
+                className="input"
+                value={ownerForm.name}
+                onChange={(event) => updateOwnerField('name', event.target.value)}
+                placeholder="e.g. Mary Wambui"
+                required
+              />
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label className="label">Phone</label>
+                <input
+                  className="input"
+                  value={ownerForm.phone}
+                  onChange={(event) => updateOwnerField('phone', event.target.value)}
+                  placeholder="+254712345678"
+                  required
+                />
+              </div>
+              <div>
+                <label className="label">Plan</label>
+                <select
+                  className="input"
+                  value={ownerForm.plan}
+                  onChange={(event) => updateOwnerField('plan', event.target.value)}
+                >
+                  <option value="FREE">Free</option>
+                  <option value="STARTER">Starter</option>
+                  <option value="PRO">Pro</option>
+                  <option value="ENTERPRISE">Enterprise</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label className="label">Email</label>
+              <input
+                className="input"
+                type="email"
+                value={ownerForm.email}
+                onChange={(event) => updateOwnerField('email', event.target.value)}
+                placeholder="owner@example.com"
+                required
+              />
+            </div>
+            <div>
+              <label className="label">Initial password</label>
+              <div className="flex gap-2">
+                <div className="relative flex-1">
+                  <KeyRound className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-kodi-text-muted" />
+                  <input
+                    className="input pl-9"
+                    value={ownerForm.password}
+                    onChange={(event) => updateOwnerField('password', event.target.value)}
+                    placeholder={suggestedPassword}
+                  />
+                </div>
+                <button type="button" onClick={copyPassword} className="btn-secondary px-3" title="Copy password">
+                  <Copy className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+            <button type="submit" disabled={createOwner.isPending} className="btn-primary w-full justify-center">
+              {createOwner.isPending ? 'Creating owner...' : 'Create Home Owner'}
+            </button>
+          </form>
+        </div>
+
         {/* Users */}
         <div className="glass-card">
           <h2 className="text-base font-semibold text-kodi-text-primary mb-4 flex items-center gap-2">

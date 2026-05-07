@@ -16,6 +16,10 @@ router.post('/register',
   body('email').isEmail().normalizeEmail(),
   body('password').isLength({ min: 8 }),
   async (req, res, next) => {
+    if (process.env.NODE_ENV === 'production' && process.env.ALLOW_PUBLIC_REGISTRATION !== 'true') {
+      return res.status(403).json({ error: 'Landlord accounts are created by the super admin.' });
+    }
+
     const errors = validationResult(req);
     if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 

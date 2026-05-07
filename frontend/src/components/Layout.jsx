@@ -39,7 +39,7 @@ const caretakerNav = [
 
 const adminNav = [
   { to: '/dashboard', label: 'Overview', icon: LayoutDashboard, exact: true },
-  { to: '/dashboard/admin', label: 'Admin Panel', icon: Shield },
+  { to: '/dashboard/admin', label: 'Super Admin', icon: Shield },
   { to: '/dashboard/properties', label: 'Properties', icon: Building2 },
   { to: '/dashboard/units', label: 'Units', icon: Home },
   { to: '/dashboard/tenants', label: 'Tenants', icon: Users },

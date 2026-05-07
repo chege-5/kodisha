@@ -39,6 +39,7 @@ const adminRoutes = require('./routes/admin');
 const { scheduleRentReminders } = require('./jobs/rentReminders');
 const { scheduleTrustScoreSync } = require('./jobs/trustScoreSync');
 const { scheduleMonthlyDigest } = require('./jobs/monthlyDigest');
+const { ensureSuperAdmin } = require('./services/superAdmin');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -189,6 +190,7 @@ async function start() {
   try {
     await prisma.$connect();
     logger.info('Database connected');
+    await ensureSuperAdmin();
 
     app.listen(PORT, () => {
       logger.info(`Kodisha API running on port ${PORT} [${process.env.NODE_ENV}]`);
