@@ -4,20 +4,35 @@
 
 :root {
   --kodi-navy: #F8FAFC;
+  --kodi-navy-rgb: 248 250 252;
   --kodi-dark: #14213D;
+  --kodi-dark-rgb: 20 33 61;
   --kodi-card: #FFFFFF;
+  --kodi-card-rgb: 255 255 255;
   --kodi-border: #E2E8F0;
+  --kodi-border-rgb: 226 232 240;
   --kodi-accent: #1D4ED8;
+  --kodi-accent-rgb: 29 78 216;
   --kodi-accent-light: #60A5FA;
+  --kodi-accent-light-rgb: 96 165 250;
   --kodi-cyan: #06b6d4;
+  --kodi-cyan-rgb: 6 182 212;
   --kodi-emerald: #10B981;
+  --kodi-emerald-rgb: 16 185 129;
   --kodi-amber: #F59E0B;
+  --kodi-amber-rgb: 245 158 11;
   --kodi-rose: #EF4444;
+  --kodi-rose-rgb: 239 68 68;
   --kodi-purple: #a855f7;
+  --kodi-purple-rgb: 168 85 247;
   --kodi-slate: #334155;
+  --kodi-slate-rgb: 51 65 85;
   --kodi-text-primary: #0F172A;
+  --kodi-text-primary-rgb: 15 23 42;
   --kodi-text-secondary: #334155;
+  --kodi-text-secondary-rgb: 51 65 85;
   --kodi-text-muted: #64748B;
+  --kodi-text-muted-rgb: 100 116 139;
   --bg-gradient-1: rgba(29, 78, 216, 0.16);
   --bg-gradient-2: rgba(16, 185, 129, 0.14);
   --bg-main-start: #f8fafc;
@@ -27,20 +42,35 @@
 
 [data-theme="dark"] {
   --kodi-navy: #0F172A;
+  --kodi-navy-rgb: 15 23 42;
   --kodi-dark: #F8FAFC;
+  --kodi-dark-rgb: 248 250 252;
   --kodi-card: #1E293B;
+  --kodi-card-rgb: 30 41 59;
   --kodi-border: #334155;
+  --kodi-border-rgb: 51 65 85;
   --kodi-accent: #3B82F6;
+  --kodi-accent-rgb: 59 130 246;
   --kodi-accent-light: #93C5FD;
+  --kodi-accent-light-rgb: 147 197 253;
   --kodi-cyan: #22d3ee;
+  --kodi-cyan-rgb: 34 211 238;
   --kodi-emerald: #34d399;
+  --kodi-emerald-rgb: 52 211 153;
   --kodi-amber: #fbbf24;
+  --kodi-amber-rgb: 251 191 36;
   --kodi-rose: #fb7185;
+  --kodi-rose-rgb: 251 113 133;
   --kodi-purple: #c084fc;
+  --kodi-purple-rgb: 192 132 252;
   --kodi-slate: #94A3B8;
+  --kodi-slate-rgb: 148 163 184;
   --kodi-text-primary: #F8FAFC;
+  --kodi-text-primary-rgb: 248 250 252;
   --kodi-text-secondary: #CBD5E1;
+  --kodi-text-secondary-rgb: 203 213 225;
   --kodi-text-muted: #94A3B8;
+  --kodi-text-muted-rgb: 148 163 184;
   --bg-gradient-1: rgba(59, 130, 246, 0.2);
   --bg-gradient-2: rgba(52, 211, 153, 0.15);
   --bg-main-start: #0F172A;
@@ -73,6 +103,8 @@
     margin: 0;
     min-height: 100%;
     position: relative;
+    line-height: 1.5;
+    text-rendering: optimizeLegibility;
     background: 
       radial-gradient(at 0% 0%, hsla(217, 91%, 60%, 0.15) 0px, transparent 50%),
       radial-gradient(at 50% 0%, hsla(162, 84%, 39%, 0.1) 0px, transparent 50%),
@@ -100,7 +132,12 @@
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-kodi-accent text-white text-sm font-bold rounded-2xl
     transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed
-    shadow-lg shadow-kodi-accent/25 hover:bg-kodi-accent-light hover:shadow-kodi-accent/40 hover:-translate-y-1 hover:scale-[1.02] active:translate-y-0 active:scale-95;
+    shadow-lg hover:bg-kodi-accent-light hover:-translate-y-1 hover:scale-[1.02] active:translate-y-0 active:scale-95;
+    --tw-shadow-color: rgb(29 78 216 / 0.25);
+    --tw-shadow: var(--tw-shadow-colored);
+  }
+  .btn-primary:hover {
+    --tw-shadow-color: rgb(29 78 216 / 0.4);
   }
   .btn-secondary {
     @apply inline-flex items-center justify-center gap-2 px-6 py-2.5 border border-kodi-border bg-kodi-card text-kodi-text-primary text-sm font-bold rounded-2xl
@@ -108,22 +145,30 @@
   }
   .btn-danger {
     @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-kodi-rose text-white text-sm font-semibold rounded-xl
-    hover:bg-rose-400 transition-all duration-200 shadow-lg shadow-kodi-rose/20;
+    hover:bg-rose-400 transition-all duration-200 shadow-lg;
+    --tw-shadow-color: rgb(239 68 68 / 0.2);
+    --tw-shadow: var(--tw-shadow-colored);
   }
   .btn-success {
     @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-kodi-emerald text-white text-sm font-semibold rounded-xl
-    hover:bg-emerald-400 transition-all duration-200 shadow-lg shadow-kodi-emerald/20;
+    hover:bg-emerald-400 transition-all duration-200 shadow-lg;
+    --tw-shadow-color: rgb(16 185 129 / 0.2);
+    --tw-shadow: var(--tw-shadow-colored);
   }
   .btn-ghost {
     @apply inline-flex items-center justify-center gap-2 px-4 py-2 text-kodi-text-secondary text-sm font-medium rounded-xl
-    hover:bg-white/10 hover:text-white transition-all duration-200;
+    hover:bg-kodi-accent/10 hover:text-kodi-accent transition-all duration-200;
   }
 
   .glass-card {
     @apply bg-kodi-card/90 backdrop-blur-xl rounded-3xl border border-kodi-border p-6 shadow-xl shadow-slate-200/50 dark:shadow-black/20;
   }
   .glass-card-hover {
-    @apply glass-card cursor-pointer transition-all duration-500 hover:scale-[1.01] hover:border-kodi-accent/40 hover:bg-kodi-card hover:shadow-2xl hover:shadow-kodi-accent/10;
+    @apply glass-card cursor-pointer transition-all duration-500 hover:scale-[1.01] hover:border-kodi-accent/40 hover:bg-kodi-card hover:shadow-2xl;
+  }
+  .glass-card-hover:hover {
+    --tw-shadow-color: rgb(29 78 216 / 0.1);
+    --tw-shadow: var(--tw-shadow-colored);
   }
   .card {
     @apply bg-white rounded-2xl border border-kodi-border p-6 shadow-sm shadow-slate-200/70 transition-all duration-300;
@@ -132,8 +177,12 @@
   .stat-card {
     @apply bg-kodi-card backdrop-blur-xl rounded-3xl border border-kodi-border p-6
     shadow-xl shadow-slate-200/60 transition-all duration-500 flex flex-col gap-2 relative overflow-hidden
-    hover:-translate-y-2 hover:shadow-2xl hover:shadow-kodi-accent/10;
+    hover:-translate-y-2 hover:shadow-2xl;
     will-change: transform;
+  }
+  .stat-card:hover {
+    --tw-shadow-color: rgb(29 78 216 / 0.1);
+    --tw-shadow: var(--tw-shadow-colored);
   }
   .stat-card::before {
     content: '';
@@ -259,6 +308,14 @@
   .saas-card--slate { --tint: 71, 85, 105; }
   .saas-card--teal { --tint: 20, 184, 166; }
   .saas-card--pink { --tint: 236, 72, 153; }
+  .bg-slate-900 .saas-card {
+    background: linear-gradient(145deg, rgba(var(--tint), 0.18), rgba(15, 23, 42, 0.82) 58%);
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.2);
+  }
+  .bg-slate-900 .saas-card::after {
+    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+  }
   .saas-chip {
     border-radius: 999px;
     border: 1px solid rgba(148, 163, 184, 0.4);
@@ -325,6 +382,78 @@
   background: rgba(255, 255, 255, 0.82);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+}
+
+[data-theme="dark"] .bg-white,
+[data-theme="dark"] .bg-white\/95,
+[data-theme="dark"] .bg-white\/90,
+[data-theme="dark"] .bg-white\/85 {
+  background-color: rgb(var(--kodi-card-rgb) / var(--tw-bg-opacity, 1));
+}
+
+[data-theme="dark"] .bg-slate-50,
+[data-theme="dark"] .bg-slate-100 {
+  background-color: rgb(15 23 42 / var(--tw-bg-opacity, 1));
+}
+
+[data-theme="dark"] .bg-slate-200 {
+  background-color: rgb(51 65 85 / var(--tw-bg-opacity, 1));
+}
+
+[data-theme="dark"] .text-slate-400 {
+  color: rgb(203 213 225 / var(--tw-text-opacity, 1));
+}
+
+[data-theme="dark"] .shadow-slate-200\/50,
+[data-theme="dark"] .shadow-slate-200\/60,
+[data-theme="dark"] .shadow-slate-200\/70,
+[data-theme="dark"] .shadow-slate-300\/70 {
+  --tw-shadow-color: rgb(0 0 0 / 0.25);
+  --tw-shadow: var(--tw-shadow-colored);
+}
+
+.landing-page {
+  --kodi-navy: #F8FAFC;
+  --kodi-navy-rgb: 248 250 252;
+  --kodi-dark: #14213D;
+  --kodi-dark-rgb: 20 33 61;
+  --kodi-card: #FFFFFF;
+  --kodi-card-rgb: 255 255 255;
+  --kodi-border: #E2E8F0;
+  --kodi-border-rgb: 226 232 240;
+  --kodi-accent: #1D4ED8;
+  --kodi-accent-rgb: 29 78 216;
+  --kodi-accent-light: #60A5FA;
+  --kodi-accent-light-rgb: 96 165 250;
+  --kodi-cyan: #06b6d4;
+  --kodi-cyan-rgb: 6 182 212;
+  --kodi-emerald: #10B981;
+  --kodi-emerald-rgb: 16 185 129;
+  --kodi-amber: #F59E0B;
+  --kodi-amber-rgb: 245 158 11;
+  --kodi-rose: #EF4444;
+  --kodi-rose-rgb: 239 68 68;
+  --kodi-purple: #a855f7;
+  --kodi-purple-rgb: 168 85 247;
+  --kodi-slate: #334155;
+  --kodi-slate-rgb: 51 65 85;
+  --kodi-text-primary: #0F172A;
+  --kodi-text-primary-rgb: 15 23 42;
+  --kodi-text-secondary: #334155;
+  --kodi-text-secondary-rgb: 51 65 85;
+  --kodi-text-muted: #64748B;
+  --kodi-text-muted-rgb: 100 116 139;
+  background-color: #F8FAFC;
+  color: #0F172A;
+}
+
+[data-theme="dark"] .landing-page.bg-slate-50,
+[data-theme="dark"] .landing-page .bg-slate-50 {
+  background-color: rgb(248 250 252 / var(--tw-bg-opacity, 1));
+}
+
+[data-theme="dark"] .landing-page .text-slate-400 {
+  color: rgb(148 163 184 / var(--tw-text-opacity, 1));
 }
 
 @keyframes fadeInUp {

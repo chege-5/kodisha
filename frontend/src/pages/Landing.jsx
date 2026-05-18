@@ -9,15 +9,12 @@ import {
   CreditCard,
   Droplets,
   FileText,
-  Headphones,
   KeyRound,
   MessageSquare,
   Mic,
   Phone,
-  Receipt,
   Shield,
   Smartphone,
-  Users,
   Wrench,
   Sparkles,
 } from 'lucide-react';
@@ -48,14 +45,14 @@ const capabilities = [
   { icon: Shield, title: 'Tenant behavioral score', desc: 'Analyze risk signals based on historical payment behavior to make better selection decisions for your properties.', tone: 'saas-card--indigo' },
   { icon: KeyRound, title: 'Digital credit passport', desc: 'Empower tenants to share their verified rent history with future landlords, rewarding good payment habits.', tone: 'saas-card--rose' },
   { icon: FileText, title: 'Lease & compliance', desc: 'Automated lease generation, renewal tracking, and tax-ready reporting for iTax and internal accounting.', tone: 'saas-card--purple' },
-  { icon: BellRing, title: 'Omnichannel alerts', desc: 'Reach tenants where they are—SMS, WhatsApp, and USSD—with billing alerts, receipts, and property-wide broadcasts.', tone: 'saas-card--blue' },
+  { icon: BellRing, title: 'Omnichannel alerts', desc: 'Reach tenants where they are - SMS, WhatsApp, and USSD - with billing alerts, receipts, and property-wide broadcasts.', tone: 'saas-card--blue' },
   { icon: BarChart3, title: 'Financial analytics', desc: 'Deep insights into collection efficiency, vacancy rates, and projected revenue for data-driven management.', tone: 'saas-card--teal' },
 ];
 
 const channels = [
   { icon: Building2, label: 'Web portal', desc: 'Full-featured administrative dashboards for landlords and property management teams.', tone: 'saas-card--indigo' },
   { icon: CreditCard, label: 'M-Pesa Paybill', desc: 'Native STK push and C2B matching for instant, reconciliation-free rent collection.', tone: 'saas-card--emerald' },
-  { icon: Phone, label: 'USSD *XXX#', desc: 'Accessibility for all—pay rent or check unit balances on any feature phone without internet.', tone: 'saas-card--amber' },
+  { icon: Phone, label: 'USSD *XXX#', desc: 'Accessibility for all - pay rent or check unit balances on any feature phone without internet.', tone: 'saas-card--amber' },
   { icon: Smartphone, label: 'Smart SMS', desc: 'Automated billing reminders, digital receipts, and real-time maintenance updates.', tone: 'saas-card--blue' },
   { icon: Mic, label: 'Voice AI', desc: 'Interactive voice prompts for payment confirmations and tenant accessibility across Kenya.', tone: 'saas-card--purple' },
   { icon: MessageSquare, label: 'WhatsApp', desc: 'Direct tenant chat for support, receipt delivery, and automated payment prompts.', tone: 'saas-card--teal' },
@@ -112,7 +109,7 @@ export default function Landing() {
   useReveal();
 
   return (
-    <div className="min-h-screen overflow-hidden bg-slate-50 text-kodi-text-primary relative isolate">
+    <div className="landing-page min-h-screen overflow-hidden bg-slate-50 text-kodi-text-primary relative isolate">
       {/* Dynamic Background Elements */}
       <div className="pointer-events-none absolute -left-24 top-16 h-96 w-96 rounded-full bg-kodi-accent/15 blur-[120px] animate-float" />
       <div className="pointer-events-none absolute right-[-10rem] top-40 h-[30rem] w-[30rem] rounded-full bg-kodi-emerald/10 blur-[140px] animate-pulse" />
@@ -152,7 +149,7 @@ export default function Landing() {
               <Link to="/login" className="btn-primary px-7 py-3.5 text-base">
                 Open Dashboard <ArrowRight className="h-4 w-4" />
               </Link>
-              <a href="#workflow" className="inline-flex items-center justify-center rounded-xl border border-white/20 bg-white/10 px-7 py-3.5 text-base font-semibold text-white transition hover:bg-white/15">
+              <a href="#workflow" className="inline-flex items-center justify-center rounded-xl border border-kodi-border bg-white/90 px-7 py-3.5 text-base font-semibold text-kodi-dark shadow-sm transition hover:border-kodi-accent/40 hover:bg-kodi-card">
                 See How It Works
               </a>
             </div>
@@ -335,7 +332,7 @@ export default function Landing() {
               <div className="space-y-6">
                 <h2 className="text-4xl font-black tracking-tight sm:text-5xl">The Operating System for Modern Kenyan Real Estate.</h2>
                 <p className="text-lg leading-8 text-slate-300">
-                  Kodishaa wasn’t built in a boardroom; it was built in the streets and apartment blocks of Nairobi. We understood that the biggest challenge for landlords isn’t just "collecting money"—it’s the mental load of tracking hundreds of conversations, physical notebooks, and M-Pesa messages.
+                  Kodishaa was not built in a boardroom; it was built in the streets and apartment blocks of Nairobi. We understood that the biggest challenge for landlords is not just "collecting money" - it is the mental load of tracking hundreds of conversations, physical notebooks, and M-Pesa messages.
                 </p>
                 <p className="text-lg leading-8 text-slate-300">
                   Our platform consolidates every touchpoint into a single, intelligent flow. By integrating USSD for accessibility, M-Pesa for instant settlement, and AI-driven risk scoring, we provide property owners with the same level of technical sophistication as global enterprise firms, tailored specifically for the local market context.
@@ -355,7 +352,7 @@ export default function Landing() {
               <div className="grid gap-4 sm:grid-cols-2">
                 {[
                   ['Built for Scale', 'Whether you manage 10 units or 1,000, Kodishaa provides the infrastructure to grow your portfolio without increasing your administrative headcount.', 'saas-card--slate'],
-                  ['Security First', 'Your data is encrypted and backed up daily. We prioritize the privacy of your financial records and your tenants’ personal information above all else.', 'saas-card--slate'],
+                  ['Security First', "Your data is encrypted and backed up daily. We prioritize the privacy of your financial records and your tenants' personal information above all else.", 'saas-card--slate'],
                   ['Local Expertise', 'Integrated directly with local payment gateways and communication networks to ensure 99.9% uptime for your critical operations.', 'saas-card--slate'],
                   ['Dedicated Support', 'Our team of real estate experts is available to help you migrate your data and train your caretakers on the ground.', 'saas-card--slate'],
                 ].map(([title, text, tone], i) => (

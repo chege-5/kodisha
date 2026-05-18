@@ -32,3 +32,4 @@
 {"error":"To is invalid; ","level":"error","message":"SMS send failed","timestamp":"2026-05-04T19:24:35.892Z","to":"0768506913"}
 {"error":"To is invalid; ","level":"error","message":"SMS send failed","timestamp":"2026-05-04T19:47:29.315Z","to":"0768506913"}
 {"error":"To is invalid; ","level":"error","message":"Notification SMS failed","phone":"0768506913","timestamp":"2026-05-04T19:47:29.316Z"}
+{"error":"Authentication failed against database server at `localhost`, the provided database credentials for `postgres` are not valid.\n\nPlease make sure to provide valid database credentials for the database server at `localhost`.","level":"error","message":"Startup failed","timestamp":"2026-05-14T09:21:05.592Z"}
