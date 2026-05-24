@@ -1,7 +1,11 @@
 import axios from 'axios';
 
+const baseURL = import.meta.env.VITE_URL 
+  ? import.meta.env.VITE_URL.replace(/\/$/, '') 
+  : '/api';
+
 const api = axios.create({
-  baseURL: '/api',
+  baseURL,
   timeout: 15000,
   withCredentials: true,
 });
@@ -21,7 +25,7 @@ api.interceptors.response.use(
     if (err.response?.status === 401 && !original._retry && !String(original?.url || '').includes('/auth/refresh')) {
       original._retry = true;
       try {
-        await axios.post('/api/auth/refresh', {}, { withCredentials: true });
+        await axios.post(`${baseURL}/auth/refresh`, {}, { withCredentials: true });
         return api(original);
       } catch {
         localStorage.removeItem('user');

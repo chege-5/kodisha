@@ -44,13 +44,15 @@ const { ensureSuperAdmin } = require('./services/superAdmin');
 const app = express();
 const PORT = process.env.PORT || 5000;
 const DEFAULT_FRONTEND_URL = process.env.NODE_ENV === 'production'
-  ? 'https://kodisha-blue.vercel.app'
+  ? 'https://kodisha-2ar4.onrender.com'
   : 'http://localhost:3000';
 const FRONTEND_URL = process.env.FRONTEND_URL || DEFAULT_FRONTEND_URL;
 process.env.FRONTEND_URL = FRONTEND_URL;
 const allowedOrigins = new Set([
   FRONTEND_URL,
   'https://kodisha-blue.vercel.app',
+  'https://kodishaa.onrender.com',
+  'https://kodisha-2ar4.onrender.com',
   'http://localhost:3000',
   'http://localhost:5173',
 ].map((origin) => origin.replace(/\/$/, '')));
