@@ -11,12 +11,17 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
+    try {
     const stored = localStorage.getItem('user');
     const storedRole = localStorage.getItem('role');
     if (stored && storedRole) {
       setUser(JSON.parse(stored));
       setRole(storedRole);
     }
+  } catch (e) {
+    localStorage.removeItem('user');
+    localStorage.removeItem('role');
+  }
     setLoading(false);
   }, []);
 
