@@ -111,7 +111,7 @@ async function rotateRefreshToken(req, res, next) {
 
     setAuthCookies(res, tokens);
 
-    res.json({ message: 'Refreshed' });
+    res.json({ message: 'Refreshed', accessToken: tokens.accessToken });
   } catch (err) {
     logger.warn('Refresh token rotation failed', { error: err.name });
     return res.status(401).json({ error: 'Invalid refresh token' });

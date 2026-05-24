@@ -9,19 +9,17 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
     try {
-    const stored = localStorage.getItem('user');
-    const storedRole = localStorage.getItem('role');
-    if (stored && storedRole) {
-      setUser(JSON.parse(stored));
-      setRole(storedRole);
+      const stored = localStorage.getItem('user');
+      const storedRole = localStorage.getItem('role');
+      if (stored && storedRole) {
+        setUser(JSON.parse(stored));
+        setRole(storedRole);
+      }
+    } catch (e) {
+      localStorage.removeItem('user');
+      localStorage.removeItem('role');
     }
-  } catch (e) {
-    localStorage.removeItem('user');
-    localStorage.removeItem('role');
-  }
     setLoading(false);
   }, []);
 
@@ -31,6 +29,9 @@ export function AuthProvider({ children }) {
     const sessionUser = sessionRole ? { ...data.user, role: sessionRole } : data.user;
     localStorage.setItem('user', JSON.stringify(sessionUser));
     localStorage.setItem('role', sessionRole);
+    if (data.accessToken) {
+      localStorage.setItem('accessToken', data.accessToken);
+    }
     setUser(sessionUser);
     setRole(sessionRole);
     return data;
