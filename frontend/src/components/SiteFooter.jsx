@@ -10,7 +10,7 @@ export default function SiteFooter({ compact = false }) {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-kodi-border bg-white/95 text-kodi-text-muted">
+    <footer className="border-t border-kodi-border bg-kodi-card/80 backdrop-blur-md text-kodi-text-muted">
       <div className={`mx-auto grid w-full max-w-7xl gap-5 px-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:px-8 ${compact ? 'py-5' : 'py-7'}`}>
         <div className="space-y-1.5">
           <p className="text-sm font-semibold tracking-tight text-kodi-dark">

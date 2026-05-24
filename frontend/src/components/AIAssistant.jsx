@@ -34,7 +34,7 @@ export default function AIAssistant() {
         content += `\n\nTotal: KSh ${Number(data.total).toLocaleString('en-KE')}`;
       }
       if (data.suggestions) {
-        content += '\n\n💡 Try: ' + data.suggestions.join(', ');
+        content += '\n\nTry: ' + data.suggestions.join(', ');
       }
       setMessages((prev) => [...prev, { role: 'assistant', content, type: data.type }]);
     },
@@ -67,7 +67,7 @@ export default function AIAssistant() {
   }
 
   return (
-    <div className="fixed bottom-6 right-6 w-96 max-w-[calc(100vw-2rem)] h-[500px] max-h-[calc(100vh-3rem)] bg-kodi-dark border border-kodi-border rounded-2xl shadow-2xl shadow-black/30 flex flex-col z-50 animate-slide-up overflow-hidden">
+    <div className="fixed bottom-6 right-6 w-96 max-w-[calc(100vw-2rem)] h-[500px] max-h-[calc(100vh-3rem)] bg-kodi-card border border-kodi-border rounded-2xl shadow-2xl shadow-black/30 flex flex-col z-50 animate-slide-up overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-kodi-border/30 bg-kodi-card/50">
         <div className="flex items-center gap-2">

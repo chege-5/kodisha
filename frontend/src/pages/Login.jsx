@@ -29,11 +29,12 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen overflow-hidden bg-slate-50 text-kodi-text-primary">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(29,78,216,0.15),_transparent_30%),radial-gradient(circle_at_bottom_right,_rgba(16,185,129,0.12),_transparent_28%)]" />
-      <div className="relative mx-auto grid min-h-screen max-w-7xl items-center gap-10 px-4 py-8 md:grid-cols-[1.05fr_0.95fr] md:px-8">
+    <div className="min-h-screen overflow-hidden bg-kodi-navy text-kodi-text-primary relative flex flex-col justify-between">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(56,189,248,0.15),_transparent_30%),radial-gradient(circle_at_bottom_right,_rgba(52,211,153,0.12),_transparent_28%)]" />
+      
+      <div className="relative mx-auto grid w-full max-w-7xl items-center gap-10 px-4 py-8 md:grid-cols-[1.05fr_0.95fr] md:px-8 my-auto">
         <div className="space-y-8 text-center md:text-left animate-fade-up">
-          <div className="inline-flex items-center gap-2 rounded-full border border-kodi-border bg-white px-4 py-2 text-sm text-kodi-text-secondary shadow-sm">
+          <div className="inline-flex items-center gap-2 rounded-full border border-kodi-border bg-kodi-card px-4 py-2 text-sm text-kodi-text-secondary shadow-sm">
             <Sparkles className="h-4 w-4 text-kodi-accent-light" />
             Auto role detection for admins, landlords, caretakers, and tenants
           </div>
@@ -42,8 +43,8 @@ export default function Login() {
             <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-kodi-accent to-kodi-emerald shadow-kodi-accent-25">
               <Building2 className="h-8 w-8 text-white" />
             </div>
-            <h1 className="max-w-3xl text-4xl font-black tracking-tight text-kodi-dark md:text-6xl">
-              kodishaa
+            <h1 className="max-w-3xl text-4xl font-black tracking-tight text-kodi-text-primary md:text-6xl">
+              kodishaa<span className="text-kodi-accent">.</span>
             </h1>
           </div>
 
@@ -57,7 +58,7 @@ export default function Login() {
                 <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-kodi-navy">
                   <Icon className="h-5 w-5 text-kodi-accent-light" />
                 </div>
-                <h2 className="mb-2 text-sm font-semibold text-kodi-dark">{title}</h2>
+                <h2 className="mb-2 text-sm font-semibold text-kodi-text-primary">{title}</h2>
                 <p className="text-sm leading-6 text-kodi-text-muted">{text}</p>
               </div>
             ))}
@@ -66,9 +67,9 @@ export default function Login() {
 
         <div className="relative mx-auto w-full max-w-md animate-fade-in">
           <div className="absolute inset-0 -z-10 rounded-[2rem] bg-kodi-accent/10 blur-2xl" />
-          <div className="glass-card border-kodi-border shadow-2xl shadow-slate-300/50">
+          <div className="glass-card border-kodi-border shadow-2xl">
             <div className="mb-8">
-              <h2 className="mt-3 text-2xl font-bold text-kodi-dark">Welcome back</h2>
+              <h2 className="mt-3 text-2xl font-bold text-kodi-text-primary">Welcome back</h2>
               <p className="mt-2 text-sm text-kodi-text-muted">Sign in to your workspace and pick up exactly where you left off.</p>
             </div>
 
@@ -108,12 +109,12 @@ export default function Login() {
               </div>
               <button type="submit" disabled={loading} className="btn-primary w-full py-3.5 text-base">
                 {loading ? (
-                  <span className="flex items-center gap-2">
+                  <span className="flex items-center gap-2 justify-center">
                     <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
                     Signing in
                   </span>
                 ) : (
-                  <span className="flex items-center gap-2">
+                  <span className="flex items-center gap-2 justify-center">
                     Continue
                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </span>
@@ -121,15 +122,15 @@ export default function Login() {
               </button>
             </form>
 
-            <div className="mt-5 grid grid-cols-3 gap-2 rounded-2xl border border-kodi-border bg-kodi-navy p-2 text-center text-[11px] font-semibold text-kodi-text-muted">
+            <div className="mt-5 grid grid-cols-3 gap-2 rounded-2xl border border-kodi-border bg-kodi-navy p-2.5 text-center text-[10px] font-bold uppercase tracking-wider text-kodi-text-muted">
               <span>Admin / Landlord</span>
               <span>Caretaker</span>
               <span>Tenant</span>
             </div>
 
             <div className="mt-6 rounded-2xl border border-kodi-border bg-kodi-navy p-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-kodi-text-muted">Access control</p>
-              <p className="mt-3 text-sm text-kodi-text-secondary">
+              <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-kodi-text-muted">Access control</p>
+              <p className="mt-2 text-sm text-kodi-text-secondary">
                 Ask your administrator for credentials or use the password reset flow after your account is created.
               </p>
             </div>

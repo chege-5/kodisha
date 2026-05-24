@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import api, { getFriendlyError } from '../utils/apiClient';
@@ -24,13 +24,15 @@ import {
   Receipt,
   Send,
   ShieldCheck,
+  SunMedium,
   UserCircle,
   Wallet,
   Wrench,
   X,
   Zap,
+  MoonStar,
 } from 'lucide-react';
-import SiteFooter from '../components/SiteFooter';
+import { applyTheme, getInitialTheme } from '../utils/theme';
 
 const NAV_ITEMS = [
   { id: 'overview', label: 'Overview', icon: LayoutDashboard },
@@ -90,8 +92,8 @@ function SectionTitle({ title, subtitle, action }) {
 
 function EmptyState({ icon: Icon, title, text }) {
   return (
-    <div className="rounded-2xl border border-dashed border-kodi-border bg-white/70 px-6 py-10 text-center">
-      <Icon className="mx-auto h-9 w-9 text-kodi-text-muted" />
+    <div className="rounded-2xl border border-dashed border-kodi-border bg-kodi-card/70 px-6 py-10 text-center shadow-xl shadow-black/10">
+      <Icon className="mx-auto h-9 w-9 text-kodi-accent" />
       <p className="mt-3 text-sm font-semibold text-kodi-text-secondary">{title}</p>
       {text && <p className="mt-1 text-xs text-kodi-text-muted">{text}</p>}
     </div>
@@ -101,24 +103,26 @@ function EmptyState({ icon: Icon, title, text }) {
 function Sidebar({ activePage, setActivePage, user, tenant, onLogout, mobileOpen, setMobileOpen }) {
   const content = (
     <>
-      <div className="flex h-16 items-center gap-3 border-b border-kodi-border px-5">
-        <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-kodi-accent text-white">
+      <div className="flex h-20 items-center gap-3 border-b border-white/10 px-5">
+        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-kodi-accent text-white shadow-lg shadow-kodi-accent-20">
           <Home className="h-5 w-5" />
         </div>
         <div className="min-w-0">
-          <p className="text-base font-bold text-kodi-text-primary">Kodisha</p>
-          <p className="truncate text-xs text-kodi-text-muted">Tenant workspace</p>
+          <p className="text-base font-black text-slate-50">Kodisha</p>
+          <p className="truncate text-xs text-slate-300">Tenant portal</p>
         </div>
       </div>
 
-      <div className="border-b border-kodi-border px-5 py-5">
-        <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-500/15 text-emerald-600">
-            <UserCircle className="h-6 w-6" />
-          </div>
-          <div className="min-w-0">
-            <p className="truncate text-sm font-semibold text-kodi-text-primary">{tenant?.name || user?.name || 'Tenant'}</p>
-            <p className="truncate text-xs text-kodi-text-muted">{tenant?.phone || user?.phone || 'No phone'}</p>
+      <div className="border-b border-white/10 px-5 py-5">
+        <div className="rounded-2xl border border-white/10 bg-white/10 p-3 shadow-inner shadow-white/5">
+          <div className="flex items-center gap-3">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-400/20 text-emerald-200">
+              <UserCircle className="h-6 w-6" />
+            </div>
+            <div className="min-w-0">
+              <p className="truncate text-sm font-semibold text-white">{tenant?.name || user?.name || 'Tenant'}</p>
+              <p className="truncate text-xs text-white/60">{tenant?.phone || user?.phone || 'No phone'}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -135,7 +139,7 @@ function Sidebar({ activePage, setActivePage, user, tenant, onLogout, mobileOpen
             className={`flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-sm font-semibold transition-all ${
               activePage === id
                 ? 'bg-kodi-accent text-white shadow-kodi-accent-20'
-                : 'text-kodi-text-secondary hover:bg-white hover:text-kodi-text-primary'
+                : 'text-slate-300 hover:bg-white/10 hover:text-white'
             }`}
           >
             <Icon className="h-4 w-4 flex-shrink-0" />
@@ -145,11 +149,11 @@ function Sidebar({ activePage, setActivePage, user, tenant, onLogout, mobileOpen
         ))}
       </nav>
 
-      <div className="border-t border-kodi-border p-3">
+      <div className="border-t border-white/10 p-3">
         <button
           type="button"
           onClick={onLogout}
-          className="flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-sm font-semibold text-kodi-text-muted transition-all hover:bg-rose-500/10 hover:text-kodi-rose"
+          className="flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-sm font-semibold text-white/60 transition-all hover:bg-rose-400/15 hover:text-rose-100"
         >
           <LogOut className="h-4 w-4" />
           Sign out
@@ -160,7 +164,7 @@ function Sidebar({ activePage, setActivePage, user, tenant, onLogout, mobileOpen
 
   return (
     <>
-      <aside className="hidden w-72 flex-shrink-0 border-r border-kodi-border bg-slate-50/95 lg:flex lg:flex-col">
+      <aside className="hidden w-72 flex-shrink-0 overflow-hidden border-r border-white/10 bg-[linear-gradient(180deg,#020617_0%,#0f172a_45%,#06352f_100%)] lg:flex lg:flex-col">
         {content}
       </aside>
 
@@ -172,12 +176,12 @@ function Sidebar({ activePage, setActivePage, user, tenant, onLogout, mobileOpen
             className="absolute inset-0 bg-black/50"
             onClick={() => setMobileOpen(false)}
           />
-          <aside className="relative flex h-full w-80 max-w-[86vw] flex-col bg-slate-50 shadow-2xl">
+          <aside className="relative flex h-full w-80 max-w-[86vw] flex-col bg-[linear-gradient(180deg,#020617_0%,#0f172a_45%,#06352f_100%)] shadow-2xl">
             <button
               type="button"
               aria-label="Close menu"
               onClick={() => setMobileOpen(false)}
-              className="absolute right-4 top-4 rounded-xl p-2 text-kodi-text-muted hover:bg-white hover:text-kodi-text-primary"
+              className="absolute right-4 top-4 rounded-xl p-2 text-white/60 hover:bg-white/10 hover:text-white"
             >
               <X className="h-5 w-5" />
             </button>
@@ -191,22 +195,22 @@ function Sidebar({ activePage, setActivePage, user, tenant, onLogout, mobileOpen
 
 function StatCard({ icon: Icon, label, value, tone = 'indigo', detail }) {
   const tones = {
-    indigo: 'bg-indigo-500/10 text-indigo-600',
-    emerald: 'bg-emerald-500/10 text-emerald-600',
-    rose: 'bg-rose-500/10 text-rose-600',
-    amber: 'bg-amber-500/10 text-amber-600',
-    cyan: 'bg-cyan-500/10 text-cyan-600',
+    indigo: 'bg-indigo-500/10 text-indigo-600 ring-indigo-500/15',
+    emerald: 'bg-emerald-500/10 text-emerald-600 ring-emerald-500/15',
+    rose: 'bg-rose-500/10 text-rose-600 ring-rose-500/15',
+    amber: 'bg-amber-500/10 text-amber-600 ring-amber-500/15',
+    cyan: 'bg-cyan-500/10 text-cyan-600 ring-cyan-500/15',
   };
 
   return (
-    <div className="rounded-2xl border border-kodi-border bg-white p-5 shadow-sm shadow-slate-200/70">
+    <div className="group rounded-2xl border border-kodi-border bg-kodi-card/85 p-5 shadow-[0_18px_45px_rgba(0,0,0,0.22)] ring-1 ring-white/5 transition-all duration-300 hover:-translate-y-1 hover:border-kodi-accent/40 hover:shadow-kodi-accent-10">
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-kodi-text-muted">{label}</p>
           <p className="mt-2 text-2xl font-bold text-kodi-text-primary">{value}</p>
           {detail && <p className="mt-1 text-xs text-kodi-text-muted">{detail}</p>}
         </div>
-        <div className={`flex h-10 w-10 items-center justify-center rounded-2xl ${tones[tone] || tones.indigo}`}>
+        <div className={`flex h-11 w-11 items-center justify-center rounded-2xl ring-4 transition-transform group-hover:scale-105 ${tones[tone] || tones.indigo}`}>
           <Icon className="h-5 w-5" />
         </div>
       </div>
@@ -220,7 +224,13 @@ export default function TenantPortal() {
   const queryClient = useQueryClient();
   const [activePage, setActivePage] = useState('overview');
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [theme, setTheme] = useState(() => getInitialTheme());
   const [issueForm, setIssueForm] = useState({ category: 'PLUMBING', description: '' });
+
+  useEffect(() => {
+    applyTheme(theme);
+    localStorage.setItem('kodisha-theme', theme);
+  }, [theme]);
 
   const { data: tenant, isLoading: tenantLoading } = useQuery({
     queryKey: ['tenant-detail', user?.id],
@@ -308,44 +318,47 @@ export default function TenantPortal() {
   function renderOverview() {
     return (
       <div className="space-y-6">
-        <div className="rounded-2xl border border-kodi-border bg-white p-5 shadow-xl shadow-slate-200/60 lg:p-7">
+        <div className="overflow-hidden rounded-[2rem] border border-kodi-border bg-kodi-card/90 shadow-[0_25px_80px_rgba(0,0,0,0.28)] backdrop-blur-xl">
           <div className="grid gap-6 lg:grid-cols-[1.35fr_0.65fr] lg:items-center">
-            <div>
+            <div className="p-5 sm:p-7">
               <div className="flex flex-wrap items-center gap-2">
                 <span className={`badge ${totalDue > 0 ? 'badge-amber' : 'badge-green'}`}>
-                  {totalDue > 0 ? 'Payment pending' : 'Clear balance'}
+                  {totalDue > 0 ? 'Balance due' : 'All clear'}
                 </span>
                 <span className="badge badge-cyan">{monthLabel(now)}</span>
               </div>
-              <h1 className="mt-5 text-3xl font-bold tracking-tight text-kodi-text-primary sm:text-4xl">
+              <h1 className="mt-5 text-3xl font-black tracking-tight text-kodi-text-primary sm:text-5xl">
                 Hi, {tenant?.name?.split(' ')[0] || user?.name?.split(' ')[0] || 'there'}
               </h1>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-kodi-text-muted">
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-kodi-text-muted">
                 {tenant?.unit
-                  ? `${tenant.unit.property?.name || 'Your property'}, Unit ${tenant.unit.unitNumber}`
-                  : 'Your unit assignment will appear here once it is active.'}
+                  ? `${tenant.unit.property?.name || 'Your property'} - Unit ${tenant.unit.unitNumber}`
+                  : 'Your active unit will appear here once assigned.'}
               </p>
 
 
               <div className="mt-8 grid gap-3 sm:grid-cols-3">
-                <div className="rounded-2xl bg-slate-50 p-4">
+                <div className="rounded-2xl border border-kodi-border bg-slate-950/45 p-4 transition-all duration-300 hover:border-kodi-accent/40">
                   <p className="text-xs text-kodi-text-muted">Rent balance</p>
                   <p className="mt-1 text-xl font-bold text-kodi-text-primary">{formatCurrency(rentBalance)}</p>
                 </div>
-                <div className="rounded-2xl bg-slate-50 p-4">
+                <div className="rounded-2xl border border-kodi-border bg-slate-950/45 p-4 transition-all duration-300 hover:border-kodi-accent/40">
                   <p className="text-xs text-kodi-text-muted">Other bills</p>
                   <p className="mt-1 text-xl font-bold text-kodi-text-primary">{formatCurrency(nonRentBillBalance)}</p>
                 </div>
-                <div className="rounded-2xl bg-slate-50 p-4">
+                <div className="rounded-2xl border border-kodi-border bg-slate-950/45 p-4 transition-all duration-300 hover:border-kodi-accent/40">
                   <p className="text-xs text-kodi-text-muted">Due date</p>
                   <p className="mt-1 text-xl font-bold text-kodi-text-primary">{formatDate(nextDueDate)}</p>
                 </div>
               </div>
             </div>
-            <div className="rounded-2xl bg-kodi-navy p-5 text-white">
-              <p className="text-sm text-white/70">Total due now</p>
-              <p className="mt-2 text-4xl font-bold">{formatCurrency(totalDue)}</p>
-              <div className="mt-5 h-2 overflow-hidden rounded-full bg-white/15">
+            <div className="m-3 rounded-[1.5rem] bg-[linear-gradient(160deg,#0f172a_0%,#155e75_58%,#047857_100%)] p-5 text-white shadow-2xl shadow-black/30 lg:m-5 lg:p-6">
+              <div className="flex items-center justify-between gap-3">
+                <p className="text-sm text-white/70">Total due now</p>
+                {totalDue > 0 ? <AlertCircle className="h-5 w-5 text-amber-200" /> : <CheckCircle2 className="h-5 w-5 text-emerald-200" />}
+              </div>
+              <p className="mt-3 text-4xl font-black tracking-tight">{formatCurrency(totalDue)}</p>
+              <div className="mt-6 h-2 overflow-hidden rounded-full bg-white/15">
                 <div className="h-full rounded-full bg-emerald-400" style={{ width: `${paymentProgress}%` }} />
               </div>
               <div className="mt-2 flex justify-between text-xs text-white/60">
@@ -356,7 +369,7 @@ export default function TenantPortal() {
                 type="button"
                 onClick={() => payAmount(totalDue)}
                 disabled={stkPush.isPending || totalDue <= 0}
-                className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-white px-4 py-3 text-sm font-bold text-kodi-navy transition-all hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50"
+                className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-300 px-4 py-3 text-sm font-black text-slate-950 shadow-kodi-emerald-20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-emerald-200 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <Send className="h-4 w-4" />
                 {stkPush.isPending ? 'Sending prompt...' : totalDue > 0 ? 'Pay with M-Pesa' : 'No payment due'}
@@ -373,15 +386,15 @@ export default function TenantPortal() {
         </div>
 
         <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
-          <div className="rounded-2xl border border-kodi-border bg-white p-5 shadow-sm shadow-slate-200/70">
-            <SectionTitle title="Recent activity" subtitle="Payments and bill updates" />
+          <div className="rounded-2xl border border-kodi-border bg-kodi-card/85 p-5 shadow-[0_18px_45px_rgba(0,0,0,0.2)]">
+            <SectionTitle title="Recent activity" subtitle="Latest payments and bill changes" />
             <div className="mt-5 space-y-3">
               {recentActivity.length === 0 ? (
-                <EmptyState icon={CalendarDays} title="No activity yet" text="Payments and bills will appear here." />
+                <EmptyState icon={CalendarDays} title="No activity yet" text="Payments and bill changes will appear here." />
               ) : recentActivity.map((item) => {
                 const ActivityIcon = item.icon;
                 return (
-                  <div key={item.id} className="flex items-center gap-3 rounded-2xl border border-kodi-border bg-slate-50 px-4 py-3">
+                  <div key={item.id} className="flex items-center gap-3 rounded-2xl border border-kodi-border bg-slate-950/45 px-4 py-3 transition-all duration-300 hover:border-kodi-accent/40 hover:bg-slate-900/80">
                     <div className={`flex h-10 w-10 items-center justify-center rounded-2xl ${item.tone}`}>
                       <ActivityIcon className="h-4 w-4" />
                     </div>
@@ -395,8 +408,8 @@ export default function TenantPortal() {
             </div>
           </div>
 
-          <div className="rounded-2xl border border-kodi-border bg-white p-5 shadow-sm shadow-slate-200/70">
-            <SectionTitle title="Lease snapshot" subtitle="Unit, deposit, and contacts" />
+          <div className="rounded-2xl border border-kodi-border bg-kodi-card/85 p-5 shadow-[0_18px_45px_rgba(0,0,0,0.2)]">
+            <SectionTitle title="Lease snapshot" subtitle="Unit, deposit, and contact details" />
             <div className="mt-5 space-y-3">
               {[
                 ['Property', tenant?.unit?.property?.name || 'Not assigned', Building2],
@@ -405,7 +418,7 @@ export default function TenantPortal() {
                 ['Deposit', `${formatCurrency(tenant?.depositAmount)} - ${tenant?.depositStatus || 'Not set'}`, Wallet],
                 ['Phone', tenant?.phone || user?.phone || 'Not set', Phone],
               ].map(([label, value, Icon]) => (
-                <div key={label} className="flex items-center justify-between gap-4 rounded-2xl bg-slate-50 px-4 py-3">
+                <div key={label} className="flex items-center justify-between gap-4 rounded-2xl border border-kodi-border bg-slate-950/45 px-4 py-3 transition-all duration-300 hover:border-kodi-accent/40">
                   <div className="flex items-center gap-3">
                     <Icon className="h-4 w-4 text-kodi-accent" />
                     <span className="text-sm text-kodi-text-muted">{label}</span>
@@ -425,7 +438,7 @@ export default function TenantPortal() {
       <div className="space-y-6">
         <SectionTitle
           title="Bills"
-          subtitle={`${bills.length} bill records - ${unpaidBills.length} unpaid`}
+          subtitle={`${bills.length} record${bills.length === 1 ? '' : 's'} - ${unpaidBills.length} unpaid`}
           action={
             <button
               type="button"
@@ -434,7 +447,7 @@ export default function TenantPortal() {
               className="btn-primary"
             >
               <Send className="h-4 w-4" />
-              Pay due balance
+              Pay balance
             </button>
           }
         />
@@ -444,22 +457,22 @@ export default function TenantPortal() {
             {[...Array(4)].map((_, index) => <div key={index} className="h-24 skeleton" />)}
           </div>
         ) : bills.length === 0 ? (
-          <EmptyState icon={Receipt} title="No bills found" text="Generated rent, water, and utility bills will appear here." />
+          <EmptyState icon={Receipt} title="No bills yet" text="Rent, water, and utility bills will appear here." />
         ) : (
           <div className="grid gap-3">
             {bills.map((bill) => {
               const Icon = BILL_ICONS[bill.type] || FileText;
               const due = Math.max(0, Number(bill.amount || 0) - Number(bill.paidAmount || 0));
               return (
-                <div key={bill.id} className="rounded-2xl border border-kodi-border bg-white p-5 shadow-sm shadow-slate-200/70">
+                <div key={bill.id} className="rounded-2xl border border-kodi-border bg-kodi-card/85 p-5 shadow-[0_16px_40px_rgba(0,0,0,0.2)] transition-all duration-300 hover:-translate-y-0.5 hover:border-kodi-accent/40">
                   <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex items-start gap-3">
-                      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-indigo-500/10 text-indigo-600">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-indigo-500/15 text-indigo-300 ring-4 ring-indigo-500/10">
                         <Icon className="h-5 w-5" />
                       </div>
                       <div>
                         <div className="flex flex-wrap items-center gap-2">
-                          <p className="text-sm font-bold text-kodi-text-primary">{bill.type} bill</p>
+                          <p className="text-sm font-bold text-kodi-text-primary">{bill.type?.replaceAll('_', ' ')} bill</p>
                           <span className={`badge ${statusBadge(bill.status)}`}>{bill.status}</span>
                         </div>
                         <p className="mt-1 text-xs text-kodi-text-muted">{bill.description || `Due ${formatDate(bill.dueDate)}`}</p>
@@ -486,20 +499,20 @@ export default function TenantPortal() {
       <div className="space-y-6">
         <SectionTitle
           title="Payments"
-          subtitle={`${payments.length} payment records - latest ${latestPayment ? formatDate(latestPayment.paymentDate) : 'none'}`}
+          subtitle={`${payments.length} receipt${payments.length === 1 ? '' : 's'} - latest ${latestPayment ? formatDate(latestPayment.paymentDate) : 'none yet'}`}
         />
         {payments.length === 0 ? (
-          <EmptyState icon={CreditCard} title="No payment records" text="Rent receipts and M-Pesa payments will appear here." />
+          <EmptyState icon={CreditCard} title="No receipts yet" text="Rent receipts and M-Pesa confirmations will appear here." />
         ) : (
-          <div className="overflow-hidden rounded-2xl border border-kodi-border bg-white shadow-sm shadow-slate-200/70">
-            <div className="hidden grid-cols-[1fr_1fr_1fr_1fr] gap-4 border-b border-kodi-border bg-slate-50 px-5 py-3 text-xs font-bold uppercase tracking-[0.16em] text-kodi-text-muted md:grid">
+          <div className="overflow-hidden rounded-2xl border border-kodi-border bg-kodi-card/85 shadow-[0_18px_45px_rgba(0,0,0,0.2)]">
+            <div className="hidden grid-cols-[1fr_1fr_1fr_1fr] gap-4 border-b border-kodi-border bg-slate-950/60 px-5 py-3 text-xs font-bold uppercase tracking-[0.16em] text-kodi-text-muted md:grid">
               <span>Amount</span>
               <span>Date</span>
               <span>Channel</span>
               <span>Status</span>
             </div>
             {payments.map((payment) => (
-              <div key={payment.id} className="grid gap-3 border-b border-kodi-border px-5 py-4 last:border-b-0 md:grid-cols-[1fr_1fr_1fr_1fr] md:items-center">
+              <div key={payment.id} className="grid gap-3 border-b border-kodi-border px-5 py-4 transition-colors duration-300 last:border-b-0 hover:bg-slate-900/60 md:grid-cols-[1fr_1fr_1fr_1fr] md:items-center">
                 <div>
                   <p className="text-sm font-bold text-kodi-text-primary">{formatCurrency(payment.amount)}</p>
                   <p className="text-xs text-kodi-text-muted md:hidden">{formatDate(payment.paymentDate)}</p>
@@ -520,8 +533,8 @@ export default function TenantPortal() {
   function renderMaintenance() {
     return (
       <div className="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
-        <div className="rounded-2xl border border-kodi-border bg-white p-5 shadow-sm shadow-slate-200/70">
-          <SectionTitle title="Report an issue" subtitle="Send maintenance requests to the property team" />
+        <div className="rounded-2xl border border-kodi-border bg-kodi-card/85 p-5 shadow-[0_18px_45px_rgba(0,0,0,0.2)]">
+          <SectionTitle title="Report an issue" subtitle="Send a clear request to the property team" />
           <div className="mt-5 space-y-4">
             <div>
               <label className="label">Category</label>
@@ -537,7 +550,7 @@ export default function TenantPortal() {
               <label className="label">Description</label>
               <textarea
                 className="input min-h-32 resize-none"
-                placeholder="Describe the issue"
+                placeholder="What is happening, where is it, and how urgent is it?"
                 value={issueForm.description}
                 onChange={(event) => setIssueForm({ ...issueForm, description: event.target.value })}
               />
@@ -549,17 +562,17 @@ export default function TenantPortal() {
               className="btn-primary w-full"
             >
               <MessageSquare className="h-4 w-4" />
-              {reportIssue.isPending ? 'Submitting...' : 'Submit request'}
+              {reportIssue.isPending ? 'Submitting...' : 'Send request'}
             </button>
           </div>
         </div>
 
         <div className="space-y-4">
-          <SectionTitle title="Maintenance history" subtitle={`${openTickets.length} open request(s)`} />
+          <SectionTitle title="Maintenance history" subtitle={`${openTickets.length} open request${openTickets.length === 1 ? '' : 's'}`} />
           {tickets.length === 0 ? (
-            <EmptyState icon={Wrench} title="No requests yet" text="Reported maintenance issues will appear here." />
+            <EmptyState icon={Wrench} title="No requests yet" text="Submitted maintenance requests will appear here." />
           ) : tickets.map((ticket) => (
-            <div key={ticket.id} className="rounded-2xl border border-kodi-border bg-white p-5 shadow-sm shadow-slate-200/70">
+            <div key={ticket.id} className="rounded-2xl border border-kodi-border bg-kodi-card/85 p-5 shadow-[0_16px_40px_rgba(0,0,0,0.2)] transition-all duration-300 hover:-translate-y-0.5 hover:border-kodi-accent/40">
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <div className="flex flex-wrap items-center gap-2">
@@ -581,15 +594,15 @@ export default function TenantPortal() {
   function renderAlerts() {
     return (
       <div className="space-y-6">
-        <SectionTitle title="Alerts" subtitle={`${notifications.length} recent notification(s)`} />
+        <SectionTitle title="Alerts" subtitle={`${notifications.length} recent notification${notifications.length === 1 ? '' : 's'}`} />
         {notifications.length === 0 ? (
-          <EmptyState icon={Bell} title="No alerts" text="Bill, payment, and maintenance alerts will appear here." />
+          <EmptyState icon={Bell} title="No alerts" text="Bill, payment, and maintenance updates will appear here." />
         ) : (
           <div className="space-y-3">
             {notifications.map((notification) => (
-              <div key={notification.id} className={`rounded-2xl border bg-white p-5 shadow-sm shadow-slate-200/70 ${notification.isRead ? 'border-kodi-border' : 'border-kodi-accent/40'}`}>
+              <div key={notification.id} className={`rounded-2xl border bg-kodi-card/85 p-5 shadow-[0_16px_40px_rgba(0,0,0,0.2)] transition-all duration-300 hover:-translate-y-0.5 ${notification.isRead ? 'border-kodi-border' : 'border-kodi-accent/50'}`}>
                 <div className="flex items-start gap-3">
-                  <div className={`flex h-10 w-10 items-center justify-center rounded-2xl ${notification.isRead ? 'bg-slate-100 text-kodi-text-muted' : 'bg-kodi-accent/10 text-kodi-accent'}`}>
+                  <div className={`flex h-10 w-10 items-center justify-center rounded-2xl ${notification.isRead ? 'bg-slate-800 text-kodi-text-muted' : 'bg-kodi-accent/15 text-kodi-accent-light'}`}>
                     {notification.type === 'BILL_GENERATED' ? <Receipt className="h-4 w-4" /> : <Bell className="h-4 w-4" />}
                   </div>
                   <div className="min-w-0 flex-1">
@@ -625,9 +638,9 @@ export default function TenantPortal() {
 
     return (
       <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
-        <div className="rounded-2xl border border-kodi-border bg-white p-6 shadow-sm shadow-slate-200/70">
+        <div className="rounded-2xl border border-kodi-border bg-kodi-card/85 p-6 shadow-[0_18px_45px_rgba(0,0,0,0.2)]">
           <div className="flex items-center gap-4">
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-kodi-accent text-white">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-kodi-accent text-white shadow-kodi-accent-20">
               <UserCircle className="h-9 w-9" />
             </div>
             <div className="min-w-0">
@@ -636,22 +649,22 @@ export default function TenantPortal() {
             </div>
           </div>
           <div className="mt-6 grid grid-cols-2 gap-3">
-            <div className="rounded-2xl bg-slate-50 p-4">
+            <div className="rounded-2xl border border-kodi-border bg-slate-950/45 p-4">
               <p className="text-xs text-kodi-text-muted">Trust score</p>
               <p className="mt-1 text-2xl font-bold text-kodi-text-primary">{trustScore}</p>
             </div>
-            <div className="rounded-2xl bg-slate-50 p-4">
+            <div className="rounded-2xl border border-kodi-border bg-slate-950/45 p-4">
               <p className="text-xs text-kodi-text-muted">Open issues</p>
               <p className="mt-1 text-2xl font-bold text-kodi-text-primary">{openTickets.length}</p>
             </div>
           </div>
         </div>
 
-        <div className="rounded-2xl border border-kodi-border bg-white p-5 shadow-sm shadow-slate-200/70">
-          <SectionTitle title="Profile details" subtitle="Account, lease, and unit information" />
+        <div className="rounded-2xl border border-kodi-border bg-kodi-card/85 p-5 shadow-[0_18px_45px_rgba(0,0,0,0.2)]">
+          <SectionTitle title="Profile details" subtitle="Account, lease, and unit records" />
           <div className="mt-5 divide-y divide-kodi-border">
             {rows.map(([label, value, Icon]) => (
-              <div key={label} className="flex items-center justify-between gap-4 py-3">
+              <div key={label} className="flex items-center justify-between gap-4 py-3 transition-colors duration-300 hover:bg-slate-900/40">
                 <div className="flex items-center gap-3">
                   <Icon className="h-4 w-4 text-kodi-accent" />
                   <span className="text-sm text-kodi-text-muted">{label}</span>
@@ -699,7 +712,7 @@ export default function TenantPortal() {
     : 'No active bill yet';
 
   return (
-    <div className="flex min-h-screen bg-slate-100 text-kodi-text-primary">
+    <div className="flex min-h-screen bg-kodi-navy text-kodi-text-primary">
       <Sidebar
         activePage={activePage}
         setActivePage={setActivePage}
@@ -711,24 +724,46 @@ export default function TenantPortal() {
       />
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-30 border-b border-kodi-border bg-white/90 backdrop-blur-xl">
-          <div className="flex h-16 items-center justify-between gap-4 px-4 lg:px-8">
+        <header className="sticky top-0 z-30 border-b border-kodi-border bg-slate-950/80 backdrop-blur-xl">
+          <div className="flex h-20 items-center justify-between gap-4 px-4 lg:px-8">
             <div className="flex min-w-0 items-center gap-3">
               <button
                 type="button"
                 onClick={() => setMobileOpen(true)}
-                className="rounded-2xl border border-kodi-border bg-white p-2 text-kodi-text-muted lg:hidden"
+                className="rounded-2xl border border-kodi-border bg-kodi-card p-2 text-kodi-text-muted shadow-sm transition-all duration-300 hover:border-kodi-accent/50 hover:text-kodi-text-primary lg:hidden"
                 aria-label="Open menu"
               >
                 <Menu className="h-5 w-5" />
               </button>
               <div className="min-w-0">
-                <p className="truncate text-base font-bold text-kodi-text-primary">{activeNav.label}</p>
+                <p className="truncate text-lg font-black text-kodi-text-primary">{activeNav.label}</p>
                 <p className="hidden truncate text-xs text-kodi-text-muted sm:block">{latestSummary}</p>
               </div>
             </div>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center rounded-2xl border border-kodi-border bg-kodi-card/90 p-1 shadow-sm">
+                <button
+                  type="button"
+                  onClick={() => setTheme('light')}
+                  className={`rounded-xl p-2 transition-all ${theme === 'light' ? 'bg-kodi-navy text-kodi-accent shadow-sm' : 'text-kodi-text-muted hover:text-kodi-accent'}`}
+                  aria-label="Use light theme"
+                  title="Light mode"
+                >
+                  <SunMedium className="h-4 w-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setTheme('dark')}
+                  className={`rounded-xl p-2 transition-all ${theme === 'dark' ? 'bg-kodi-navy text-kodi-emerald shadow-sm' : 'text-kodi-text-muted hover:text-kodi-accent'}`}
+                  aria-label="Use dark theme"
+                  title="Dark mode"
+                >
+                  <MoonStar className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
             <div className="hidden items-center gap-3 md:flex">
-              <div className="rounded-2xl border border-kodi-border bg-slate-50 px-4 py-2 text-sm">
+              <div className="rounded-2xl border border-kodi-border bg-kodi-card/90 px-4 py-2 text-sm shadow-sm">
                 <span className="text-kodi-text-muted">Total due </span>
                 <span className="font-bold text-kodi-text-primary">{formatCurrency(totalDue)}</span>
               </div>
@@ -742,12 +777,12 @@ export default function TenantPortal() {
         </header>
 
         <main className="flex-1 overflow-y-auto px-4 py-6 pb-24 sm:px-6 lg:px-8 lg:pb-8">
-          <div className="page-shell mx-auto max-w-7xl animate-fade-in p-4 lg:p-6">
+          <div className="mx-auto max-w-7xl animate-fade-in">
             {renderPage()}
           </div>
         </main>
 
-        <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-kodi-border bg-white/95 px-2 py-2 backdrop-blur-xl lg:hidden">
+        <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-kodi-border bg-slate-950/95 px-2 py-2 shadow-[0_-12px_40px_rgba(0,0,0,0.28)] backdrop-blur-xl lg:hidden">
           <div className="grid grid-cols-6 gap-1">
             {NAV_ITEMS.map(({ id, label, icon: Icon }) => (
               <button
@@ -755,7 +790,7 @@ export default function TenantPortal() {
                 type="button"
                 onClick={() => setActivePage(id)}
                 className={`flex h-14 flex-col items-center justify-center gap-1 rounded-2xl text-[10px] font-semibold transition-all ${
-                  activePage === id ? 'bg-kodi-accent text-white' : 'text-kodi-text-muted'
+                  activePage === id ? 'bg-kodi-accent text-white shadow-kodi-accent-20' : 'text-kodi-text-muted'
                 }`}
               >
                 <Icon className="h-4 w-4" />
@@ -765,7 +800,6 @@ export default function TenantPortal() {
           </div>
         </nav>
       </div>
-      <SiteFooter compact />
     </div>
   );
 }

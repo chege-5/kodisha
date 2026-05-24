@@ -34,19 +34,19 @@ export function paymentStatusColor(status) {
 
 export function unitStatusColor(status) {
   const map = {
-    OCCUPIED: 'bg-green-100 border-green-300 text-green-800',
-    VACANT: 'bg-gray-100 border-gray-300 text-gray-600',
-    MAINTENANCE: 'bg-amber-100 border-amber-300 text-amber-800',
+    OCCUPIED: 'badge-green',
+    VACANT: 'badge-gray',
+    MAINTENANCE: 'badge-amber',
   };
-  return map[status] || 'bg-gray-100';
+  return map[status] || 'badge-gray';
 }
 
 export function trustTierColor(tier) {
   const map = {
-    Excellent: 'text-green-700 bg-green-50',
-    Good: 'text-blue-700 bg-blue-50',
-    Fair: 'text-amber-700 bg-amber-50',
-    Poor: 'text-red-700 bg-red-50',
+    Excellent: 'badge-green',
+    Good: 'badge-blue',
+    Fair: 'badge-amber',
+    Poor: 'badge-red',
   };
-  return map[tier] || 'text-gray-700 bg-gray-50';
+  return map[tier] || 'badge-gray';
 }

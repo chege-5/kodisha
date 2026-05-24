@@ -151,7 +151,7 @@ export default function Layout({ caretakerMode }) {
       )}
 
       {/* Mobile sidebar */}
-      <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-kodi-dark border-r border-white/10 flex flex-col transform transition-transform duration-300 lg:hidden ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+      <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-[linear-gradient(180deg,#090d1a_0%,#0d1527_50%,#05231f_100%)] border-r border-white/10 flex flex-col transform transition-transform duration-300 lg:hidden ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <button onClick={() => setMobileOpen(false)} className="absolute right-4 top-4 text-blue-100/80 hover:text-white">
           <X className="w-5 h-5" />
         </button>
@@ -159,11 +159,11 @@ export default function Layout({ caretakerMode }) {
       </aside>
 
       {/* Desktop sidebar */}
-      <aside className={`hidden lg:flex flex-col bg-kodi-dark border-r border-white/10 flex-shrink-0 transition-all duration-300 ${collapsed ? 'w-[76px]' : 'w-72'}`}>
+      <aside className={`hidden lg:flex flex-col bg-[linear-gradient(180deg,#090d1a_0%,#0d1527_50%,#05231f_100%)] border-r border-white/10 flex-shrink-0 transition-all duration-300 ${collapsed ? 'w-[76px]' : 'w-72'}`}>
         {sidebarContent}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="absolute bottom-20 -right-3 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-white border border-kodi-border text-kodi-text-muted hover:text-kodi-accent hover:border-kodi-accent/50 transition-all"
+          className="absolute bottom-20 -right-3 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-kodi-card border border-kodi-border text-kodi-text-muted hover:text-kodi-accent hover:border-kodi-accent/50 transition-all"
           style={{ left: collapsed ? '58px' : '264px' }}
         >
           {collapsed ? <ChevronRight className="w-3 h-3" /> : <ChevronLeft className="w-3 h-3" />}

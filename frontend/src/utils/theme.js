@@ -3,10 +3,9 @@ export function getInitialTheme() {
     const stored = localStorage.getItem('kodisha-theme');
     if (stored === 'light' || stored === 'dark') return stored;
 
-    const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)')?.matches;
-    return prefersDark ? 'dark' : 'light';
+    return 'dark';
   } catch {
-    return 'light';
+    return 'dark';
   }
 }
 

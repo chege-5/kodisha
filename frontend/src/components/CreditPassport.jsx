@@ -3,8 +3,9 @@ import api from '../utils/apiClient';
 import toast from 'react-hot-toast';
 import { paymentStatusColor } from '../utils/formatters';
 import TrustScoreBadge from './TrustScoreBadge';
+import { CheckCircle2, Circle, Clock3, Download, MinusCircle } from 'lucide-react';
 
-const STATUS_EMOJI = { paid: '✅', late: '🔴', partial: '🟡', missed: '⬜', future: '⬜' };
+const STATUS_ICON = { paid: CheckCircle2, late: Clock3, partial: Circle, missed: MinusCircle, future: Circle };
 
 export default function CreditPassport({ data }) {
   const { tenant, passport, trustScore, paymentCalendar } = data || {};
@@ -24,15 +25,15 @@ export default function CreditPassport({ data }) {
     <div className="space-y-4">
       <div className="flex items-start justify-between">
         <div>
-          <h3 className="font-semibold text-gray-900">Credit Passport</h3>
-          <p className="text-sm text-gray-500">{tenant?.name}</p>
+          <h3 className="font-semibold text-kodi-text-primary">Credit Passport</h3>
+          <p className="text-sm text-kodi-text-muted">{tenant?.name}</p>
         </div>
         <button
           onClick={() => shareMutation.mutate()}
           disabled={shareMutation.isPending}
           className="btn-secondary text-xs"
         >
-          {shareMutation.isPending ? 'Generating…' : '↓ Download PDF'}
+          {shareMutation.isPending ? 'Generating...' : <><Download className="h-3.5 w-3.5" /> Download PDF</>}
         </button>
       </div>
 
@@ -45,32 +46,41 @@ export default function CreditPassport({ data }) {
           ['Late Payments', passport?.lateMonths],
           ['Avg Days Late', passport?.averageDaysLate],
         ].map(([label, value]) => (
-          <div key={label} className="bg-gray-50 rounded-lg p-3">
-            <p className="text-xs text-gray-500">{label}</p>
-            <p className="font-semibold text-gray-900 mt-0.5">{value ?? '—'}</p>
+          <div key={label} className="bg-kodi-navy/80 rounded-lg p-3 border border-kodi-border/30">
+            <p className="text-xs text-kodi-text-muted">{label}</p>
+            <p className="font-semibold text-kodi-text-primary mt-0.5">{value ?? '—'}</p>
           </div>
         ))}
       </div>
 
       {/* 12-month payment calendar */}
       <div>
-        <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">12-Month History</p>
+        <p className="text-xs font-medium text-kodi-text-muted uppercase tracking-wider mb-2">12-Month History</p>
         <div className="grid grid-cols-6 gap-1.5">
           {paymentCalendar?.map((m) => (
-            <div
-              key={`${m.year}-${m.monthNum}`}
-              title={`${m.month}: ${m.status}${m.daysLate > 0 ? ` (${m.daysLate}d late)` : ''}`}
-              className={`rounded p-1.5 text-center cursor-help badge ${paymentStatusColor(m.status)}`}
-            >
-              <p className="text-xs font-medium">{STATUS_EMOJI[m.status]}</p>
-              <p className="text-xs opacity-70" style={{ fontSize: '9px' }}>{m.month.slice(0, 3)}</p>
-            </div>
+            <MonthCell key={`${m.year}-${m.monthNum}`} month={m} />
           ))}
         </div>
-        <div className="flex gap-3 mt-2 text-xs text-gray-500">
-          <span>✅ On-time</span><span>🔴 Late</span><span>🟡 Partial</span><span>⬜ Missed</span>
+        <div className="flex gap-3 mt-2 text-xs text-kodi-text-muted">
+          <span className="inline-flex items-center gap-1"><CheckCircle2 className="h-3.5 w-3.5" /> On-time</span>
+          <span className="inline-flex items-center gap-1"><Clock3 className="h-3.5 w-3.5" /> Late</span>
+          <span className="inline-flex items-center gap-1"><Circle className="h-3.5 w-3.5" /> Partial</span>
+          <span className="inline-flex items-center gap-1"><MinusCircle className="h-3.5 w-3.5" /> Missed</span>
         </div>
       </div>
+    </div>
+  );
+}
+
+function MonthCell({ month }) {
+  const Icon = STATUS_ICON[month.status] || Circle;
+  return (
+    <div
+      title={`${month.month}: ${month.status}${month.daysLate > 0 ? ` (${month.daysLate}d late)` : ''}`}
+      className={`rounded p-1.5 text-center cursor-help badge ${paymentStatusColor(month.status)}`}
+    >
+      <Icon className="mx-auto h-3.5 w-3.5" />
+      <p className="text-xs opacity-70" style={{ fontSize: '9px' }}>{month.month.slice(0, 3)}</p>
     </div>
   );
 }

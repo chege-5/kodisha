@@ -7,6 +7,7 @@ import CreditPassport from '../components/CreditPassport';
 import { formatCurrency, formatDate } from '../utils/formatters';
 import api from '../utils/apiClient';
 import toast from 'react-hot-toast';
+import { FileText, Smartphone, Star } from 'lucide-react';
 
 const TABS = ['Overview', 'Payments', 'Credit Passport', 'Maintenance'];
 
@@ -54,10 +55,10 @@ export default function TenantDetail() {
             disabled={stkPush.isPending}
             className="btn-primary text-sm"
           >
-            {stkPush.isPending ? 'Sending…' : '📱 STK Push'}
+            {stkPush.isPending ? 'Sending...' : <><Smartphone className="h-4 w-4" /> STK Push</>}
           </button>
           <button onClick={() => generateLease.mutate()} disabled={generateLease.isPending} className="btn-secondary text-sm">
-            {generateLease.isPending ? 'Generating…' : '📄 Lease'}
+            {generateLease.isPending ? 'Generating...' : <><FileText className="h-4 w-4" /> Lease</>}
           </button>
         </div>
       </div>
@@ -160,7 +161,11 @@ export default function TenantDetail() {
                     </span>
                     <p className="font-medium text-gray-900 mt-1">{t.category}</p>
                     <p className="text-sm text-gray-500">{t.description}</p>
-                    {t.rating && <p className="text-xs text-gray-400 mt-1">Rating: {'⭐'.repeat(t.rating)}</p>}
+                    {t.rating && (
+                      <p className="mt-1 flex items-center gap-1 text-xs text-gray-400">
+                        Rating: {Array.from({ length: t.rating }).map((_, index) => <Star key={index} className="h-3 w-3 fill-current text-kodi-amber" />)}
+                      </p>
+                    )}
                   </div>
                   <p className="text-xs text-gray-400">{formatDate(t.createdAt)}</p>
                 </div>

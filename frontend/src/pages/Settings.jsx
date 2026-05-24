@@ -38,11 +38,11 @@ export default function Settings() {
 
   return (
     <div className="p-8 max-w-3xl mx-auto space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
+      <h1 className="text-2xl font-bold text-kodi-dark">Settings</h1>
 
       {/* Profile */}
       <div className="card space-y-4">
-        <h2 className="text-base font-semibold text-gray-900">Account Details</h2>
+        <h2 className="text-base font-semibold text-kodi-dark">Account Details</h2>
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="label">Full Name</label>
@@ -74,13 +74,13 @@ export default function Settings() {
 
       {/* Caretakers */}
       <div className="card space-y-4">
-        <h2 className="text-base font-semibold text-gray-900">Caretaker Sub-Accounts</h2>
+        <h2 className="text-base font-semibold text-kodi-dark">Caretaker Sub-Accounts</h2>
 
         {caretakers.map((c) => (
-          <div key={c.id} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
+          <div key={c.id} className="flex items-center justify-between py-2 border-b border-kodi-border/60 last:border-0">
             <div>
-              <p className="text-sm font-medium text-gray-900">{c.name}</p>
-              <p className="text-xs text-gray-400">{c.phone} · {c.permissions.join(', ') || 'No permissions'}</p>
+              <p className="text-sm font-medium text-kodi-dark">{c.name}</p>
+              <p className="text-xs text-kodi-text-muted">{c.phone} · {c.permissions.join(', ') || 'No permissions'}</p>
             </div>
             <button
               onClick={() => toggleCaretaker.mutate({ id: c.id, isActive: !c.isActive })}
@@ -91,8 +91,8 @@ export default function Settings() {
           </div>
         ))}
 
-        <div className="border-t border-gray-100 pt-4">
-          <p className="text-sm font-medium text-gray-700 mb-3">Add Caretaker</p>
+        <div className="border-t border-kodi-border/60 pt-4">
+          <p className="text-sm font-medium text-kodi-text-secondary mb-3">Add Caretaker</p>
           <div className="grid grid-cols-2 gap-3">
             <input className="input" placeholder="Full name" value={newCaretaker.name} onChange={(e) => setNewCaretaker({ ...newCaretaker, name: e.target.value })} />
             <input className="input" placeholder="+254712..." value={newCaretaker.phone} onChange={(e) => setNewCaretaker({ ...newCaretaker, phone: e.target.value })} />

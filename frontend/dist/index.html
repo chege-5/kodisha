@@ -6,15 +6,30 @@
     <title>Kodisha | AI-Powered Rental Management SaaS</title>
     <meta name="description" content="Kodisha is an AI-powered rental management SaaS for landlords, caretakers, and tenants across Africa. STK Push, SMS, USSD, voice, and automation built in." />
     <meta name="theme-color" content="#043024" />
+    <meta name="color-scheme" content="light dark" />
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('kodisha-theme');
+          var theme = stored === 'dark' || stored === 'light'
+            ? stored
+            : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+          document.documentElement.dataset.theme = theme;
+          document.documentElement.style.colorScheme = theme;
+        } catch (e) {
+          // no-op
+        }
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
-    <script type="module" crossorigin src="/assets/index-CoB64n7T.js"></script>
+    <script type="module" crossorigin src="/assets/index-Bpi3JZWW.js"></script>
     <link rel="modulepreload" crossorigin href="/assets/query-ona_VWCK.js">
     <link rel="modulepreload" crossorigin href="/assets/react-sZuxIVdN.js">
-    <link rel="modulepreload" crossorigin href="/assets/ui-U6RkqTOH.js">
+    <link rel="modulepreload" crossorigin href="/assets/ui-DdT5S7Ni.js">
     <link rel="modulepreload" crossorigin href="/assets/charts-DvvbmjPP.js">
-    <link rel="stylesheet" crossorigin href="/assets/index-Bdx9AxUq.css">
+    <link rel="stylesheet" crossorigin href="/assets/index-ChFkA9nb.css">
   </head>
   <body>
     <div id="root"></div>

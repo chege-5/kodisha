@@ -2,54 +2,53 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --kodi-navy: 248 250 252;
-  --kodi-dark: 20 33 61;
-  --kodi-card: 255 255 255;
-  --kodi-border: 226 232 240;
-  --kodi-accent: 29 78 216;
-  --kodi-accent-light: 96 165 250;
-  --kodi-cyan: 6 182 212;
-  --kodi-emerald: 16 185 129;
-  --kodi-amber: 245 158 11;
-  --kodi-rose: 239 68 68;
-  --kodi-purple: 168 85 247;
-  --kodi-slate: 51 65 85;
-  --kodi-text-primary: 15 23 42;
-  --kodi-text-secondary: 51 65 85;
-  --kodi-text-muted: 100 116 139;
-  --bg-gradient-1: rgba(29, 78, 216, 0.16);
-  --bg-gradient-2: rgba(16, 185, 129, 0.14);
-  --bg-main-start: #f8fafc;
-  --bg-main-mid: #eef4fb;
-  --bg-main-end: #e8f1fb;
-  --surface-tint: rgba(255, 255, 255, 0.88);
-  --surface-solid: #ffffff;
-}
-
+:root,
 [data-theme="dark"] {
-  --kodi-navy: 15 23 42;
+  --kodi-navy: 8 12 24;
   --kodi-dark: 248 250 252;
-  --kodi-card: 30 41 59;
-  --kodi-border: 51 65 85;
-  --kodi-accent: 59 130 246;
-  --kodi-accent-light: 147 197 253;
+  --kodi-card: 13 20 38;
+  --kodi-elevated: 18 28 54;
+  --kodi-border: 30 41 59;
+  --kodi-accent: 56 189 248;
+  --kodi-accent-light: 125 211 252;
   --kodi-cyan: 34 211 238;
   --kodi-emerald: 52 211 153;
   --kodi-amber: 251 191 36;
   --kodi-rose: 251 113 133;
-  --kodi-purple: 192 132 252;
+  --kodi-purple: 167 139 250;
   --kodi-slate: 148 163 184;
   --kodi-text-primary: 248 250 252;
   --kodi-text-secondary: 203 213 225;
   --kodi-text-muted: 148 163 184;
-  --bg-gradient-1: rgba(59, 130, 246, 0.2);
-  --bg-gradient-2: rgba(52, 211, 153, 0.15);
-  --bg-main-start: #0F172A;
-  --bg-main-mid: #14213D;
-  --bg-main-end: #1E293B;
-  --surface-tint: rgba(15, 23, 42, 0.84);
-  --surface-solid: #1e293b;
+  --bg-gradient-1: rgba(56, 189, 248, 0.16);
+  --bg-gradient-2: rgba(52, 211, 153, 0.12);
+  --bg-main-start: #080c18;
+  --bg-main-mid: #0a1122;
+  --bg-main-end: #0e172e;
+}
+
+[data-theme="light"] {
+  --kodi-navy: 243 244 246;
+  --kodi-dark: 17 24 39;
+  --kodi-card: 255 255 255;
+  --kodi-elevated: 249 250 251;
+  --kodi-border: 229 231 235;
+  --kodi-accent: 37 99 235;
+  --kodi-accent-light: 59 130 246;
+  --kodi-cyan: 6 182 212;
+  --kodi-emerald: 5 150 105;
+  --kodi-amber: 217 119 6;
+  --kodi-rose: 220 38 38;
+  --kodi-purple: 124 58 237;
+  --kodi-slate: 71 85 105;
+  --kodi-text-primary: 17 24 39;
+  --kodi-text-secondary: 55 65 81;
+  --kodi-text-muted: 107 114 128;
+  --bg-gradient-1: rgba(37, 99, 235, 0.08);
+  --bg-gradient-2: rgba(5, 150, 105, 0.06);
+  --bg-main-start: #f3f4f6;
+  --bg-main-mid: #f9fafb;
+  --bg-main-end: #ffffff;
 }
 
 @layer base {
@@ -61,11 +60,11 @@
 
   * {
     scrollbar-width: thin;
-    scrollbar-color: rgb(var(--kodi-text-muted) / 1) transparent;
+    scrollbar-color: rgb(var(--kodi-border)) transparent;
   }
   *::-webkit-scrollbar { width: 6px; }
   *::-webkit-scrollbar-track { background: transparent; }
-  *::-webkit-scrollbar-thumb { background: rgb(var(--kodi-text-muted) / 1); border-radius: 10px; }
+  *::-webkit-scrollbar-thumb { background: rgb(var(--kodi-border)); border-radius: 10px; }
 
   html {
     scroll-behavior: smooth;
@@ -78,10 +77,10 @@
     min-height: 100%;
     position: relative;
     background:
-      linear-gradient(135deg, var(--bg-main-start) 0%, var(--bg-main-mid) 48%, var(--bg-main-end) 100%),
-      radial-gradient(at 0% 0%, hsla(217, 91%, 60%, 0.1) 0px, transparent 46%),
-      radial-gradient(at 100% 100%, hsla(162, 84%, 39%, 0.08) 0px, transparent 42%),
-      var(--bg-main-start);
+      radial-gradient(circle at top left, var(--bg-gradient-1), transparent 32rem),
+      radial-gradient(circle at 80% 10%, rgba(167, 139, 250, 0.1), transparent 26rem),
+      radial-gradient(circle at bottom right, var(--bg-gradient-2), transparent 34rem),
+      linear-gradient(135deg, var(--bg-main-start), var(--bg-main-mid) 52%, var(--bg-main-end));
   }
 
   body::before {
@@ -100,13 +99,13 @@
 
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-kodi-accent text-white text-sm font-bold rounded-xl
+    @apply inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-kodi-accent text-white text-sm font-bold rounded-xl
     transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed
-    shadow-kodi-accent-20 hover:bg-kodi-accent-light hover:shadow-kodi-accent-30 hover:-translate-y-0.5 active:translate-y-0;
+    shadow-kodi-accent-25 hover:bg-kodi-accent-light hover:shadow-kodi-accent-40 hover:-translate-y-0.5 active:translate-y-0 active:scale-95;
   }
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 border border-kodi-border bg-kodi-card text-kodi-text-primary text-sm font-bold rounded-xl
-    hover:bg-kodi-accent/5 hover:border-kodi-accent/50 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md active:translate-y-0;
+    @apply inline-flex items-center justify-center gap-2 px-6 py-2.5 border border-kodi-border bg-kodi-card text-kodi-text-primary text-sm font-bold rounded-xl
+    hover:bg-kodi-navy hover:border-kodi-accent/50 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md active:translate-y-0;
   }
   .btn-danger {
     @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-kodi-rose text-white text-sm font-semibold rounded-xl
@@ -118,23 +117,23 @@
   }
   .btn-ghost {
     @apply inline-flex items-center justify-center gap-2 px-4 py-2 text-kodi-text-secondary text-sm font-medium rounded-xl
-    hover:bg-kodi-accent/10 hover:text-kodi-accent transition-all duration-200;
+    hover:bg-white/10 hover:text-white transition-all duration-200;
   }
 
   .glass-card {
-    @apply bg-kodi-card/90 backdrop-blur-xl rounded-2xl border border-kodi-border p-6 shadow-lg shadow-slate-200/50 dark:shadow-black/20;
+    @apply bg-kodi-card/90 backdrop-blur-xl rounded-2xl border border-kodi-border/70 p-6 shadow-xl shadow-slate-200/40 dark:shadow-black/30;
   }
   .glass-card-hover {
     @apply glass-card cursor-pointer transition-all duration-500 hover:scale-[1.01] hover:border-kodi-accent/40 hover:bg-kodi-card hover:shadow-kodi-accent-10;
   }
   .card {
-    @apply bg-kodi-card rounded-2xl border border-kodi-border p-6 shadow-sm shadow-slate-200/70 transition-all duration-300;
+    @apply bg-kodi-card rounded-2xl border border-kodi-border p-6 shadow-sm shadow-slate-200/50 transition-all duration-300 dark:shadow-black/20;
     will-change: transform;
   }
   .stat-card {
-    @apply bg-kodi-card backdrop-blur-xl rounded-2xl border border-kodi-border p-5
-    shadow-lg shadow-slate-200/60 transition-all duration-300 flex flex-col gap-2 relative overflow-hidden
-    hover:-translate-y-1 hover:shadow-kodi-accent-10;
+    @apply bg-kodi-card/90 backdrop-blur-xl rounded-2xl border border-kodi-border/70 p-6
+    shadow-xl shadow-slate-200/50 transition-all duration-500 flex flex-col gap-2 relative overflow-hidden
+    dark:shadow-black/25 hover:-translate-y-1 hover:shadow-kodi-accent-10;
     will-change: transform;
   }
   .stat-card::before {
@@ -144,7 +143,7 @@
   }
 
   .input {
-    @apply w-full bg-kodi-card border border-kodi-border rounded-2xl px-4 py-3 text-sm text-kodi-text-primary
+    @apply w-full bg-kodi-card border border-kodi-border rounded-xl px-4 py-3 text-sm text-kodi-text-primary
     placeholder:text-kodi-text-muted focus:outline-none focus:ring-4 focus:ring-kodi-accent/10 focus:border-kodi-accent/50
     transition-all duration-300 hover:border-kodi-accent/30;
   }
@@ -152,7 +151,7 @@
     @apply block text-sm font-medium text-kodi-text-secondary mb-1.5;
   }
   .select {
-    @apply w-full bg-white border border-kodi-border rounded-xl px-4 py-3 text-sm text-kodi-text-primary
+    @apply w-full bg-kodi-card border border-kodi-border rounded-xl px-4 py-3 text-sm text-kodi-text-primary
     placeholder:text-kodi-text-muted focus:outline-none focus:ring-2 focus:ring-kodi-accent/50 focus:border-kodi-accent/50
     transition-all duration-200 appearance-none cursor-pointer;
   }
@@ -179,7 +178,7 @@
   }
 
   .skeleton {
-    @apply bg-slate-200 rounded-xl animate-pulse;
+    @apply bg-kodi-border/40 rounded-xl animate-pulse;
   }
 
   .divider {
@@ -190,34 +189,32 @@
   }
 
   .section-eyebrow {
-    @apply text-xs font-semibold uppercase tracking-[0.2em];
-    color: #1D4ED8;
+    @apply text-sm font-semibold uppercase tracking-[0.22em] text-kodi-accent;
   }
   .section-title {
     @apply text-3xl font-semibold tracking-tight md:text-4xl;
-    color: #14213D;
+    color: rgb(var(--kodi-dark));
   }
   .section-copy {
     @apply text-base leading-8;
-    color: #334155;
+    color: rgb(var(--kodi-text-secondary));
   }
   .page-surface {
     @apply rounded-2xl border p-6 md:p-8;
-    border-color: rgb(226 232 240 / 0.95);
-    background: rgb(255 255 255 / 0.9);
+    border-color: rgb(var(--kodi-border) / 0.75);
+    background: rgb(var(--kodi-card) / 0.9);
     backdrop-filter: blur(18px);
   }
   .page-shell {
-    @apply relative isolate overflow-hidden rounded-2xl border border-white/70 shadow-[0_20px_80px_rgba(15,23,42,0.08)] backdrop-blur-2xl;
-    background: var(--surface-tint);
+    @apply relative isolate overflow-hidden rounded-2xl border border-kodi-border/70 bg-kodi-card/80 shadow-[0_20px_80px_rgba(15,23,42,0.12)] backdrop-blur-2xl dark:shadow-black/25;
     animation: pageIn 0.6s ease-out both;
   }
   .page-shell::before {
     content: '';
     @apply pointer-events-none absolute inset-0 opacity-70;
     background:
-      linear-gradient(135deg, rgba(29, 78, 216, 0.08), transparent 28%),
-      linear-gradient(315deg, rgba(16, 185, 129, 0.08), transparent 24%);
+      linear-gradient(135deg, rgb(var(--kodi-accent) / 0.12), transparent 28%),
+      linear-gradient(315deg, rgb(var(--kodi-emerald) / 0.1), transparent 24%);
   }
   .page-shell > * {
     position: relative;
@@ -229,7 +226,7 @@
     overflow: hidden;
     border-radius: 1rem;
     border: 1px solid rgba(148, 163, 184, 0.35);
-    background: linear-gradient(140deg, rgba(var(--tint), 0.12), var(--surface-tint) 58%);
+    background: linear-gradient(140deg, rgba(var(--tint), 0.14), rgb(var(--kodi-card) / 0.92) 55%);
     box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
     transition: all 400ms cubic-bezier(0.23, 1, 0.32, 1);
     will-change: transform, box-shadow;
@@ -244,7 +241,7 @@
     transition: opacity 400ms ease, transform 500ms ease;
   }
   .saas-card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-6px) scale(1.01);
     border-color: rgba(var(--tint), 0.35);
     box-shadow: 0 26px 60px rgba(15, 23, 42, 0.16);
   }
@@ -265,7 +262,7 @@
   .saas-chip {
     border-radius: 999px;
     border: 1px solid rgba(148, 163, 184, 0.4);
-    background: rgba(255, 255, 255, 0.85);
+    background: rgb(var(--kodi-card) / 0.85);
     padding: 6px 14px;
     font-size: 11px;
     font-weight: 700;
@@ -283,8 +280,8 @@
   .page-stage .glass-card:hover,
   .page-stage .stat-card:hover,
   .page-stage .page-surface:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 18px 42px rgba(15, 23, 42, 0.11);
+    transform: translateY(-6px);
+    box-shadow: 0 22px 50px rgba(15, 23, 42, 0.12);
   }
   .reveal {
     opacity: 0;
@@ -299,28 +296,28 @@
 
 @layer utilities {
   .shadow-kodi-accent-5 {
-    box-shadow: 0 4px 12px rgba(29, 78, 216, 0.05);
+    box-shadow: 0 4px 12px rgba(56, 189, 248, 0.05);
   }
   .shadow-kodi-accent-10 {
-    box-shadow: 0 8px 18px rgba(29, 78, 216, 0.1);
+    box-shadow: 0 8px 18px rgba(56, 189, 248, 0.1);
   }
   .shadow-kodi-accent-20 {
-    box-shadow: 0 10px 20px rgba(29, 78, 216, 0.2);
+    box-shadow: 0 10px 20px rgba(56, 189, 248, 0.2);
   }
   .shadow-kodi-accent-25 {
-    box-shadow: 0 18px 36px rgba(29, 78, 216, 0.25);
+    box-shadow: 0 18px 36px rgba(56, 189, 248, 0.25);
   }
   .shadow-kodi-accent-30 {
-    box-shadow: 0 20px 42px rgba(29, 78, 216, 0.3);
+    box-shadow: 0 20px 42px rgba(56, 189, 248, 0.3);
   }
   .shadow-kodi-accent-40 {
-    box-shadow: 0 24px 52px rgba(29, 78, 216, 0.4);
+    box-shadow: 0 24px 52px rgba(56, 189, 248, 0.4);
   }
   .shadow-kodi-rose-20 {
-    box-shadow: 0 10px 20px rgba(239, 68, 68, 0.2);
+    box-shadow: 0 10px 20px rgba(251, 113, 133, 0.2);
   }
   .shadow-kodi-emerald-20 {
-    box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2);
+    box-shadow: 0 10px 20px rgba(52, 211, 153, 0.2);
   }
 }
 
@@ -348,13 +345,66 @@
 
 .gradient-text {
   @apply bg-clip-text text-transparent;
-  background-image: linear-gradient(135deg, #1D4ED8 0%, #10B981 100%);
+  background-image: linear-gradient(135deg, #38bdf8 0%, #34d399 100%);
 }
 
 .glass {
-  background: var(--surface-tint);
+  background: rgb(var(--kodi-card) / 0.82);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+}
+
+[data-theme="dark"] .bg-white,
+[data-theme="dark"] .bg-white\/95,
+[data-theme="dark"] .bg-white\/90,
+[data-theme="dark"] .bg-white\/85,
+[data-theme="dark"] .bg-white\/80,
+[data-theme="dark"] .bg-white\/70 {
+  background-color: rgb(var(--kodi-card) / 0.9) !important;
+}
+
+[data-theme="dark"] .bg-slate-50,
+[data-theme="dark"] .bg-slate-100,
+[data-theme="dark"] .bg-blue-50\/60,
+[data-theme="dark"] .bg-emerald-50 {
+  background-color: rgb(var(--kodi-elevated) / 0.82) !important;
+}
+
+[data-theme="dark"] .text-kodi-dark,
+[data-theme="dark"] .text-slate-950,
+[data-theme="dark"] .text-slate-900 {
+  color: rgb(var(--kodi-text-primary)) !important;
+}
+
+[data-theme="dark"] .text-slate-800,
+[data-theme="dark"] .text-slate-700,
+[data-theme="dark"] .text-slate-600 {
+  color: rgb(var(--kodi-text-secondary)) !important;
+}
+
+[data-theme="dark"] .text-slate-500,
+[data-theme="dark"] .text-slate-400,
+[data-theme="dark"] .text-blue-100 {
+  color: rgb(var(--kodi-text-muted)) !important;
+}
+
+[data-theme="dark"] .border-white,
+[data-theme="dark"] .border-white\/70,
+[data-theme="dark"] .border-slate-200,
+[data-theme="dark"] .border-emerald-100 {
+  border-color: rgb(var(--kodi-border) / 0.75) !important;
+}
+
+[data-theme="dark"] .shadow-slate-200\/50,
+[data-theme="dark"] .shadow-slate-200\/70,
+[data-theme="dark"] .shadow-slate-300\/50,
+[data-theme="dark"] .shadow-slate-300\/70 {
+  --tw-shadow-color: rgb(0 0 0 / 0.28) !important;
+}
+
+[data-theme="dark"] option {
+  background: rgb(var(--kodi-card));
+  color: rgb(var(--kodi-text-primary));
 }
 
 @keyframes fadeInUp {
