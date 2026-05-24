@@ -4,7 +4,6 @@ import api from '../utils/apiClient';
 import { useAuth } from '../hooks/useAuth';
 import toast from 'react-hot-toast';
 import { ArrowDownTrayIcon } from '@heroicons/react/24/outline';
-import { formatDate } from '../utils/formatters';
 
 export default function ITaxExporter() {
   const { user } = useAuth();

@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '../utils/apiClient';
-import { useAuth } from '../hooks/useAuth';
 import toast from 'react-hot-toast';
 
 function useCaretakers() {
@@ -9,7 +8,6 @@ function useCaretakers() {
 }
 
 export default function Settings() {
-  const { user } = useAuth();
   const qc = useQueryClient();
   const [profile, setProfile] = useState({ name: '', language: 'en', currencyPref: 'KES', monthlyAirtimeCap: 5000 });
   const [newCaretaker, setNewCaretaker] = useState({ name: '', phone: '', password: '', permissions: [] });
@@ -36,11 +34,6 @@ export default function Settings() {
   const toggleCaretaker = useMutation({
     mutationFn: ({ id, isActive }) => api.patch(`/caretakers/${id}`, { isActive }).then((r) => r.data),
     onSuccess: () => { toast.success('Updated'); qc.invalidateQueries(['caretakers']); },
-  });
-
-  const updateAirtimeCap = useMutation({
-    mutationFn: (cap) => api.patch('/airtime/cap', { cap }),
-    onSuccess: () => toast.success('Airtime cap updated'),
   });
 
   return (

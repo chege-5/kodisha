@@ -110,9 +110,9 @@ function AppContent() {
         position="top-right"
         toastOptions={{
           style: {
-            background: 'var(--kodi-card)',
-            color: 'var(--kodi-text-primary)',
-            border: '1px solid var(--kodi-border)',
+            background: 'rgb(var(--kodi-card))',
+            color: 'rgb(var(--kodi-text-primary))',
+            border: '1px solid rgb(var(--kodi-border))',
             borderRadius: '14px',
           },
           success: { iconTheme: { primary: '#10b981', secondary: '#f1f5f9' } },

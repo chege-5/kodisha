@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../utils/apiClient';
 import { formatDate } from '../utils/formatters';
-import { Bell, Check, CheckCheck, Mail, AlertTriangle, CreditCard, Droplets, Wrench } from 'lucide-react';
+import { Bell, CheckCheck, Mail, AlertTriangle, CreditCard, Droplets, Wrench } from 'lucide-react';
 
 const TYPE_ICONS = {
   PAYMENT_RECEIVED: CreditCard,

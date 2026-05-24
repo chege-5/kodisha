@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import api from '../utils/apiClient';
-import toast from 'react-hot-toast';
-import { Bot, Send, Sparkles, X, MessageCircle } from 'lucide-react';
+import { Bot, Send, Sparkles, X } from 'lucide-react';
 
 const QUICK_ACTIONS = [
   'Show unpaid tenants',

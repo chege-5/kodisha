@@ -308,7 +308,7 @@ export default function TenantPortal() {
   function renderOverview() {
     return (
       <div className="space-y-6">
-        <div className="rounded-3xl border border-kodi-border bg-white p-5 shadow-xl shadow-slate-200/60 lg:p-7">
+        <div className="rounded-2xl border border-kodi-border bg-white p-5 shadow-xl shadow-slate-200/60 lg:p-7">
           <div className="grid gap-6 lg:grid-cols-[1.35fr_0.65fr] lg:items-center">
             <div>
               <div className="flex flex-wrap items-center gap-2">
@@ -342,7 +342,7 @@ export default function TenantPortal() {
                 </div>
               </div>
             </div>
-            <div className="rounded-3xl bg-kodi-navy p-5 text-white">
+            <div className="rounded-2xl bg-kodi-navy p-5 text-white">
               <p className="text-sm text-white/70">Total due now</p>
               <p className="mt-2 text-4xl font-bold">{formatCurrency(totalDue)}</p>
               <div className="mt-5 h-2 overflow-hidden rounded-full bg-white/15">
@@ -627,7 +627,7 @@ export default function TenantPortal() {
       <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
         <div className="rounded-2xl border border-kodi-border bg-white p-6 shadow-sm shadow-slate-200/70">
           <div className="flex items-center gap-4">
-            <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-kodi-accent text-white">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-kodi-accent text-white">
               <UserCircle className="h-9 w-9" />
             </div>
             <div className="min-w-0">
@@ -742,7 +742,7 @@ export default function TenantPortal() {
         </header>
 
         <main className="flex-1 overflow-y-auto px-4 py-6 pb-24 sm:px-6 lg:px-8 lg:pb-8">
-          <div className="page-shell mx-auto max-w-7xl animate-fade-in">
+          <div className="page-shell mx-auto max-w-7xl animate-fade-in p-4 lg:p-6">
             {renderPage()}
           </div>
         </main>

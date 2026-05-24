@@ -9,15 +9,12 @@ import {
   CreditCard,
   Droplets,
   FileText,
-  Headphones,
   KeyRound,
   MessageSquare,
   Mic,
   Phone,
-  Receipt,
   Shield,
   Smartphone,
-  Users,
   Wrench,
   Sparkles,
 } from 'lucide-react';
@@ -113,10 +110,7 @@ export default function Landing() {
 
   return (
     <div className="min-h-screen overflow-hidden bg-slate-50 text-kodi-text-primary relative isolate">
-      {/* Dynamic Background Elements */}
-      <div className="pointer-events-none absolute -left-24 top-16 h-96 w-96 rounded-full bg-kodi-accent/15 blur-[120px] animate-float" />
-      <div className="pointer-events-none absolute right-[-10rem] top-40 h-[30rem] w-[30rem] rounded-full bg-kodi-emerald/10 blur-[140px] animate-pulse" />
-      <div className="pointer-events-none absolute left-1/2 top-1/2 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-kodi-purple/5 blur-[100px]" />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,_rgba(29,78,216,0.08),_transparent_32%),linear-gradient(315deg,_rgba(16,185,129,0.08),_transparent_30%)]" />
 
       <header className="relative overflow-hidden">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(29,78,216,0.08),_transparent_40%),radial-gradient(circle_at_top_right,_rgba(16,185,129,0.08),_transparent_35%)]" />
@@ -152,7 +146,7 @@ export default function Landing() {
               <Link to="/login" className="btn-primary px-7 py-3.5 text-base">
                 Open Dashboard <ArrowRight className="h-4 w-4" />
               </Link>
-              <a href="#workflow" className="inline-flex items-center justify-center rounded-xl border border-white/20 bg-white/10 px-7 py-3.5 text-base font-semibold text-white transition hover:bg-white/15">
+              <a href="#workflow" className="inline-flex items-center justify-center rounded-xl border border-kodi-border bg-white/85 px-7 py-3.5 text-base font-semibold text-kodi-text-primary shadow-sm transition hover:border-kodi-accent/50 hover:bg-kodi-accent/5 hover:text-kodi-accent">
                 See How It Works
               </a>
             </div>
@@ -168,7 +162,7 @@ export default function Landing() {
 
           <div className="reveal" data-reveal>
             <div className="grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
-              <div className="relative min-h-[560px] overflow-hidden rounded-[2rem] border border-kodi-border bg-kodi-dark shadow-2xl shadow-slate-300/70 animate-float">
+              <div className="relative min-h-[560px] overflow-hidden rounded-2xl border border-kodi-border bg-kodi-dark shadow-2xl shadow-slate-300/70 animate-float">
                 <img
                   src={heroImages[0].src}
                   alt={heroImages[0].alt}
@@ -176,7 +170,7 @@ export default function Landing() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-kodi-dark via-kodi-dark/40 to-transparent" />
                 <div className="absolute inset-x-0 bottom-0 p-5 md:p-7">
-                  <div className="max-w-md rounded-3xl border border-white/15 bg-white/95 p-5 text-kodi-text-primary shadow-xl backdrop-blur">
+                  <div className="max-w-md rounded-2xl border border-white/15 bg-white/95 p-5 text-kodi-text-primary shadow-xl backdrop-blur">
                     <p className="text-xs font-semibold uppercase tracking-[0.2em] text-kodi-text-muted">This month</p>
                     <div className="mt-4 grid grid-cols-3 gap-3">
                       {[
@@ -203,7 +197,7 @@ export default function Landing() {
               </div>
 
               <div className="grid gap-4">
-                <div className="overflow-hidden rounded-[2rem] border border-kodi-border bg-white shadow-xl shadow-slate-200/70">
+                <div className="overflow-hidden rounded-2xl border border-kodi-border bg-white shadow-xl shadow-slate-200/70">
                   <img src={heroImages[1].src} alt={heroImages[1].alt} className="h-64 w-full object-cover" />
                   <div className="p-5">
                     <p className="text-xs font-semibold uppercase tracking-[0.22em] text-kodi-accent">Property view</p>
@@ -212,7 +206,7 @@ export default function Landing() {
                   </div>
                 </div>
 
-                <div className="rounded-[2rem] border border-kodi-border bg-white p-5 shadow-xl shadow-slate-200/70">
+                <div className="rounded-2xl border border-kodi-border bg-white p-5 shadow-xl shadow-slate-200/70">
                   <p className="text-xs font-semibold uppercase tracking-[0.22em] text-kodi-text-muted">Live activity</p>
                   <div className="mt-4 space-y-3">
                     {timeline.map((item) => (
@@ -278,8 +272,8 @@ export default function Landing() {
               </p>
             </div>
             <div className="grid gap-4 sm:grid-cols-3">
-              {channels.map(({ icon: Icon, label, desc }, i) => (
-                <div key={label} className={`saas-card reveal saas-card--cyan p-5 text-center stagger-${i + 1}`} data-reveal>
+              {channels.map(({ icon: Icon, label, desc, tone }, i) => (
+                <div key={label} className={`saas-card reveal ${tone} p-5 text-center stagger-${i + 1}`} data-reveal>
                   <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-kodi-navy">
                     <Icon className="h-6 w-6 text-kodi-accent" />
                   </div>
@@ -298,7 +292,7 @@ export default function Landing() {
               ['Reduce payment excuses', 'Send reminders, trigger M-Pesa prompts, and issue receipts from the same operating record.'],
               ['Keep maintenance history', 'Capture tickets, recordings, assignments, closure, and tenant ratings in one timeline.'],
             ].map(([title, text], i) => (
-              <div key={title} className={`reveal rounded-3xl border border-white/10 bg-white/10 p-7 transition-all duration-300 hover:-translate-y-1 hover:border-white/30 stagger-${i + 1}`} data-reveal>
+              <div key={title} className={`reveal rounded-2xl border border-white/10 bg-white/10 p-7 transition-all duration-300 hover:-translate-y-1 hover:border-white/30 stagger-${i + 1}`} data-reveal>
                 <CheckCircle2 className="h-6 w-6 text-kodi-emerald" />
                 <h3 className="mt-5 text-xl font-bold">{title}</h3>
                 <p className="mt-3 text-sm leading-7 text-blue-50">{text}</p>
@@ -330,12 +324,12 @@ export default function Landing() {
             ))}
           </div>
 
-          <div className="mt-20 rounded-[3rem] bg-slate-900 p-8 lg:p-16 text-white reveal" data-reveal>
+          <div className="mt-20 rounded-2xl bg-slate-900 p-8 lg:p-16 text-white reveal" data-reveal>
             <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
               <div className="space-y-6">
                 <h2 className="text-4xl font-black tracking-tight sm:text-5xl">The Operating System for Modern Kenyan Real Estate.</h2>
                 <p className="text-lg leading-8 text-slate-300">
-                  Kodishaa wasn’t built in a boardroom; it was built in the streets and apartment blocks of Nairobi. We understood that the biggest challenge for landlords isn’t just "collecting money"—it’s the mental load of tracking hundreds of conversations, physical notebooks, and M-Pesa messages.
+                  Kodishaa was built around the streets and apartment blocks of Nairobi. The hardest part for landlords is not only collecting money; it is the mental load of tracking hundreds of conversations, physical notebooks, and M-Pesa messages.
                 </p>
                 <p className="text-lg leading-8 text-slate-300">
                   Our platform consolidates every touchpoint into a single, intelligent flow. By integrating USSD for accessibility, M-Pesa for instant settlement, and AI-driven risk scoring, we provide property owners with the same level of technical sophistication as global enterprise firms, tailored specifically for the local market context.
@@ -370,7 +364,7 @@ export default function Landing() {
         </section>
 
         <section className="mx-auto max-w-7xl px-5 py-20 lg:px-8" data-reveal>
-          <div className="rounded-[2rem] border border-kodi-border bg-white p-8 shadow-xl shadow-slate-200/70 lg:p-10">
+          <div className="rounded-2xl border border-kodi-border bg-white p-8 shadow-xl shadow-slate-200/70 lg:p-10">
             <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
               <div>
                 <p className="section-eyebrow">Built for rental pressure</p>

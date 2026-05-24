@@ -189,8 +189,8 @@ export default function Dashboard() {
         <StatCard icon={Home} label="Occupied units" value={overview.occupiedUnits || 0} color="#1D4ED8" sub={`${occupancyRate}% occupied`} />
         <StatCard icon={AlertTriangle} label="Vacancy rate" value={`${vacancyRate}%`} color="#F59E0B" sub={`${overview.vacantUnits || 0} empty`} />
         <StatCard icon={TrendingUp} label="Collections" value={formatCurrency(overview.collectedThisMonth)} color="#10B981" sub="this month" />
-        <StatCard icon={Receipt} label="Arrears" value={formatCurrency(overview.totalArrears)} color="var(--kodi-rose)" sub={`${arrears.length} tenants`} />
-        <StatCard icon={Wrench} label="Open tickets" value={overview.openTickets || 0} color="var(--kodi-amber)" sub="maintenance backlog" />
+        <StatCard icon={Receipt} label="Arrears" value={formatCurrency(overview.totalArrears)} color="rgb(var(--kodi-rose))" sub={`${arrears.length} tenants`} />
+        <StatCard icon={Wrench} label="Open tickets" value={overview.openTickets || 0} color="rgb(var(--kodi-amber))" sub="maintenance backlog" />
       </div>
 
       <div className="glass-card">

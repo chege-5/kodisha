@@ -3,7 +3,6 @@ import { useAuth } from '../hooks/useAuth';
 import { useQuery } from '@tanstack/react-query';
 import api from '../utils/apiClient';
 import { useEffect, useState } from 'react';
-import SiteFooter from './SiteFooter';
 import {
   LayoutDashboard, Building2, Users, CreditCard, Wrench, Megaphone, BarChart3,
   Settings, LogOut, Bell, ChevronLeft, ChevronRight, Receipt,
@@ -144,9 +143,7 @@ export default function Layout({ caretakerMode }) {
 
   return (
     <div className="flex h-screen bg-kodi-navy overflow-hidden text-kodi-text-primary relative isolate">
-      {/* Decorative Background Blobs */}
-      <div className="pointer-events-none absolute -left-20 top-40 h-96 w-96 rounded-full bg-kodi-accent/10 blur-[120px] animate-pulse" />
-      <div className="pointer-events-none absolute -right-20 bottom-20 h-80 w-80 rounded-full bg-kodi-emerald/10 blur-[100px] animate-pulse" style={{ animationDelay: '1s' }} />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,_rgba(29,78,216,0.07),_transparent_36%),linear-gradient(315deg,_rgba(16,185,129,0.07),_transparent_32%)]" />
       
       {/* Mobile overlay */}
       {mobileOpen && (
@@ -155,7 +152,7 @@ export default function Layout({ caretakerMode }) {
 
       {/* Mobile sidebar */}
       <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-kodi-dark border-r border-white/10 flex flex-col transform transition-transform duration-300 lg:hidden ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        <button onClick={() => setMobileOpen(false)} className="absolute right-4 top-4 text-kodi-text-muted hover:text-white">
+        <button onClick={() => setMobileOpen(false)} className="absolute right-4 top-4 text-blue-100/80 hover:text-white">
           <X className="w-5 h-5" />
         </button>
         {sidebarContent}
@@ -178,7 +175,7 @@ export default function Layout({ caretakerMode }) {
         {/* Top bar */}
         <header className="flex h-18 flex-shrink-0 items-center justify-between border-b border-kodi-border/50 bg-kodi-card/40 px-4 shadow-sm backdrop-blur-2xl lg:px-8 z-30 sticky top-0">
           <div className="flex items-center gap-4">
-            <button onClick={() => setMobileOpen(true)} className="flex h-10 w-10 items-center justify-center rounded-xl bg-kodi-navy text-kodi-text-muted hover:text-white lg:hidden">
+            <button onClick={() => setMobileOpen(true)} className="flex h-10 w-10 items-center justify-center rounded-xl border border-kodi-border bg-kodi-card text-kodi-text-muted hover:text-kodi-accent lg:hidden">
               <Menu className="w-5 h-5" />
             </button>
             <div className="hidden items-center gap-2 rounded-2xl border border-kodi-border/60 bg-kodi-card/50 px-4 py-2 text-xs font-semibold tracking-wide text-kodi-text-muted shadow-sm lg:flex">
@@ -191,14 +188,14 @@ export default function Layout({ caretakerMode }) {
             <div className="flex items-center p-1 rounded-2xl bg-kodi-navy/50 border border-kodi-border/40 backdrop-blur-md">
               <button
                 onClick={() => setTheme('light')}
-                className={`p-2 rounded-xl transition-all ${theme === 'light' ? 'bg-white text-kodi-accent shadow-md scale-110' : 'text-kodi-text-muted hover:text-white'}`}
+                className={`p-2 rounded-xl transition-all ${theme === 'light' ? 'bg-white text-kodi-accent shadow-md scale-105' : 'text-kodi-text-muted hover:text-kodi-accent'}`}
                 title="Light Mode"
               >
                 <SunMedium className="h-4 w-4" />
               </button>
               <button
                 onClick={() => setTheme('dark')}
-                className={`p-2 rounded-xl transition-all ${theme === 'dark' ? 'bg-kodi-card text-kodi-emerald shadow-md scale-110' : 'text-kodi-text-muted hover:text-white'}`}
+                className={`p-2 rounded-xl transition-all ${theme === 'dark' ? 'bg-kodi-card text-kodi-emerald shadow-md scale-105' : 'text-kodi-text-muted hover:text-kodi-accent'}`}
                 title="Dark Mode"
               >
                 <MoonStar className="h-4 w-4" />
