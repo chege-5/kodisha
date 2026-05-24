@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './hooks/useAuth';
 import { useEffect } from 'react';
 import { Toaster } from 'react-hot-toast';
+import { applyTheme, getInitialTheme } from './utils/theme';
 
 import Landing from './pages/Landing';
 import Login from './pages/Login';
@@ -33,11 +34,7 @@ function getHomePath(role) {
 
 function ThemeBootstrap() {
   useEffect(() => {
-    const stored = localStorage.getItem('kodisha-theme');
-    const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches;
-    const theme = stored || (prefersDark ? 'dark' : 'light');
-    document.documentElement.dataset.theme = theme;
-    document.documentElement.style.colorScheme = theme;
+    applyTheme(getInitialTheme());
   }, []);
 
   return null;

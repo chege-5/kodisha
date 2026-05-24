@@ -3,6 +3,7 @@ import { useAuth } from '../hooks/useAuth';
 import { useQuery } from '@tanstack/react-query';
 import api from '../utils/apiClient';
 import { useEffect, useState } from 'react';
+import { applyTheme, getInitialTheme } from '../utils/theme';
 import {
   LayoutDashboard, Building2, Users, CreditCard, Wrench, Megaphone, BarChart3,
   Settings, LogOut, Bell, ChevronLeft, ChevronRight, Receipt,
@@ -57,13 +58,12 @@ export default function Layout({ caretakerMode }) {
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [theme, setTheme] = useState(() => localStorage.getItem('kodisha-theme') || 'light');
+  const [theme, setTheme] = useState(() => getInitialTheme());
 
   const nav = caretakerMode ? caretakerNav : role === 'ADMIN' ? adminNav : landlordNav;
 
   useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-    document.documentElement.style.colorScheme = theme;
+    applyTheme(theme);
     localStorage.setItem('kodisha-theme', theme);
   }, [theme]);
 
