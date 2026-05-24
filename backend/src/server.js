@@ -54,6 +54,7 @@ const allowedOrigins = new Set([
   'https://kodishaa.onrender.com',
   'https://kodisha-2ar4.onrender.com',
   'http://localhost:3000',
+  'http://localhost:4173',
   'http://localhost:5173',
 ].map((origin) => origin.replace(/\/$/, '')));
 
