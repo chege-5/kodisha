@@ -18,20 +18,50 @@ export function getFriendlyError(err, fallback = 'We could not complete that req
 }
 
 // Auto-refresh on 401
+let isRefreshing = false;
+let failedQueue = [];
+
+const processQueue = (error, token = null) => {
+  failedQueue.forEach(prom => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
+  failedQueue = [];
+};
+
 api.interceptors.response.use(
   (res) => res,
   async (err) => {
     const original = err.config;
     if (err.response?.status === 401 && !original._retry && !String(original?.url || '').includes('/auth/refresh')) {
+      if (isRefreshing) {
+        return new Promise(function(resolve, reject) {
+          failedQueue.push({ resolve, reject });
+        }).then(() => {
+          return api(original);
+        }).catch((err) => {
+          return Promise.reject(err);
+        });
+      }
+
       original._retry = true;
+      isRefreshing = true;
+
       try {
         await axios.post(`${baseURL}/auth/refresh`, {}, { withCredentials: true });
+        isRefreshing = false;
+        processQueue(null);
         return api(original);
-      } catch {
+      } catch (refreshError) {
+        isRefreshing = false;
+        processQueue(refreshError, null);
         localStorage.removeItem('user');
         localStorage.removeItem('role');
         window.location.href = '/login';
-        return Promise.reject(err);
+        return Promise.reject(refreshError);
       }
     }
     return Promise.reject(err);

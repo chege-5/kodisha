@@ -20,7 +20,7 @@ function cookieOptions(maxAge) {
   return {
     httpOnly: true,
     secure: isProduction,
-    sameSite: 'strict',
+    sameSite: isProduction ? 'none' : 'lax',
     path: '/',
     maxAge,
   };
@@ -32,7 +32,8 @@ function setAuthCookies(res, tokens) {
 }
 
 function clearAuthCookies(res) {
-  const baseOptions = { path: '/', sameSite: 'strict', secure: process.env.NODE_ENV === 'production' };
+  const isProduction = process.env.NODE_ENV === 'production';
+  const baseOptions = { path: '/', sameSite: isProduction ? 'none' : 'lax', secure: isProduction };
   res.clearCookie('accessToken', baseOptions);
   res.clearCookie('refreshToken', baseOptions);
 }
