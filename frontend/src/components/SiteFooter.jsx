@@ -31,12 +31,12 @@ export default function SiteFooter({ compact = false }) {
               aria-label={`${member.name} portfolio, opens in a new tab`}
               className={`group inline-flex items-center gap-1.5 rounded-xl border px-3 py-2 transition-all focus:outline-none focus:ring-2 focus:ring-kodi-accent/30 ${
                 member.featured
-                  ? 'border-kodi-accent/20 bg-kodi-accent/5 font-bold text-kodi-dark shadow-sm shadow-kodi-accent/5 hover:border-kodi-accent/40 hover:text-kodi-accent'
-                  : 'border-transparent text-kodi-text-secondary hover:border-kodi-border hover:bg-kodi-navy hover:text-kodi-accent'
+                  ? 'btn-soft-hover border-kodi-border bg-kodi-card font-bold text-kodi-dark shadow-sm'
+                  : 'btn-soft-hover border-transparent text-kodi-text-secondary'
               }`}
             >
               <span>{member.name}</span>
-              <ExternalLink className={`h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 ${member.featured ? 'text-kodi-accent' : 'text-kodi-text-muted group-hover:text-kodi-accent'}`} />
+              <ExternalLink className="h-3.5 w-3.5 text-kodi-text-muted transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
             </a>
           ))}
         </div>

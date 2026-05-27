@@ -33,6 +33,13 @@
   --kodi-text-secondary-rgb: 51 65 85;
   --kodi-text-muted: #64748B;
   --kodi-text-muted-rgb: 100 116 139;
+  --button-primary-bg: #14213D;
+  --button-primary-hover-bg: #1E293B;
+  --button-primary-border: rgba(16, 185, 129, 0.28);
+  --button-primary-shadow: rgba(20, 33, 61, 0.18);
+  --button-primary-hover-shadow: rgba(16, 185, 129, 0.22);
+  --button-secondary-hover-bg: rgba(248, 250, 252, 0.92);
+  --button-soft-hover-bg: rgba(100, 116, 139, 0.1);
   --bg-gradient-1: rgba(29, 78, 216, 0.16);
   --bg-gradient-2: rgba(16, 185, 129, 0.14);
   --bg-main-start: #f8fafc;
@@ -71,6 +78,13 @@
   --kodi-text-secondary-rgb: 203 213 225;
   --kodi-text-muted: #94A3B8;
   --kodi-text-muted-rgb: 148 163 184;
+  --button-primary-bg: #334155;
+  --button-primary-hover-bg: #475569;
+  --button-primary-border: rgba(52, 211, 153, 0.24);
+  --button-primary-shadow: rgba(0, 0, 0, 0.24);
+  --button-primary-hover-shadow: rgba(52, 211, 153, 0.18);
+  --button-secondary-hover-bg: rgba(30, 41, 59, 0.92);
+  --button-soft-hover-bg: rgba(148, 163, 184, 0.12);
   --bg-gradient-1: rgba(59, 130, 246, 0.2);
   --bg-gradient-2: rgba(52, 211, 153, 0.15);
   --bg-main-start: #0F172A;
@@ -130,18 +144,26 @@
 
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-kodi-accent text-white text-sm font-bold rounded-2xl
+    @apply inline-flex items-center justify-center gap-2 px-6 py-2.5 text-white text-sm font-bold rounded-2xl border
     transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed
-    shadow-lg hover:bg-kodi-accent-light hover:-translate-y-1 hover:scale-[1.02] active:translate-y-0 active:scale-95;
-    --tw-shadow-color: rgb(29 78 216 / 0.25);
+    shadow-lg hover:-translate-y-1 hover:scale-[1.02] active:translate-y-0 active:scale-95;
+    background: var(--button-primary-bg);
+    border-color: var(--button-primary-border);
+    --tw-shadow-color: var(--button-primary-shadow);
     --tw-shadow: var(--tw-shadow-colored);
   }
   .btn-primary:hover {
-    --tw-shadow-color: rgb(29 78 216 / 0.4);
+    background: var(--button-primary-hover-bg);
+    border-color: rgb(var(--kodi-emerald-rgb) / 0.35);
+    --tw-shadow-color: var(--button-primary-hover-shadow);
   }
   .btn-secondary {
     @apply inline-flex items-center justify-center gap-2 px-6 py-2.5 border border-kodi-border bg-kodi-card text-kodi-text-primary text-sm font-bold rounded-2xl
-    hover:bg-kodi-navy hover:border-kodi-accent/50 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md active:translate-y-0;
+    transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md active:translate-y-0;
+  }
+  .btn-secondary:hover {
+    background: var(--button-secondary-hover-bg);
+    border-color: rgb(var(--kodi-border-rgb) / 1);
   }
   .btn-danger {
     @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-kodi-rose text-white text-sm font-semibold rounded-xl
@@ -157,7 +179,32 @@
   }
   .btn-ghost {
     @apply inline-flex items-center justify-center gap-2 px-4 py-2 text-kodi-text-secondary text-sm font-medium rounded-xl
-    hover:bg-kodi-accent/10 hover:text-kodi-accent transition-all duration-200;
+    hover:text-kodi-text-primary transition-all duration-200;
+  }
+  .btn-ghost:hover {
+    background: var(--button-soft-hover-bg);
+  }
+  .btn-tone {
+    background: var(--button-primary-bg);
+    border-color: var(--button-primary-border);
+    color: #fff;
+    box-shadow: 0 12px 28px var(--button-primary-shadow);
+  }
+  .btn-tone:hover {
+    background: var(--button-primary-hover-bg);
+    border-color: rgb(var(--kodi-emerald-rgb) / 0.35);
+    box-shadow: 0 14px 32px var(--button-primary-hover-shadow);
+  }
+  .btn-soft-hover:hover {
+    background: var(--button-soft-hover-bg);
+    border-color: rgb(var(--kodi-border-rgb) / 1);
+    color: rgb(var(--kodi-text-primary-rgb) / 1);
+  }
+  .btn-subtle-active {
+    background: rgb(var(--kodi-slate-rgb) / 0.12);
+    border-color: rgb(var(--kodi-border-rgb) / 1);
+    color: rgb(var(--kodi-text-primary-rgb) / 1);
+    box-shadow: 0 10px 24px rgb(var(--kodi-text-primary-rgb) / 0.08);
   }
 
   .glass-card {
@@ -227,6 +274,20 @@
 
   .skeleton {
     @apply bg-slate-200 rounded-xl animate-pulse;
+  }
+  .loading-skeleton main [class*="bg-kodi-navy"],
+  .loading-skeleton aside [class*="bg-kodi-navy"] {
+    position: relative;
+    overflow: hidden;
+  }
+  .loading-skeleton main [class*="bg-kodi-navy"]::after,
+  .loading-skeleton aside [class*="bg-kodi-navy"]::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, rgb(var(--kodi-card-rgb) / 0.45), transparent);
+    animation: shimmer 1.8s ease-in-out infinite;
   }
 
   .divider {
@@ -496,6 +557,12 @@
   }
   50% {
     transform: translate3d(0, -10px, 0);
+  }
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
   }
 }
 

@@ -27,8 +27,8 @@ export default function TicketQueue({ tickets = [], isLoading }) {
           <button
             key={s}
             onClick={() => setFilter(s)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-              filter === s ? 'bg-kodi-navy text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            className={`rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
+              filter === s ? 'btn-subtle-active' : 'btn-soft-hover border-transparent bg-gray-100 text-gray-600'
             }`}
           >
             {s.replace('_', ' ')}

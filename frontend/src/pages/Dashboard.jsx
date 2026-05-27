@@ -210,7 +210,7 @@ export default function Dashboard() {
             ['/dashboard/broadcast', Megaphone, 'Raise broadcast'],
             ['/dashboard/tenants', FileText, 'Create lease'],
           ].map(([to, Icon, label]) => (
-            <Link key={label} to={to} className="rounded-2xl border border-kodi-border bg-kodi-navy p-4 text-sm font-semibold text-kodi-text-secondary transition hover:border-kodi-accent hover:text-kodi-accent">
+            <Link key={label} to={to} className="btn-soft-hover rounded-2xl border border-kodi-border bg-kodi-navy p-4 text-sm font-semibold text-kodi-text-secondary transition">
               <Icon className="mb-3 h-5 w-5" />
               {label}
             </Link>
@@ -262,7 +262,7 @@ export default function Dashboard() {
           ) : (
             <div className="space-y-3">
               {attentionItems.slice(0, 7).map(({ title, type, detail, icon: Icon, tone, to }) => (
-                <Link key={`${type}-${title}`} to={to} className="flex items-center justify-between gap-4 rounded-2xl border border-kodi-border p-4 transition hover:border-kodi-accent/40 hover:bg-kodi-navy">
+                <Link key={`${type}-${title}`} to={to} className="btn-soft-hover flex items-center justify-between gap-4 rounded-2xl border border-kodi-border p-4 transition">
                   <div className="flex items-center gap-3">
                     <div className={`rounded-xl p-2 ${tone}`}><Icon className="h-4 w-4" /></div>
                     <div>

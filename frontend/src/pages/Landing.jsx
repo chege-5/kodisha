@@ -120,9 +120,9 @@ export default function Landing() {
         <nav className="relative z-10 mx-auto flex max-w-7xl items-center justify-between px-5 py-5 lg:px-8">
           <Logo />
           <div className="hidden items-center gap-7 text-sm font-medium text-kodi-text-muted md:flex">
-            <a href="#workflow" className="hover:text-kodi-accent">Workflow</a>
-            <a href="#channels" className="hover:text-kodi-accent">Channels</a>
-            <a href="#features" className="hover:text-kodi-accent">Features</a>
+            <a href="#workflow" className="transition hover:text-kodi-text-primary">Workflow</a>
+            <a href="#channels" className="transition hover:text-kodi-text-primary">Channels</a>
+            <a href="#features" className="transition hover:text-kodi-text-primary">Features</a>
           </div>
           <div className="flex items-center gap-3">
             <Link to="/login" className="btn-ghost">Log in</Link>
@@ -149,7 +149,7 @@ export default function Landing() {
               <Link to="/login" className="btn-primary px-7 py-3.5 text-base">
                 Open Dashboard <ArrowRight className="h-4 w-4" />
               </Link>
-              <a href="#workflow" className="inline-flex items-center justify-center rounded-xl border border-kodi-border bg-white/90 px-7 py-3.5 text-base font-semibold text-kodi-dark shadow-sm transition hover:border-kodi-accent/40 hover:bg-kodi-card">
+              <a href="#workflow" className="btn-soft-hover inline-flex items-center justify-center rounded-xl border border-kodi-border bg-white/90 px-7 py-3.5 text-base font-semibold text-kodi-dark shadow-sm transition">
                 See How It Works
               </a>
             </div>
@@ -213,7 +213,7 @@ export default function Landing() {
                   <p className="text-xs font-semibold uppercase tracking-[0.22em] text-kodi-text-muted">Live activity</p>
                   <div className="mt-4 space-y-3">
                     {timeline.map((item) => (
-                      <div key={item.label} className="rounded-2xl bg-slate-50 p-4 transition-all duration-300 hover:bg-blue-50/60">
+                      <div key={item.label} className="rounded-2xl bg-slate-50 p-4 transition-all duration-300 hover:bg-slate-100/80">
                         <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-kodi-accent">{item.label}</p>
                         <p className="mt-1 text-sm leading-6 text-kodi-text-secondary">{item.value}</p>
                       </div>

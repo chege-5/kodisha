@@ -109,7 +109,7 @@ export default function Layout({ caretakerMode }) {
               `flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm font-medium transition-all ${
                 isActive
                   ? 'bg-white/12 text-white border border-white/15 shadow-lg shadow-black/10'
-                  : 'text-blue-100/80 hover:bg-white/10 hover:text-white'
+                  : 'text-slate-200/80 hover:bg-white/10 hover:text-white'
               } ${collapsed ? 'justify-center' : ''}`
             }
           >
@@ -133,7 +133,7 @@ export default function Layout({ caretakerMode }) {
         )}
         <button
           onClick={handleLogout}
-          className={`flex w-full items-center gap-3 px-3 py-2.5 rounded-2xl text-sm text-blue-100/75 hover:bg-white/10 hover:text-white transition-all ${collapsed ? 'justify-center' : ''}`}
+          className={`flex w-full items-center gap-3 px-3 py-2.5 rounded-2xl text-sm text-slate-200/75 hover:bg-white/10 hover:text-white transition-all ${collapsed ? 'justify-center' : ''}`}
         >
           <LogOut className="w-[18px] h-[18px]" />
           {!collapsed && 'Sign out'}
@@ -155,7 +155,7 @@ export default function Layout({ caretakerMode }) {
 
       {/* Mobile sidebar */}
       <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-kodi-dark border-r border-white/10 flex flex-col transform transition-transform duration-300 lg:hidden ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        <button onClick={() => setMobileOpen(false)} className="absolute right-4 top-4 text-kodi-text-muted hover:text-white">
+        <button onClick={() => setMobileOpen(false)} className="absolute right-4 top-4 text-slate-300 transition-colors hover:text-white">
           <X className="w-5 h-5" />
         </button>
         {sidebarContent}
@@ -166,7 +166,7 @@ export default function Layout({ caretakerMode }) {
         {sidebarContent}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="absolute bottom-20 -right-3 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-white border border-kodi-border text-kodi-text-muted hover:text-kodi-accent hover:border-kodi-accent/50 transition-all"
+          className="btn-soft-hover absolute bottom-20 -right-3 z-10 flex h-7 w-7 items-center justify-center rounded-full border border-kodi-border bg-white text-kodi-text-muted transition-all"
           style={{ left: collapsed ? '58px' : '264px' }}
         >
           {collapsed ? <ChevronRight className="w-3 h-3" /> : <ChevronLeft className="w-3 h-3" />}
@@ -178,7 +178,7 @@ export default function Layout({ caretakerMode }) {
         {/* Top bar */}
         <header className="flex h-18 flex-shrink-0 items-center justify-between border-b border-kodi-border/50 bg-kodi-card/40 px-4 shadow-sm backdrop-blur-2xl lg:px-8 z-30 sticky top-0">
           <div className="flex items-center gap-4">
-            <button onClick={() => setMobileOpen(true)} className="flex h-10 w-10 items-center justify-center rounded-xl bg-kodi-navy text-kodi-text-muted hover:text-white lg:hidden">
+            <button onClick={() => setMobileOpen(true)} className="btn-soft-hover flex h-10 w-10 items-center justify-center rounded-xl border border-transparent bg-kodi-navy text-kodi-text-muted lg:hidden">
               <Menu className="w-5 h-5" />
             </button>
             <div className="hidden items-center gap-2 rounded-2xl border border-kodi-border/60 bg-kodi-card/50 px-4 py-2 text-xs font-semibold tracking-wide text-kodi-text-muted shadow-sm lg:flex">
@@ -191,14 +191,14 @@ export default function Layout({ caretakerMode }) {
             <div className="flex items-center p-1 rounded-2xl bg-kodi-navy/50 border border-kodi-border/40 backdrop-blur-md">
               <button
                 onClick={() => setTheme('light')}
-                className={`p-2 rounded-xl transition-all ${theme === 'light' ? 'bg-white text-kodi-accent shadow-md scale-110' : 'text-kodi-text-muted hover:text-white'}`}
+                className={`p-2 rounded-xl transition-all ${theme === 'light' ? 'btn-subtle-active scale-110' : 'btn-soft-hover border border-transparent text-kodi-text-muted'}`}
                 title="Light Mode"
               >
                 <SunMedium className="h-4 w-4" />
               </button>
               <button
                 onClick={() => setTheme('dark')}
-                className={`p-2 rounded-xl transition-all ${theme === 'dark' ? 'bg-kodi-card text-kodi-emerald shadow-md scale-110' : 'text-kodi-text-muted hover:text-white'}`}
+                className={`p-2 rounded-xl transition-all ${theme === 'dark' ? 'btn-subtle-active scale-110' : 'btn-soft-hover border border-transparent text-kodi-text-muted'}`}
                 title="Dark Mode"
               >
                 <MoonStar className="h-4 w-4" />
@@ -206,7 +206,7 @@ export default function Layout({ caretakerMode }) {
             </div>
             <button
               onClick={() => navigate(caretakerMode ? '/caretaker/notifications' : '/dashboard/notifications')}
-              className="relative rounded-xl p-2.5 text-kodi-text-muted hover:bg-kodi-navy hover:text-kodi-accent transition-all"
+              className="btn-soft-hover relative rounded-xl border border-transparent p-2.5 text-kodi-text-muted transition-all"
             >
               <Bell className="w-5 h-5" />
               {unreadCount > 0 && (

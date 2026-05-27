@@ -134,8 +134,8 @@ function Sidebar({ activePage, setActivePage, user, tenant, onLogout, mobileOpen
             }}
             className={`flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-sm font-semibold transition-all ${
               activePage === id
-                ? 'bg-kodi-accent text-white shadow-lg shadow-kodi-accent/20'
-                : 'text-kodi-text-secondary hover:bg-white hover:text-kodi-text-primary'
+                ? 'btn-subtle-active'
+                : 'btn-soft-hover border border-transparent text-kodi-text-secondary'
             }`}
           >
             <Icon className="h-4 w-4 flex-shrink-0" />
@@ -177,7 +177,7 @@ function Sidebar({ activePage, setActivePage, user, tenant, onLogout, mobileOpen
               type="button"
               aria-label="Close menu"
               onClick={() => setMobileOpen(false)}
-              className="absolute right-4 top-4 rounded-xl p-2 text-kodi-text-muted hover:bg-white hover:text-kodi-text-primary"
+              className="btn-soft-hover absolute right-4 top-4 rounded-xl border border-transparent p-2 text-kodi-text-muted"
             >
               <X className="h-5 w-5" />
             </button>
@@ -755,7 +755,7 @@ export default function TenantPortal() {
                 type="button"
                 onClick={() => setActivePage(id)}
                 className={`flex h-14 flex-col items-center justify-center gap-1 rounded-2xl text-[10px] font-semibold transition-all ${
-                  activePage === id ? 'bg-kodi-accent text-white' : 'text-kodi-text-muted'
+                  activePage === id ? 'btn-subtle-active' : 'btn-soft-hover border border-transparent text-kodi-text-muted'
                 }`}
               >
                 <Icon className="h-4 w-4" />

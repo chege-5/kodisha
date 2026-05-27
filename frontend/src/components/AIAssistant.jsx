@@ -60,7 +60,7 @@ export default function AIAssistant() {
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 w-14 h-14 rounded-2xl bg-kodi-accent text-white shadow-2xl shadow-kodi-accent/30 flex items-center justify-center hover:scale-105 transition-all duration-200 z-50"
+        className="btn-tone fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-2xl border transition-all duration-200 hover:scale-105"
       >
         <Bot className="w-6 h-6" />
       </button>
@@ -80,7 +80,7 @@ export default function AIAssistant() {
             <p className="text-[10px] text-kodi-emerald">Online</p>
           </div>
         </div>
-        <button onClick={() => setIsOpen(false)} className="p-1.5 rounded-lg hover:bg-kodi-border/20 text-kodi-text-muted hover:text-white transition-all">
+        <button onClick={() => setIsOpen(false)} className="btn-soft-hover rounded-lg border border-transparent p-1.5 text-kodi-text-muted transition-all">
           <X className="w-4 h-4" />
         </button>
       </div>
@@ -91,7 +91,7 @@ export default function AIAssistant() {
           <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
             <div className={`max-w-[85%] px-3.5 py-2.5 rounded-2xl text-sm whitespace-pre-line ${
               m.role === 'user'
-                ? 'bg-kodi-accent text-white rounded-br-md'
+                ? 'btn-tone rounded-br-md border'
                 : 'bg-kodi-card border border-kodi-border/30 text-kodi-text-primary rounded-bl-md'
             }`}>
               {m.content}
@@ -116,7 +116,7 @@ export default function AIAssistant() {
         <div className="px-4 pb-2 flex flex-wrap gap-1.5">
           {QUICK_ACTIONS.slice(0, 4).map((a) => (
             <button key={a} onClick={() => handleQuickAction(a)}
-              className="text-[10px] px-2.5 py-1.5 rounded-lg bg-kodi-accent/10 text-kodi-accent border border-kodi-accent/20 hover:bg-kodi-accent/20 transition-all">
+              className="btn-soft-hover rounded-lg border border-kodi-border/70 bg-kodi-card/70 px-2.5 py-1.5 text-[10px] text-kodi-text-secondary transition-all">
               {a}
             </button>
           ))}
@@ -134,7 +134,7 @@ export default function AIAssistant() {
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
           />
           <button onClick={handleSend} disabled={!query.trim() || askAI.isPending}
-            className="p-2.5 rounded-xl bg-kodi-accent text-white hover:bg-kodi-accent-light transition-all disabled:opacity-50">
+            className="btn-tone rounded-xl border p-2.5 transition-all disabled:opacity-50">
             <Send className="w-4 h-4" />
           </button>
         </div>
