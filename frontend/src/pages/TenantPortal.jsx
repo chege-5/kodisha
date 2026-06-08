@@ -103,25 +103,25 @@ function EmptyState({ icon: Icon, title, text }) {
 function Sidebar({ activePage, setActivePage, user, tenant, onLogout, mobileOpen, setMobileOpen }) {
   const content = (
     <>
-      <div className="flex h-20 items-center gap-3 border-b border-white/10 px-5">
+      <div className="flex h-20 items-center gap-3 border-b sidebar-divider px-5">
         <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-kodi-accent text-white shadow-lg shadow-kodi-accent-20">
           <Home className="h-5 w-5" />
         </div>
         <div className="min-w-0">
-          <p className="text-base font-black text-slate-50">Kodisha</p>
-          <p className="truncate text-xs text-slate-300">Tenant portal</p>
+          <p className="text-base font-black sidebar-text-title">Kodisha</p>
+          <p className="truncate text-xs sidebar-text-secondary">Tenant portal</p>
         </div>
       </div>
 
-      <div className="border-b border-white/10 px-5 py-5">
-        <div className="rounded-2xl border border-white/10 bg-white/10 p-3 shadow-inner shadow-white/5">
+      <div className="border-b sidebar-divider px-5 py-5">
+        <div className="rounded-2xl border sidebar-card p-3">
           <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-400/20 text-emerald-200">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-600 dark:bg-emerald-400/20 dark:text-emerald-200">
               <UserCircle className="h-6 w-6" />
             </div>
             <div className="min-w-0">
-              <p className="truncate text-sm font-semibold text-white">{tenant?.name || user?.name || 'Tenant'}</p>
-              <p className="truncate text-xs text-white/60">{tenant?.phone || user?.phone || 'No phone'}</p>
+              <p className="truncate text-sm font-semibold sidebar-text-title">{tenant?.name || user?.name || 'Tenant'}</p>
+              <p className="truncate text-xs sidebar-text-muted">{tenant?.phone || user?.phone || 'No phone'}</p>
             </div>
           </div>
         </div>
@@ -139,7 +139,7 @@ function Sidebar({ activePage, setActivePage, user, tenant, onLogout, mobileOpen
             className={`flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-sm font-semibold transition-all ${
               activePage === id
                 ? 'bg-kodi-accent text-white shadow-kodi-accent-20'
-                : 'text-slate-300 hover:bg-white/10 hover:text-white'
+                : 'sidebar-nav-link-inactive'
             }`}
           >
             <Icon className="h-4 w-4 flex-shrink-0" />
@@ -149,11 +149,11 @@ function Sidebar({ activePage, setActivePage, user, tenant, onLogout, mobileOpen
         ))}
       </nav>
 
-      <div className="border-t border-white/10 p-3">
+      <div className="border-t sidebar-divider p-3">
         <button
           type="button"
           onClick={onLogout}
-          className="flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-sm font-semibold text-white/60 transition-all hover:bg-rose-400/15 hover:text-rose-100"
+          className="flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-sm font-semibold sidebar-signout transition-all"
         >
           <LogOut className="h-4 w-4" />
           Sign out
@@ -164,7 +164,7 @@ function Sidebar({ activePage, setActivePage, user, tenant, onLogout, mobileOpen
 
   return (
     <>
-      <aside className="hidden w-72 flex-shrink-0 overflow-hidden border-r border-white/10 bg-[linear-gradient(180deg,#020617_0%,#0f172a_45%,#06352f_100%)] lg:flex lg:flex-col">
+      <aside className="hidden w-72 flex-shrink-0 overflow-hidden border-r sidebar-divider sidebar-tenant lg:flex lg:flex-col">
         {content}
       </aside>
 
@@ -176,12 +176,12 @@ function Sidebar({ activePage, setActivePage, user, tenant, onLogout, mobileOpen
             className="absolute inset-0 bg-black/50"
             onClick={() => setMobileOpen(false)}
           />
-          <aside className="relative flex h-full w-80 max-w-[86vw] flex-col bg-[linear-gradient(180deg,#020617_0%,#0f172a_45%,#06352f_100%)] shadow-2xl">
+          <aside className="relative flex h-full w-80 max-w-[86vw] flex-col sidebar-tenant shadow-2xl">
             <button
               type="button"
               aria-label="Close menu"
               onClick={() => setMobileOpen(false)}
-              className="absolute right-4 top-4 rounded-xl p-2 text-white/60 hover:bg-white/10 hover:text-white"
+              className="absolute right-4 top-4 rounded-xl p-2 sidebar-text-muted hover:sidebar-nav-hover-bg hover:sidebar-text-title transition-all"
             >
               <X className="h-5 w-5" />
             </button>

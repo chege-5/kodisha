@@ -82,15 +82,15 @@ export default function Layout({ caretakerMode }) {
   const sidebarContent = (
     <>
       {/* Logo */}
-      <div className={`px-5 py-6 border-b border-white/10 ${collapsed ? 'px-3' : ''}`}>
+      <div className={`px-5 py-6 border-b sidebar-divider ${collapsed ? 'px-3' : ''}`}>
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-kodi-accent to-kodi-emerald shadow-kodi-accent-20">
             <Building2 className="h-5 w-5 text-white" />
           </div>
           {!collapsed && (
             <div className="animate-fade-in">
-              <h1 className="text-lg font-bold tracking-tight text-white">Kodishaa</h1>
-              <p className="text-[10px] font-medium uppercase tracking-[0.28em] text-blue-100">Rent OS</p>
+              <h1 className="text-lg font-bold tracking-tight sidebar-text-title">Kodishaa</h1>
+              <p className="text-[10px] font-medium uppercase tracking-[0.28em] sidebar-text-secondary">Rent OS</p>
             </div>
           )}
         </div>
@@ -107,8 +107,8 @@ export default function Layout({ caretakerMode }) {
             className={({ isActive }) =>
               `flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm font-medium transition-all ${
                 isActive
-                  ? 'bg-white/12 text-white border border-white/15 shadow-lg shadow-black/10'
-                  : 'text-blue-100/80 hover:bg-white/10 hover:text-white'
+                  ? 'sidebar-nav-link-active border shadow-lg shadow-black/5'
+                  : 'sidebar-nav-link-inactive'
               } ${collapsed ? 'justify-center' : ''}`
             }
           >
@@ -118,21 +118,21 @@ export default function Layout({ caretakerMode }) {
         ))}
       </nav>
       {/* User */}
-      <div className="px-3 py-4 border-t border-white/10">
+      <div className="px-3 py-4 border-t sidebar-divider">
         {!collapsed && (
           <div className="flex items-center gap-3 px-3 py-2 mb-2">
             <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-kodi-purple to-kodi-accent text-sm font-bold text-white">
               {user?.name?.[0] || 'U'}
             </div>
             <div className="min-w-0">
-              <p className="truncate text-sm font-medium text-white">{user?.name}</p>
-              <p className="truncate text-xs text-blue-100/75">{role}</p>
+              <p className="truncate text-sm font-medium sidebar-text-title">{user?.name}</p>
+              <p className="truncate text-xs sidebar-text-muted">{role}</p>
             </div>
           </div>
         )}
         <button
           onClick={handleLogout}
-          className={`flex w-full items-center gap-3 px-3 py-2.5 rounded-2xl text-sm text-blue-100/75 hover:bg-white/10 hover:text-white transition-all ${collapsed ? 'justify-center' : ''}`}
+          className={`flex w-full items-center gap-3 px-3 py-2.5 rounded-2xl text-sm sidebar-nav-link-inactive transition-all ${collapsed ? 'justify-center' : ''}`}
         >
           <LogOut className="w-[18px] h-[18px]" />
           {!collapsed && 'Sign out'}
@@ -151,15 +151,15 @@ export default function Layout({ caretakerMode }) {
       )}
 
       {/* Mobile sidebar */}
-      <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-[linear-gradient(180deg,#090d1a_0%,#0d1527_50%,#05231f_100%)] border-r border-white/10 flex flex-col transform transition-transform duration-300 lg:hidden ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        <button onClick={() => setMobileOpen(false)} className="absolute right-4 top-4 text-blue-100/80 hover:text-white">
+      <aside className={`fixed inset-y-0 left-0 z-50 w-64 sidebar-landlord border-r sidebar-divider flex flex-col transform transition-transform duration-300 lg:hidden ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <button onClick={() => setMobileOpen(false)} className="absolute right-4 top-4 sidebar-text-secondary hover:sidebar-text-title transition-all">
           <X className="w-5 h-5" />
         </button>
         {sidebarContent}
       </aside>
 
       {/* Desktop sidebar */}
-      <aside className={`hidden lg:flex flex-col bg-[linear-gradient(180deg,#090d1a_0%,#0d1527_50%,#05231f_100%)] border-r border-white/10 flex-shrink-0 transition-all duration-300 ${collapsed ? 'w-[76px]' : 'w-72'}`}>
+      <aside className={`hidden lg:flex flex-col sidebar-landlord border-r sidebar-divider flex-shrink-0 transition-all duration-300 ${collapsed ? 'w-[76px]' : 'w-72'}`}>
         {sidebarContent}
         <button
           onClick={() => setCollapsed(!collapsed)}

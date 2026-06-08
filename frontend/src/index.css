@@ -25,6 +25,30 @@
   --bg-main-start: #080c18;
   --bg-main-mid: #0a1122;
   --bg-main-end: #0e172e;
+
+  /* Sidebar theme-aware variables (Dark Theme) */
+  --sidebar-landlord-start: #090d1a;
+  --sidebar-landlord-mid: #0d1527;
+  --sidebar-landlord-end: #05231f;
+  --sidebar-tenant-start: #020617;
+  --sidebar-tenant-mid: #0f172a;
+  --sidebar-tenant-end: #06352f;
+  --sidebar-border: rgba(255, 255, 255, 0.1);
+  --sidebar-divider: rgba(255, 255, 255, 0.1);
+  --sidebar-text-primary: #ffffff;
+  --sidebar-text-secondary: rgba(219, 234, 254, 0.8);
+  --sidebar-text-muted: rgba(219, 234, 254, 0.75);
+  --sidebar-nav-active-bg: rgba(255, 255, 255, 0.12);
+  --sidebar-nav-active-text: #ffffff;
+  --sidebar-nav-active-border: rgba(255, 255, 255, 0.15);
+  --sidebar-nav-hover-bg: rgba(255, 255, 255, 0.1);
+  --sidebar-nav-hover-text: #ffffff;
+  --sidebar-card-bg: rgba(255, 255, 255, 0.1);
+  --sidebar-card-border: rgba(255, 255, 255, 0.1);
+  --sidebar-card-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+  --sidebar-signout-text: rgba(255, 255, 255, 0.6);
+  --sidebar-signout-hover-bg: rgba(251, 113, 133, 0.15);
+  --sidebar-signout-hover-text: #ffe4e6;
 }
 
 [data-theme="light"] {
@@ -49,6 +73,30 @@
   --bg-main-start: #f3f4f6;
   --bg-main-mid: #f9fafb;
   --bg-main-end: #ffffff;
+
+  /* Sidebar theme-aware variables (Light Theme) */
+  --sidebar-landlord-start: #ffffff;
+  --sidebar-landlord-mid: #f8fafc;
+  --sidebar-landlord-end: #ecfdf5;
+  --sidebar-tenant-start: #ffffff;
+  --sidebar-tenant-mid: #f8fafc;
+  --sidebar-tenant-end: #ecfdf5;
+  --sidebar-border: rgba(15, 23, 42, 0.08);
+  --sidebar-divider: rgba(15, 23, 42, 0.08);
+  --sidebar-text-primary: #0f172a;
+  --sidebar-text-secondary: rgba(15, 23, 42, 0.7);
+  --sidebar-text-muted: rgba(71, 85, 105, 0.8);
+  --sidebar-nav-active-bg: rgba(37, 99, 235, 0.09);
+  --sidebar-nav-active-text: #2563eb;
+  --sidebar-nav-active-border: rgba(37, 99, 235, 0.15);
+  --sidebar-nav-hover-bg: rgba(15, 23, 42, 0.05);
+  --sidebar-nav-hover-text: #0f172a;
+  --sidebar-card-bg: rgba(15, 23, 42, 0.03);
+  --sidebar-card-border: rgba(15, 23, 42, 0.08);
+  --sidebar-card-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.8);
+  --sidebar-signout-text: rgba(15, 23, 42, 0.6);
+  --sidebar-signout-hover-bg: rgba(220, 38, 38, 0.08);
+  --sidebar-signout-hover-text: #dc2626;
 }
 
 @layer base {
@@ -291,6 +339,52 @@
   .reveal-visible {
     opacity: 1;
     transform: translateY(0);
+  }
+
+  /* Theme-aware Sidebar classes */
+  .sidebar-landlord {
+    background: linear-gradient(180deg, var(--sidebar-landlord-start) 0%, var(--sidebar-landlord-mid) 50%, var(--sidebar-landlord-end) 100%);
+    border-color: var(--sidebar-border);
+  }
+  .sidebar-tenant {
+    background: linear-gradient(180deg, var(--sidebar-tenant-start) 0%, var(--sidebar-tenant-mid) 50%, var(--sidebar-tenant-end) 100%);
+    border-color: var(--sidebar-border);
+  }
+  .sidebar-divider {
+    border-color: var(--sidebar-divider) !important;
+  }
+  .sidebar-text-title {
+    color: var(--sidebar-text-primary) !important;
+  }
+  .sidebar-text-subtitle {
+    color: var(--sidebar-text-secondary) !important;
+  }
+  .sidebar-text-muted {
+    color: var(--sidebar-text-muted) !important;
+  }
+  .sidebar-nav-link-active {
+    background-color: var(--sidebar-nav-active-bg) !important;
+    color: var(--sidebar-nav-active-text) !important;
+    border-color: var(--sidebar-nav-active-border) !important;
+  }
+  .sidebar-nav-link-inactive {
+    color: var(--sidebar-text-secondary) !important;
+  }
+  .sidebar-nav-link-inactive:hover {
+    background-color: var(--sidebar-nav-hover-bg) !important;
+    color: var(--sidebar-nav-hover-text) !important;
+  }
+  .sidebar-card {
+    background-color: var(--sidebar-card-bg) !important;
+    border-color: var(--sidebar-card-border) !important;
+    box-shadow: var(--sidebar-card-shadow) !important;
+  }
+  .sidebar-signout {
+    color: var(--sidebar-signout-text) !important;
+  }
+  .sidebar-signout:hover {
+    background-color: var(--sidebar-signout-hover-bg) !important;
+    color: var(--sidebar-signout-hover-text) !important;
   }
 }
 
