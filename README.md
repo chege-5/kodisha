@@ -1,105 +1,83 @@
-# <p align="center">🏢 Kodishaa</p>
-<p align="center">
-  <strong>The Operating System for Modern Kenyan Real Estate.</strong>
-</p>
+# Kodisha
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Status-Production--Ready-10B981?style=for-the-badge" alt="Status" />
-  <img src="https://img.shields.io/badge/Stack-React_|_Node_|_Prisma-1D4ED8?style=for-the-badge" alt="Stack" />
-  <img src="https://img.shields.io/badge/Market-Kenya_🇰🇪-F59E0B?style=for-the-badge" alt="Market" />
-</p>
+Kodisha is a modern, high-performance property management platform tailored for Kenyan real estate. It features automated billing, M-Pesa STK push collections, utility tracking, and an AI-assisted trust-scoring ecosystem.
 
 ---
 
-## 🌟 Overview
+##  Tech Stack
 
-**Kodishaa** is a high-performance, AI-augmented property management platform designed to eliminate the administrative friction of Kenyan real estate. By bridging the gap between physical operations and digital financial control, Kodishaa provides landlords, caretakers, and tenants with a seamless, omnichannel experience.
-
-From **M-Pesa STK Push** rent collection to **USSD-based utility tracking** and **AI-driven trust scoring**, Kodishaa is built for scale, transparency, and operational excellence.
-
----
-
-## 🚀 Key Features
-
-### 🏦 Financial Command Center
-- **Native M-Pesa Integration**: One-click STK push for rent and utilities with instant transaction matching.
-- **Automated Billing**: Dynamic bill runs for water (meter-based) and electricity with automated receipt generation.
-- **Arrears Management**: Intelligent tracking of partial payments and automated omnichannel reminders (SMS, WhatsApp).
-
-### 🛠️ Field Operations (Caretaker Portal)
-- **Maintenance Lifecycle**: Track issues from tenant report (Voice/Web) to caretaker closure and landlord verification.
-- **Meter Reading Engine**: On-site utility recording with instant billing triggers.
-- **Tenant Onboarding**: Streamlined KYC and unit assignment directly from the field.
-
-### 📜 Trust & Credit Ecosystem
-- **Intelligent Trust Score**: Behavioral risk signal analysis based on historical payment patterns.
-- **Digital Credit Passport**: Verified rent history sharing for tenants, rewarding reliability.
-- **Airtime Rewards**: Automated loyalty payouts for consistent on-time payments.
-
-### 🎨 Premium User Experience
-- **Glassmorphic UI**: A modern design system built with Mesh Gradients, noise textures, and backdrop blurs.
-- **Omnichannel Access**: Seamless transition between Web, USSD, SMS, WhatsApp, and Voice IVR.
-- **Scroll-Reveal Animations**: Cinematic, staggered entry animations for an engaging professional narrative.
+- **Frontend**: React 18, Vite, Tailwind CSS (Glassmorphism), Lucide Icons
+- **Backend**: Node.js, Express, Prisma ORM
+- **Database**: PostgreSQL, Redis (Sessions & Caching)
 
 ---
 
-## 🛠️ Technology Stack
+##  Getting Started
 
-| Layer | Technology |
-|:---|:---|
-| **Frontend** | React 18, Vite, Tailwind CSS (Glassmorphism), Lucide Icons |
-| **Backend** | Node.js, Express, Prisma ORM |
-| **Database** | PostgreSQL, Redis (Caching & Sessions) |
-| **Integrations** | Africa's Talking (USSD/SMS/Voice), Safaricom Daraja (M-Pesa), Twilio (WhatsApp) |
-| **Infrastructure** | Docker, Nginx Reverse Proxy, Winston/Morgan Logging |
+You can run the project locally either using **Docker Compose** or directly in your **Local Dev Environment**.
 
----
+### Option 1: Running with Docker Compose (Recommended)
+This starts all services (PostgreSQL, Redis, Backend API, Frontend SPA, and Nginx proxy) in containers.
 
-## ⚡ Quick Start
-
-### 1. Environment Setup
 ```bash
-# Clone the repository
-git clone https://github.com/Peter-Opapa/kodisha.git
-cd kodisha
-
-# Install dependencies
-cd backend && npm install
-cd ../frontend && npm install
-```
-
-### 2. Configuration
-Copy `.env.example` to `.env` in the `backend` directory and fill in your credentials:
-- **Database**: `DATABASE_URL`
-- **Africa's Talking**: `AT_API_KEY`, `AT_USERNAME`
-- **M-Pesa**: `MPESA_CONSUMER_KEY`, `MPESA_CONSUMER_SECRET`
-- **Security**: `JWT_SECRET`, `JWT_REFRESH_SECRET`
-
-### 3. Execution (Docker Compose)
-The fastest way to get Kodishaa running in production-mode is via Docker:
-```bash
+# Start all containers in the background
 docker compose up --build -d
 ```
-
-For development:
-```bash
-# Terminal 1 (Backend)
-cd backend && npm run dev
-
-# Terminal 2 (Frontend)
-cd frontend && npm run dev
-```
+Once healthy, access the app at: **`http://localhost`** (reverse-proxied via Nginx on port 80).
 
 ---
 
-## 📊 Trust Score Mechanics
+### Option 2: Local Development Setup (Manual)
+Use this option if you want to run backend and frontend processes directly for active editing.
 
-| Event | Delta | Tier | Range |
-|:---|:---|:---|:---|
-| **On-time payment** | +20 | 🌟 Excellent | 750+ |
-| **On-time streak (3mo)** | +50 | ✅ Good | 600-749 |
-| **Late payment (1-5d)** | -30 | ⚠️ Fair | 400-599 |
-| **Late payment (15d+)** | -100 | 🛑 Poor | <400 |
+#### 1. Prerequisites
+- **Node.js** (v18+)
+- **PostgreSQL**
+- **Redis**
+
+#### 2. Backend Setup
+1. Navigate to the backend directory:
+   ```bash
+   cd backend
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Set up environment variables:
+   - Create a `.env` file (based on `.env.example`).
+   - Configure `DATABASE_URL`, `REDIS_URL`, and other integration credentials.
+4. Generate the Prisma Client and run migrations:
+   ```bash
+   npx prisma generate
+   npx prisma migrate dev
+   ```
+5. *(Optional)* Seed the database with initial dummy data:
+   ```bash
+   npm run seed
+   ```
+6. Start the development server:
+   ```bash
+   npm run dev
+   ```
+   *The backend will run on port `5000` by default.*
+
+#### 3. Frontend Setup
+1. Navigate to the frontend directory:
+   ```bash
+   cd frontend
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Configure the proxy target:
+   - Open `vite.config.js` and verify the `server.proxy` target port matches your backend (e.g. `http://localhost:5000`).
+4. Start the Vite dev server:
+   ```bash
+   npm run dev
+   ```
+   *Access the frontend at: **`http://localhost:3000`**.*
 
 ---
 
@@ -107,26 +85,12 @@ cd frontend && npm run dev
 
 ```text
 kodisha/
-├── backend/          # Node.js API with Prisma ORM
-│   ├── prisma/       # Database schemas and seeds
-│   └── src/          # Business logic & integrations
-├── frontend/         # React SPA with Modern Design System
-│   ├── src/pages/    # Context-aware user dashboards
-│   └── src/components/ # Shared premium UI components
-├── nginx/            # Reverse proxy configuration
-└── docker-compose.yml # Orchestration for Postgres, Redis, and API
+├── backend/            # Express.js API & Prisma schemas
+│   ├── prisma/         # Database migrations & seed scripts
+│   └── src/            # API endpoints & core services
+├── frontend/           # React SPA
+│   ├── src/components/ # Shared UI components
+│   └── src/pages/      # Dashboard and portal interfaces
+├── nginx/              # Nginx reverse proxy configuration
+└── docker-compose.yml  # Multi-container orchestration
 ```
-
----
-
-## 🛡️ Security
-- **JWT Rotation**: Access token expiration with automatic refresh token rotation.
-- **Webhook Validation**: AT and M-Pesa callback validation against IP whitelists.
-- **Audit Trails**: Detailed logging of all financial transactions and maintenance events.
-
----
-
-<p align="center">
-  Built with ❤️ for the Kenyan Real Estate Market.<br/>
-  © 2026 Kodishaa Platform.
-</p>
