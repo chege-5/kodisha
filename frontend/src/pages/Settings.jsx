@@ -75,7 +75,7 @@ export default function Settings() {
           </div>
         </div>
         <button onClick={() => updateProfile.mutate(profile)} disabled={updateProfile.isPending} className="btn-primary">
-          {updateProfile.isPending ? 'Saving…' : 'Save Changes'}
+          {updateProfile.isPending ? 'Saving...' : 'Save Changes'}
         </button>
       </div>
 

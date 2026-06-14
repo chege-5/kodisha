@@ -119,67 +119,41 @@
     position: relative;
     line-height: 1.5;
     text-rendering: optimizeLegibility;
-    background: 
-      radial-gradient(at 0% 0%, hsla(217, 91%, 60%, 0.15) 0px, transparent 50%),
-      radial-gradient(at 50% 0%, hsla(162, 84%, 39%, 0.1) 0px, transparent 50%),
-      radial-gradient(at 100% 0%, hsla(217, 91%, 60%, 0.15) 0px, transparent 50%),
-      radial-gradient(at 0% 100%, hsla(217, 91%, 60%, 0.1) 0px, transparent 50%),
-      radial-gradient(at 100% 100%, hsla(162, 84%, 39%, 0.1) 0px, transparent 50%),
-      var(--bg-main-start);
-  }
-
-  body::before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0.03;
-    pointer-events: none;
-    z-index: -1;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    background: var(--bg-main-start);
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 px-6 py-2.5 text-white text-sm font-bold rounded-2xl border
-    transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed
-    shadow-lg hover:-translate-y-1 hover:scale-[1.02] active:translate-y-0 active:scale-95;
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border px-5 py-2.5 text-sm font-semibold text-white
+    transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-50;
     background: var(--button-primary-bg);
     border-color: var(--button-primary-border);
-    --tw-shadow-color: var(--button-primary-shadow);
-    --tw-shadow: var(--tw-shadow-colored);
+    box-shadow: 0 1px 2px var(--button-primary-shadow);
   }
   .btn-primary:hover {
     background: var(--button-primary-hover-bg);
-    border-color: rgb(var(--kodi-emerald-rgb) / 0.35);
-    --tw-shadow-color: var(--button-primary-hover-shadow);
+    border-color: rgb(var(--kodi-dark-rgb) / 0.26);
   }
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 px-6 py-2.5 border border-kodi-border bg-kodi-card text-kodi-text-primary text-sm font-bold rounded-2xl
-    transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md active:translate-y-0;
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-kodi-border bg-kodi-card px-5 py-2.5 text-sm font-semibold text-kodi-text-primary
+    transition-colors duration-150;
   }
   .btn-secondary:hover {
     background: var(--button-secondary-hover-bg);
     border-color: rgb(var(--kodi-border-rgb) / 1);
   }
   .btn-danger {
-    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-kodi-rose text-white text-sm font-semibold rounded-xl
-    hover:bg-rose-400 transition-all duration-200 shadow-lg;
-    --tw-shadow-color: rgb(239 68 68 / 0.2);
-    --tw-shadow: var(--tw-shadow-colored);
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-kodi-rose px-5 py-2.5 text-sm font-semibold text-white
+    transition-colors duration-150 hover:bg-rose-500;
   }
   .btn-success {
-    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-kodi-emerald text-white text-sm font-semibold rounded-xl
-    hover:bg-emerald-400 transition-all duration-200 shadow-lg;
-    --tw-shadow-color: rgb(16 185 129 / 0.2);
-    --tw-shadow: var(--tw-shadow-colored);
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-kodi-emerald px-5 py-2.5 text-sm font-semibold text-white
+    transition-colors duration-150 hover:bg-emerald-500;
   }
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 px-4 py-2 text-kodi-text-secondary text-sm font-medium rounded-xl
-    hover:text-kodi-text-primary transition-all duration-200;
+    @apply inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium text-kodi-text-secondary
+    transition-colors duration-150 hover:text-kodi-text-primary;
   }
   .btn-ghost:hover {
     background: var(--button-soft-hover-bg);
@@ -188,12 +162,12 @@
     background: var(--button-primary-bg);
     border-color: var(--button-primary-border);
     color: #fff;
-    box-shadow: 0 12px 28px var(--button-primary-shadow);
+    box-shadow: 0 1px 2px var(--button-primary-shadow);
   }
   .btn-tone:hover {
     background: var(--button-primary-hover-bg);
     border-color: rgb(var(--kodi-emerald-rgb) / 0.35);
-    box-shadow: 0 14px 32px var(--button-primary-hover-shadow);
+    box-shadow: 0 1px 2px var(--button-primary-hover-shadow);
   }
   .btn-soft-hover:hover {
     background: var(--button-soft-hover-bg);
@@ -204,32 +178,27 @@
     background: rgb(var(--kodi-slate-rgb) / 0.12);
     border-color: rgb(var(--kodi-border-rgb) / 1);
     color: rgb(var(--kodi-text-primary-rgb) / 1);
-    box-shadow: 0 10px 24px rgb(var(--kodi-text-primary-rgb) / 0.08);
+    box-shadow: inset 0 0 0 1px rgb(var(--kodi-border-rgb) / 1);
   }
 
   .glass-card {
-    @apply bg-kodi-card/90 backdrop-blur-xl rounded-3xl border border-kodi-border p-6 shadow-xl shadow-slate-200/50 dark:shadow-black/20;
+    @apply rounded-xl border border-kodi-border bg-kodi-card p-6 shadow-sm;
   }
   .glass-card-hover {
-    @apply glass-card cursor-pointer transition-all duration-500 hover:scale-[1.01] hover:border-kodi-accent/40 hover:bg-kodi-card hover:shadow-2xl;
+    @apply glass-card cursor-pointer transition-colors duration-150 hover:border-kodi-accent/30 hover:bg-slate-50;
   }
   .glass-card-hover:hover {
-    --tw-shadow-color: rgb(29 78 216 / 0.1);
-    --tw-shadow: var(--tw-shadow-colored);
+    box-shadow: 0 1px 3px rgb(15 23 42 / 0.08);
   }
   .card {
-    @apply bg-white rounded-2xl border border-kodi-border p-6 shadow-sm shadow-slate-200/70 transition-all duration-300;
-    will-change: transform;
+    @apply rounded-xl border border-kodi-border bg-white p-6 shadow-sm transition-colors duration-150;
   }
   .stat-card {
-    @apply bg-kodi-card backdrop-blur-xl rounded-3xl border border-kodi-border p-6
-    shadow-xl shadow-slate-200/60 transition-all duration-500 flex flex-col gap-2 relative overflow-hidden
-    hover:-translate-y-2 hover:shadow-2xl;
-    will-change: transform;
+    @apply relative flex flex-col gap-2 overflow-hidden rounded-xl border border-kodi-border bg-kodi-card p-5 shadow-sm transition-colors duration-150;
   }
   .stat-card:hover {
-    --tw-shadow-color: rgb(29 78 216 / 0.1);
-    --tw-shadow: var(--tw-shadow-colored);
+    border-color: rgb(var(--kodi-border-rgb) / 1);
+    background: rgb(var(--kodi-card-rgb) / 1);
   }
   .stat-card::before {
     content: '';
@@ -238,17 +207,17 @@
   }
 
   .input {
-    @apply w-full bg-kodi-card border border-kodi-border rounded-2xl px-4 py-3 text-sm text-kodi-text-primary
+    @apply w-full rounded-lg border border-kodi-border bg-kodi-card px-4 py-3 text-sm text-kodi-text-primary
     placeholder:text-kodi-text-muted focus:outline-none focus:ring-4 focus:ring-kodi-accent/10 focus:border-kodi-accent/50
-    transition-all duration-300 hover:border-kodi-accent/30;
+    transition-colors duration-150 hover:border-kodi-accent/30;
   }
   .label {
     @apply block text-sm font-medium text-kodi-text-secondary mb-1.5;
   }
   .select {
-    @apply w-full bg-white border border-kodi-border rounded-xl px-4 py-3 text-sm text-kodi-text-primary
+    @apply w-full appearance-none rounded-lg border border-kodi-border bg-white px-4 py-3 text-sm text-kodi-text-primary
     placeholder:text-kodi-text-muted focus:outline-none focus:ring-2 focus:ring-kodi-accent/50 focus:border-kodi-accent/50
-    transition-all duration-200 appearance-none cursor-pointer;
+    cursor-pointer transition-colors duration-150;
   }
 
   .badge {
@@ -298,7 +267,7 @@
   }
 
   .section-eyebrow {
-    @apply text-sm font-semibold uppercase tracking-[0.28em];
+    @apply text-sm font-semibold uppercase tracking-[0.12em];
     color: #1D4ED8;
   }
   .section-title {
@@ -310,21 +279,16 @@
     color: #334155;
   }
   .page-surface {
-    @apply rounded-[2rem] border p-6 md:p-8;
+    @apply rounded-xl border p-6 md:p-8;
     border-color: rgb(226 232 240 / 0.95);
-    background: rgb(255 255 255 / 0.9);
-    backdrop-filter: blur(18px);
+    background: rgb(255 255 255 / 0.96);
   }
   .page-shell {
-    @apply relative isolate overflow-hidden rounded-[2.25rem] border border-white/70 bg-white/85 shadow-[0_20px_80px_rgba(15,23,42,0.08)] backdrop-blur-2xl;
-    animation: pageIn 0.6s ease-out both;
+    @apply relative isolate overflow-hidden rounded-xl border border-kodi-border bg-white shadow-sm;
+    animation: pageIn 0.24s ease-out both;
   }
   .page-shell::before {
-    content: '';
-    @apply pointer-events-none absolute inset-0 opacity-70;
-    background:
-      linear-gradient(135deg, rgba(29, 78, 216, 0.08), transparent 28%),
-      linear-gradient(315deg, rgba(16, 185, 129, 0.08), transparent 24%);
+    content: none;
   }
   .page-shell > * {
     position: relative;
@@ -334,30 +298,21 @@
     --tint: 29, 78, 216;
     position: relative;
     overflow: hidden;
-    border-radius: 1.25rem;
+    border-radius: 0.75rem;
     border: 1px solid rgba(148, 163, 184, 0.35);
-    background: linear-gradient(140deg, rgba(var(--tint), 0.14), rgba(255, 255, 255, 0.92) 55%);
-    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
-    transition: all 400ms cubic-bezier(0.23, 1, 0.32, 1);
-    will-change: transform, box-shadow;
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+    transition: border-color 150ms ease, background-color 150ms ease;
   }
   .saas-card::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.55), transparent);
-    opacity: 0;
-    transform: translateX(-45%);
-    transition: opacity 400ms ease, transform 500ms ease;
+    content: none;
   }
   .saas-card:hover {
-    transform: translateY(-6px) scale(1.01);
-    border-color: rgba(var(--tint), 0.35);
-    box-shadow: 0 26px 60px rgba(15, 23, 42, 0.16);
+    border-color: rgba(var(--tint), 0.38);
+    background: rgba(var(--tint), 0.035);
   }
   .saas-card:hover::after {
-    opacity: 1;
-    transform: translateX(45%);
+    content: none;
   }
   .saas-card--emerald { --tint: 16, 185, 129; }
   .saas-card--amber { --tint: 245, 158, 11; }
@@ -370,9 +325,9 @@
   .saas-card--teal { --tint: 20, 184, 166; }
   .saas-card--pink { --tint: 236, 72, 153; }
   .bg-slate-900 .saas-card {
-    background: linear-gradient(145deg, rgba(var(--tint), 0.18), rgba(15, 23, 42, 0.82) 58%);
+    background: rgba(255, 255, 255, 0.04);
     border-color: rgba(255, 255, 255, 0.12);
-    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.2);
+    box-shadow: none;
   }
   .bg-slate-900 .saas-card::after {
     background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.08), transparent);
@@ -392,19 +347,18 @@
   .page-stage .glass-card-hover,
   .page-stage .stat-card,
   .page-stage .page-surface {
-    animation: riseIn 0.65s ease-out both;
+    animation: riseIn 0.24s ease-out both;
   }
   .page-stage .card:hover,
   .page-stage .glass-card:hover,
   .page-stage .stat-card:hover,
   .page-stage .page-surface:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 22px 50px rgba(15, 23, 42, 0.12);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
   }
   .reveal {
     opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 600ms ease, transform 600ms ease;
+    transform: translateY(10px);
+    transition: opacity 260ms ease, transform 260ms ease;
   }
   .reveal-visible {
     opacity: 1;
@@ -413,19 +367,15 @@
 }
 
 .animate-fade-in {
-  animation: fadeInUp 0.55s ease-out forwards;
+  animation: fadeInUp 0.24s ease-out forwards;
 }
 
 .animate-fade-up {
-  animation: fadeInUp 0.75s ease-out forwards;
-}
-
-.animate-float {
-  animation: float 10s ease-in-out infinite;
+  animation: fadeInUp 0.24s ease-out forwards;
 }
 
 .animate-in {
-  animation: fadeInUp 0.45s ease-out forwards;
+  animation: fadeInUp 0.2s ease-out forwards;
 }
 
 .stagger-1 { animation-delay: 0.05s; }
@@ -435,14 +385,11 @@
 .stagger-5 { animation-delay: 0.25s; }
 
 .gradient-text {
-  @apply bg-clip-text text-transparent;
-  background-image: linear-gradient(135deg, #1D4ED8 0%, #10B981 100%);
+  color: var(--kodi-accent);
 }
 
 .glass {
-  background: rgba(255, 255, 255, 0.82);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.96);
 }
 
 [data-theme="dark"] .bg-white,
@@ -547,16 +494,6 @@
   to {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-
-@keyframes float {
-  0%,
-  100% {
-    transform: translate3d(0, 0, 0);
-  }
-  50% {
-    transform: translate3d(0, -10px, 0);
   }
 }
 

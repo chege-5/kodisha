@@ -173,7 +173,7 @@ export default function Dashboard() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="section-eyebrow">Overview</p>
-          <h1 className="mt-2 text-3xl font-black tracking-tight text-kodi-dark">Financial command center</h1>
+          <h1 className="mt-2 text-3xl font-bold tracking-tight text-kodi-dark">Rent and property snapshot</h1>
           <p className="mt-1 max-w-3xl text-sm text-kodi-text-muted">
             Welcome back, {user?.name?.split(' ')[0]}. Know who paid, who owes, what needs fixing, and what money is missing.
           </p>
@@ -196,8 +196,8 @@ export default function Dashboard() {
       <div className="glass-card">
         <div className="mb-4 flex items-center justify-between">
           <div>
-            <h2 className="text-base font-bold text-kodi-dark">Smart actions</h2>
-            <p className="text-xs text-kodi-text-muted">Fast paths for common landlord workflows.</p>
+            <h2 className="text-base font-bold text-kodi-dark">Quick actions</h2>
+            <p className="text-xs text-kodi-text-muted">Common tasks for the month.</p>
           </div>
         </div>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-7">
@@ -280,8 +280,8 @@ export default function Dashboard() {
         <div className="space-y-6">
           <div className="glass-card">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="flex items-center gap-2 text-base font-bold text-kodi-dark"><Zap className="h-4 w-4 text-kodi-amber" /> Insight panel</h2>
-              <span className="badge badge-blue"><Brain className="mr-1 h-3 w-3" /> Rent signals</span>
+              <h2 className="flex items-center gap-2 text-base font-bold text-kodi-dark"><Zap className="h-4 w-4 text-kodi-amber" /> Risk signals</h2>
+              <span className="badge badge-blue"><Brain className="mr-1 h-3 w-3" /> Rent history</span>
             </div>
             <div className="space-y-3">
               {(insights?.high || []).slice(0, 3).map((tenant) => (

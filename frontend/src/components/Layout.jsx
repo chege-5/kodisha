@@ -85,13 +85,13 @@ export default function Layout({ caretakerMode }) {
       {/* Logo */}
       <div className={`px-5 py-6 border-b border-white/10 ${collapsed ? 'px-3' : ''}`}>
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-kodi-accent to-kodi-emerald shadow-lg shadow-kodi-accent/20">
+          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-white/10">
             <Building2 className="h-5 w-5 text-white" />
           </div>
           {!collapsed && (
             <div className="animate-fade-in">
               <h1 className="text-lg font-bold tracking-tight text-white">Kodishaa</h1>
-              <p className="text-[10px] font-medium uppercase tracking-[0.28em] text-blue-100">Rent OS</p>
+              <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-blue-100">Rent OS</p>
             </div>
           )}
         </div>
@@ -106,9 +106,9 @@ export default function Layout({ caretakerMode }) {
             end={exact}
             onClick={() => setMobileOpen(false)}
             className={({ isActive }) =>
-              `flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm font-medium transition-all ${
+              `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
                 isActive
-                  ? 'bg-white/12 text-white border border-white/15 shadow-lg shadow-black/10'
+                  ? 'bg-white/12 text-white border border-white/15'
                   : 'text-slate-200/80 hover:bg-white/10 hover:text-white'
               } ${collapsed ? 'justify-center' : ''}`
             }
@@ -122,7 +122,7 @@ export default function Layout({ caretakerMode }) {
       <div className="px-3 py-4 border-t border-white/10">
         {!collapsed && (
           <div className="flex items-center gap-3 px-3 py-2 mb-2">
-            <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-kodi-purple to-kodi-accent text-sm font-bold text-white">
+            <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-white/10 text-sm font-bold text-white">
               {user?.name?.[0] || 'U'}
             </div>
             <div className="min-w-0">
@@ -133,7 +133,7 @@ export default function Layout({ caretakerMode }) {
         )}
         <button
           onClick={handleLogout}
-          className={`flex w-full items-center gap-3 px-3 py-2.5 rounded-2xl text-sm text-slate-200/75 hover:bg-white/10 hover:text-white transition-all ${collapsed ? 'justify-center' : ''}`}
+          className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-200/75 transition-colors hover:bg-white/10 hover:text-white ${collapsed ? 'justify-center' : ''}`}
         >
           <LogOut className="w-[18px] h-[18px]" />
           {!collapsed && 'Sign out'}
@@ -144,10 +144,6 @@ export default function Layout({ caretakerMode }) {
 
   return (
     <div className="flex h-screen bg-kodi-navy overflow-hidden text-kodi-text-primary relative isolate">
-      {/* Decorative Background Blobs */}
-      <div className="pointer-events-none absolute -left-20 top-40 h-96 w-96 rounded-full bg-kodi-accent/10 blur-[120px] animate-pulse" />
-      <div className="pointer-events-none absolute -right-20 bottom-20 h-80 w-80 rounded-full bg-kodi-emerald/10 blur-[100px] animate-pulse" style={{ animationDelay: '1s' }} />
-      
       {/* Mobile overlay */}
       {mobileOpen && (
         <div className="fixed inset-0 bg-black/60 z-40 lg:hidden" onClick={() => setMobileOpen(false)} />
@@ -166,7 +162,7 @@ export default function Layout({ caretakerMode }) {
         {sidebarContent}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="btn-soft-hover absolute bottom-20 -right-3 z-10 flex h-7 w-7 items-center justify-center rounded-full border border-kodi-border bg-white text-kodi-text-muted transition-all"
+          className="btn-soft-hover absolute bottom-20 -right-3 z-10 flex h-7 w-7 items-center justify-center rounded-full border border-kodi-border bg-white text-kodi-text-muted transition-colors"
           style={{ left: collapsed ? '58px' : '264px' }}
         >
           {collapsed ? <ChevronRight className="w-3 h-3" /> : <ChevronLeft className="w-3 h-3" />}
@@ -176,29 +172,29 @@ export default function Layout({ caretakerMode }) {
       {/* Main content */}
       <div className="relative z-10 flex flex-1 flex-col overflow-hidden">
         {/* Top bar */}
-        <header className="flex h-18 flex-shrink-0 items-center justify-between border-b border-kodi-border/50 bg-kodi-card/40 px-4 shadow-sm backdrop-blur-2xl lg:px-8 z-30 sticky top-0">
+        <header className="flex h-18 flex-shrink-0 items-center justify-between border-b border-kodi-border bg-kodi-card px-4 lg:px-8 z-30 sticky top-0">
           <div className="flex items-center gap-4">
-            <button onClick={() => setMobileOpen(true)} className="btn-soft-hover flex h-10 w-10 items-center justify-center rounded-xl border border-transparent bg-kodi-navy text-kodi-text-muted lg:hidden">
+            <button onClick={() => setMobileOpen(true)} className="btn-soft-hover flex h-10 w-10 items-center justify-center rounded-lg border border-transparent bg-kodi-navy text-kodi-text-muted lg:hidden">
               <Menu className="w-5 h-5" />
             </button>
-            <div className="hidden items-center gap-2 rounded-2xl border border-kodi-border/60 bg-kodi-card/50 px-4 py-2 text-xs font-semibold tracking-wide text-kodi-text-muted shadow-sm lg:flex">
-              <div className="h-1.5 w-1.5 rounded-full bg-kodi-emerald animate-pulse" />
+            <div className="hidden items-center gap-2 rounded-lg border border-kodi-border bg-kodi-navy px-4 py-2 text-xs font-semibold tracking-wide text-kodi-text-muted lg:flex">
+              <div className="h-1.5 w-1.5 rounded-full bg-kodi-emerald" />
               {new Date().toLocaleDateString('en-KE', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}
             </div>
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="flex items-center p-1 rounded-2xl bg-kodi-navy/50 border border-kodi-border/40 backdrop-blur-md">
+            <div className="flex items-center rounded-lg border border-kodi-border bg-kodi-navy p-1">
               <button
                 onClick={() => setTheme('light')}
-                className={`p-2 rounded-xl transition-all ${theme === 'light' ? 'btn-subtle-active scale-110' : 'btn-soft-hover border border-transparent text-kodi-text-muted'}`}
+                className={`rounded-md p-2 transition-colors ${theme === 'light' ? 'btn-subtle-active' : 'btn-soft-hover border border-transparent text-kodi-text-muted'}`}
                 title="Light Mode"
               >
                 <SunMedium className="h-4 w-4" />
               </button>
               <button
                 onClick={() => setTheme('dark')}
-                className={`p-2 rounded-xl transition-all ${theme === 'dark' ? 'btn-subtle-active scale-110' : 'btn-soft-hover border border-transparent text-kodi-text-muted'}`}
+                className={`rounded-md p-2 transition-colors ${theme === 'dark' ? 'btn-subtle-active' : 'btn-soft-hover border border-transparent text-kodi-text-muted'}`}
                 title="Dark Mode"
               >
                 <MoonStar className="h-4 w-4" />
@@ -206,11 +202,11 @@ export default function Layout({ caretakerMode }) {
             </div>
             <button
               onClick={() => navigate(caretakerMode ? '/caretaker/notifications' : '/dashboard/notifications')}
-              className="btn-soft-hover relative rounded-xl border border-transparent p-2.5 text-kodi-text-muted transition-all"
+              className="btn-soft-hover relative rounded-lg border border-transparent p-2.5 text-kodi-text-muted transition-colors"
             >
               <Bell className="w-5 h-5" />
               {unreadCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-kodi-rose text-white text-[10px] font-bold rounded-full flex items-center justify-center animate-pulse">
+                <span className="absolute -top-0.5 -right-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-kodi-rose text-[10px] font-bold text-white">
                   {unreadCount > 9 ? '9+' : unreadCount}
                 </span>
               )}

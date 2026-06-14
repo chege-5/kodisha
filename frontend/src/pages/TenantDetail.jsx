@@ -113,7 +113,7 @@ export default function TenantDetail() {
                 disabled={logPayment.isPending || !payForm.amount}
                 className="btn-primary whitespace-nowrap"
               >
-                {logPayment.isPending ? 'Saving…' : 'Log'}
+                {logPayment.isPending ? 'Saving...' : 'Log'}
               </button>
             </div>
           </div>
