@@ -2,10 +2,8 @@ const PDFDocument = require('pdfkit');
 const { stringify } = require('csv-stringify');
 const fs = require('fs');
 const path = require('path');
-const { PrismaClient } = require('@prisma/client');
+const prisma = require('../utils/prismaClient');
 const logger = require('../utils/logger');
-
-const prisma = new PrismaClient();
 const REPORT_DIR = process.env.STORAGE_PATH
   ? path.join(process.env.STORAGE_PATH, 'reports')
   : path.join(__dirname, '../../uploads/reports');

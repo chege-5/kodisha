@@ -1,9 +1,7 @@
 const cron = require('node-cron');
-const { PrismaClient } = require('@prisma/client');
+const prisma = require('../utils/prismaClient');
 const { recalculate } = require('../services/trustScore');
 const logger = require('../utils/logger');
-
-const prisma = new PrismaClient();
 
 async function syncAllTrustScores() {
   logger.info('Running trust score sync job');

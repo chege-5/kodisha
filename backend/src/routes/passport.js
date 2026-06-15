@@ -1,13 +1,11 @@
 const router = require('express').Router();
-const { PrismaClient } = require('@prisma/client');
+const prisma = require('../utils/prismaClient');
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
 const path = require('path');
 const { authenticate } = require('../middleware/auth');
 const { getTier } = require('../services/trustScore');
 const logger = require('../utils/logger');
-
-const prisma = new PrismaClient();
 const PASSPORT_DIR = path.join(__dirname, '../../uploads/passports');
 
 router.use(authenticate);

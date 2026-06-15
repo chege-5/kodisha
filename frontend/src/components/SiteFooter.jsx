@@ -31,13 +31,8 @@ export default function SiteFooter({ compact = false }) {
               aria-label={`${member.name} portfolio, opens in a new tab`}
               className={`group inline-flex items-center gap-1.5 rounded-xl border px-3 py-2 transition-all focus:outline-none focus:ring-2 focus:ring-kodi-accent/30 ${
                 member.featured
-<<<<<<< HEAD
                   ? 'border-kodi-accent/20 bg-kodi-accent/5 font-bold text-kodi-dark shadow-kodi-accent-5 hover:border-kodi-accent/40 hover:text-kodi-accent'
                   : 'border-transparent text-kodi-text-secondary hover:border-kodi-border hover:bg-kodi-navy hover:text-kodi-accent'
-=======
-                  ? 'btn-soft-hover border-kodi-border bg-kodi-card font-bold text-kodi-dark shadow-sm'
-                  : 'btn-soft-hover border-transparent text-kodi-text-secondary'
->>>>>>> f5b4ed203937dd83f1f0993e59b52abdfb064e75
               }`}
             >
               <span>{member.name}</span>

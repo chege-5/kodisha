@@ -1,11 +1,9 @@
 const router = require('express').Router();
-const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcryptjs');
 const { authenticate } = require('../middleware/auth');
 const { requireRole } = require('../middleware/roleCheck');
 const logger = require('../utils/logger');
-
-const prisma = new PrismaClient();
+const prisma = require('../utils/prismaClient');
 
 // All landlord routes require auth
 router.use(authenticate);

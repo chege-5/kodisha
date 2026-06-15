@@ -1,12 +1,10 @@
 const router = require('express').Router();
-const { PrismaClient } = require('@prisma/client');
+const prisma = require('../utils/prismaClient');
 const { validateATRequest } = require('../middleware/atValidate');
 const { sendSMS } = require('../services/africastalking');
 const { recalculate } = require('../services/trustScore');
 const { notifyIssueClosed } = require('../services/issueMessaging');
 const logger = require('../utils/logger');
-
-const prisma = new PrismaClient();
 
 router.post('/', validateATRequest, async (req, res) => {
   res.json({ status: 'received' }); // Acknowledge immediately

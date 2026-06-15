@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { PrismaClient } = require('@prisma/client');
+const prisma = require('../utils/prismaClient');
 const bcrypt = require('bcryptjs');
 const { authenticate } = require('../middleware/auth');
 const { requireRole } = require('../middleware/roleCheck');
@@ -7,8 +7,6 @@ const { getScore } = require('../services/trustScore');
 const { sendSMS } = require('../services/africastalking');
 const { notifyIssueCreated } = require('../services/issueMessaging');
 const logger = require('../utils/logger');
-
-const prisma = new PrismaClient();
 router.use(authenticate);
 
 async function getScopedLandlordId(req) {

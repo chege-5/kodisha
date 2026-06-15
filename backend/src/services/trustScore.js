@@ -1,7 +1,5 @@
-const { PrismaClient } = require('@prisma/client');
+const prisma = require('../utils/prismaClient');
 const logger = require('../utils/logger');
-
-const prisma = new PrismaClient();
 
 const BASE_SCORE = 500;
 

@@ -1,12 +1,10 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
-const { PrismaClient } = require('@prisma/client');
+const prisma = require('../utils/prismaClient');
 const { body, validationResult } = require('express-validator');
 const { generateTokens, rotateRefreshToken, setAuthCookies, clearAuthCookies, readCookie } = require('../middleware/auth');
 const logger = require('../utils/logger');
 const { authenticate } = require('../middleware/auth');
-
-const prisma = new PrismaClient();
 
 // ─── Landlord Register ───────────────────────────────────────────────────────
 
@@ -73,7 +71,7 @@ router.post('/smart-login',
         });
         setAuthCookies(res, tokens);
         const { passwordHash: _, ...user } = landlord;
-        return res.json({ user, role, accessToken: tokens.accessToken });
+        return res.json({ user, role });
       }
 
       // 2. Try Caretaker
@@ -88,7 +86,7 @@ router.post('/smart-login',
         });
         setAuthCookies(res, tokens);
         const { passwordHash: _, ...user } = caretaker;
-        return res.json({ user, role: 'CARETAKER', accessToken: tokens.accessToken });
+        return res.json({ user, role: 'CARETAKER' });
       }
 
       // 3. Try Tenant
@@ -108,7 +106,7 @@ router.post('/smart-login',
         });
         setAuthCookies(res, tokens);
         const { passwordHash: _, idNumber: __, ...user } = tenant;
-        return res.json({ user, role: 'TENANT', accessToken: tokens.accessToken });
+        return res.json({ user, role: 'TENANT' });
       }
 
       return res.status(401).json({ error: 'Invalid credentials' });

@@ -1,8 +1,6 @@
 const jwt = require('jsonwebtoken');
-const { PrismaClient } = require('@prisma/client');
+const prisma = require('../utils/prismaClient');
 const logger = require('../utils/logger');
-
-const prisma = new PrismaClient();
 
 function parseDurationMs(value, fallbackMs) {
   if (!value || typeof value !== 'string') return fallbackMs;
@@ -111,7 +109,7 @@ async function rotateRefreshToken(req, res, next) {
 
     setAuthCookies(res, tokens);
 
-    res.json({ message: 'Refreshed', accessToken: tokens.accessToken });
+    res.json({ message: 'Refreshed' });
   } catch (err) {
     logger.warn('Refresh token rotation failed', { error: err.name });
     return res.status(401).json({ error: 'Invalid refresh token' });

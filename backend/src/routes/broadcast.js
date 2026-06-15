@@ -1,12 +1,10 @@
 const router = require('express').Router();
-const { PrismaClient } = require('@prisma/client');
+const prisma = require('../utils/prismaClient');
 const { authenticate } = require('../middleware/auth');
 const { requireRole } = require('../middleware/roleCheck');
 const { sendSMS } = require('../services/africastalking');
 const { sendWhatsApp } = require('../services/whatsapp');
 const logger = require('../utils/logger');
-
-const prisma = new PrismaClient();
 router.use(authenticate, requireRole('LANDLORD', 'ADMIN'));
 
 // ─── Send / Schedule Broadcast ────────────────────────────────────────────────

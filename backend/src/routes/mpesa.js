@@ -1,5 +1,4 @@
 const router = require('express').Router();
-const { PrismaClient } = require('@prisma/client');
 const { authenticate } = require('../middleware/auth');
 const { requireRole } = require('../middleware/roleCheck');
 const { stkPush, querySTKStatus, b2cTransfer } = require('../services/mpesa');
@@ -7,8 +6,7 @@ const { recalculate, checkAirtimeEligibility } = require('../services/trustScore
 const { sendSMS } = require('../services/africastalking');
 const { sendAirtime } = require('../services/africastalking');
 const logger = require('../utils/logger');
-
-const prisma = new PrismaClient();
+const prisma = require('../utils/prismaClient');
 
 // ─── STK Push ────────────────────────────────────────────────────────────────
 

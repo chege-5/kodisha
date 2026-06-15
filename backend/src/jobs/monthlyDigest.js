@@ -1,10 +1,8 @@
 const cron = require('node-cron');
-const { PrismaClient } = require('@prisma/client');
+const prisma = require('../utils/prismaClient');
 const nodemailer = require('nodemailer');
 const { generateITax } = require('../services/itaxExport');
 const logger = require('../utils/logger');
-
-const prisma = new PrismaClient();
 
 function getTransporter() {
   return nodemailer.createTransport({

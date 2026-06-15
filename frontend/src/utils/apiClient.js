@@ -10,15 +10,6 @@ const api = axios.create({
   withCredentials: true,
 });
 
-// Attach token to every outgoing request
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('accessToken');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
-
 export function getFriendlyError(err, fallback = 'We could not complete that request. Please try again.') {
   if (err.response?.data?.error) return err.response.data.error;
   if (err.code === 'ECONNABORTED') return 'The request took too long. Please check your connection and try again.';
@@ -60,20 +51,15 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const { data } = await axios.post(`${baseURL}/auth/refresh`, {}, { withCredentials: true });
-        if (data.accessToken) {
-          localStorage.setItem('accessToken', data.accessToken);
-          original.headers.Authorization = `Bearer ${data.accessToken}`;
-        }
+        await axios.post(`${baseURL}/auth/refresh`, {}, { withCredentials: true });
         isRefreshing = false;
-        processQueue(null, data.accessToken);
+        processQueue(null, true);
         return api(original);
       } catch (refreshError) {
         isRefreshing = false;
         processQueue(refreshError, null);
         localStorage.removeItem('user');
         localStorage.removeItem('role');
-        localStorage.removeItem('accessToken');
         window.location.href = '/login';
         return Promise.reject(refreshError);
       }

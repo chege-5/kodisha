@@ -1,10 +1,8 @@
 const router = require('express').Router();
-const { PrismaClient } = require('@prisma/client');
+const prisma = require('../utils/prismaClient');
 const { validateATRequest } = require('../middleware/atValidate');
 const { notifyIssueCreated } = require('../services/issueMessaging');
 const logger = require('../utils/logger');
-
-const prisma = new PrismaClient();
 
 const CATEGORY_MAP = { '1': 'PLUMBING', '2': 'ELECTRICAL', '3': 'SECURITY', '4': 'OTHER' };
 const CATEGORY_NAMES = { PLUMBING: 'Plumbing', ELECTRICAL: 'Electrical', SECURITY: 'Security', OTHER: 'Other' };

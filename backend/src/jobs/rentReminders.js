@@ -1,9 +1,7 @@
 const cron = require('node-cron');
-const { PrismaClient } = require('@prisma/client');
+const prisma = require('../utils/prismaClient');
 const { sendSMS } = require('../services/africastalking');
 const logger = require('../utils/logger');
-
-const prisma = new PrismaClient();
 
 async function sendRentReminders() {
   logger.info('Running rent reminder job');

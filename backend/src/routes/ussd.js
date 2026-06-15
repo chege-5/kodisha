@@ -1,12 +1,10 @@
 const router = require('express').Router();
-const { PrismaClient } = require('@prisma/client');
+const prisma = require('../utils/prismaClient');
 const Redis = require('ioredis');
 const { validateATRequest } = require('../middleware/atValidate');
 const { sendSMS, ussdCON, ussdEND } = require('../services/africastalking');
 const { stkPush } = require('../services/mpesa');
 const logger = require('../utils/logger');
-
-const prisma = new PrismaClient();
 const redis = new Redis(process.env.REDIS_URL);
 
 const SESSION_TTL = 120; // seconds

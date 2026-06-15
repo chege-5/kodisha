@@ -1,11 +1,9 @@
 const router = require('express').Router();
-const { PrismaClient } = require('@prisma/client');
+const prisma = require('../utils/prismaClient');
 const twilio = require('twilio');
 const { sendWhatsApp } = require('../services/whatsapp');
 const { stkPush } = require('../services/mpesa');
 const logger = require('../utils/logger');
-
-const prisma = new PrismaClient();
 
 // ─── Twilio WhatsApp Webhook ──────────────────────────────────────────────────
 

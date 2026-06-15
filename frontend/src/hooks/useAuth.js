@@ -29,9 +29,6 @@ export function AuthProvider({ children }) {
     const sessionUser = sessionRole ? { ...data.user, role: sessionRole } : data.user;
     localStorage.setItem('user', JSON.stringify(sessionUser));
     localStorage.setItem('role', sessionRole);
-    if (data.accessToken) {
-      localStorage.setItem('accessToken', data.accessToken);
-    }
     setUser(sessionUser);
     setRole(sessionRole);
     return data;
@@ -41,8 +38,6 @@ export function AuthProvider({ children }) {
     await api.post('/auth/logout', {}).catch(() => {});
     localStorage.removeItem('user');
     localStorage.removeItem('role');
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
     setUser(null);
     setRole(null);
   }, []);

@@ -138,13 +138,8 @@ function Sidebar({ activePage, setActivePage, user, tenant, onLogout, mobileOpen
             }}
             className={`flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-sm font-semibold transition-all ${
               activePage === id
-<<<<<<< HEAD
                 ? 'bg-kodi-accent text-white shadow-kodi-accent-20'
                 : 'sidebar-nav-link-inactive'
-=======
-                ? 'btn-subtle-active'
-                : 'btn-soft-hover border border-transparent text-kodi-text-secondary'
->>>>>>> f5b4ed203937dd83f1f0993e59b52abdfb064e75
             }`}
           >
             <Icon className="h-4 w-4 flex-shrink-0" />
@@ -186,11 +181,6 @@ function Sidebar({ activePage, setActivePage, user, tenant, onLogout, mobileOpen
               type="button"
               aria-label="Close menu"
               onClick={() => setMobileOpen(false)}
-<<<<<<< HEAD
-              className="absolute right-4 top-4 rounded-xl p-2 sidebar-text-muted hover:sidebar-nav-hover-bg hover:sidebar-text-title transition-all"
-=======
-              className="btn-soft-hover absolute right-4 top-4 rounded-xl border border-transparent p-2 text-kodi-text-muted"
->>>>>>> f5b4ed203937dd83f1f0993e59b52abdfb064e75
             >
               <X className="h-5 w-5" />
             </button>
@@ -799,11 +789,7 @@ export default function TenantPortal() {
                 type="button"
                 onClick={() => setActivePage(id)}
                 className={`flex h-14 flex-col items-center justify-center gap-1 rounded-2xl text-[10px] font-semibold transition-all ${
-<<<<<<< HEAD
                   activePage === id ? 'bg-kodi-accent text-white shadow-kodi-accent-20' : 'text-kodi-text-muted'
-=======
-                  activePage === id ? 'btn-subtle-active' : 'btn-soft-hover border border-transparent text-kodi-text-muted'
->>>>>>> f5b4ed203937dd83f1f0993e59b52abdfb064e75
                 }`}
               >
                 <Icon className="h-4 w-4" />

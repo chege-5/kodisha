@@ -1,10 +1,8 @@
 const router = require('express').Router();
-const { PrismaClient } = require('@prisma/client');
+const prisma = require('../utils/prismaClient');
 const { authenticate } = require('../middleware/auth');
 const { requireRole } = require('../middleware/roleCheck');
 const { notifyIssueClosed } = require('../services/issueMessaging');
-
-const prisma = new PrismaClient();
 router.use(authenticate);
 
 async function getScopedLandlordId(req) {
