@@ -5,8 +5,8 @@ const prisma = new PrismaClient();
 
 async function main() {
   console.log('🌱 Seeding Kodisha database...');
-  const superAdminEmail = process.env.SUPER_ADMIN_EMAIL || 'admin@kodisha.ke';
-  const superAdminPassword = process.env.SUPER_ADMIN_PASSWORD || 'admin12345';
+  const superAdminEmail = process.env.SUPER_ADMIN_EMAIL || 'admin@kodisha.org';
+  const superAdminPassword = process.env.SUPER_ADMIN_PASSWORD || 'Admin123!';
   const superAdminPhone = process.env.SUPER_ADMIN_PHONE || '+254700000000';
   const superAdminName = process.env.SUPER_ADMIN_NAME || 'Super Admin';
 

@@ -1,1 +1,8 @@
 {"error":"Authentication failed against database server at `localhost`, the provided database credentials for `postgres` are not valid.\n\nPlease make sure to provide valid database credentials for the database server at `localhost`.","level":"error","message":"Startup failed","timestamp":"2026-05-14T09:21:05.592Z"}
+{"level":"info","message":"Database connected","timestamp":"2026-06-15T10:16:02.195Z"}
+{"error":"\nInvalid `prisma.landlord.upsert()` invocation in\nC:\\Users\\JIMM\\OneDrive\\Desktop\\kodisha\\kodisha\\backend\\src\\services\\superAdmin.js:12:39\n\n   9 const phone = process.env.SUPER_ADMIN_PHONE || '+254700000000';\n  10 \n  11 const passwordHash = await bcrypt.hash(password, 12);\n→ 12 const admin = await prisma.landlord.upsert(\nUnique constraint failed on the fields: (`phone`)","level":"error","message":"Startup failed","timestamp":"2026-06-15T10:16:03.111Z"}
+{"level":"info","message":"Database connected","timestamp":"2026-06-15T10:17:02.579Z"}
+{"adminId":"6c322020-b296-4ad8-83a9-f0745abcc97c","email":"admin@proppulse.ke","level":"info","message":"Super admin account bootstrapped","timestamp":"2026-06-15T10:17:07.569Z"}
+{"level":"info","message":"Cron jobs scheduled","timestamp":"2026-06-15T10:17:07.641Z"}
+{"level":"info","message":"Kodisha API running on port 5000 [development]","timestamp":"2026-06-15T10:17:07.642Z"}
+{"level":"info","message":"Database connected","timestamp":"2026-06-15T10:17:50.168Z"}

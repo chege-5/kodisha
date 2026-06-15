@@ -3,43 +3,54 @@ const prisma = require('../utils/prismaClient');
 const logger = require('../utils/logger');
 
 async function ensureSuperAdmin() {
-  const existingAdmin = await prisma.landlord.findFirst({
-    where: { isAdmin: true },
-    select: { id: true },
-  });
-
-  if (existingAdmin) return;
-
-  const email = process.env.SUPER_ADMIN_EMAIL;
-  const password = process.env.SUPER_ADMIN_PASSWORD;
+  const email = process.env.SUPER_ADMIN_EMAIL || 'admin@kodisha.org';
+  const password = process.env.SUPER_ADMIN_PASSWORD || 'Admin123!';
   const name = process.env.SUPER_ADMIN_NAME || 'Super Admin';
   const phone = process.env.SUPER_ADMIN_PHONE || '+254700000000';
 
-  if (!email || !password) {
-    logger.warn('No admin account exists. Set SUPER_ADMIN_EMAIL and SUPER_ADMIN_PASSWORD to bootstrap one.');
-    return;
+  const passwordHash = await bcrypt.hash(password, 12);
+  const [adminByEmail, adminByPhone] = await Promise.all([
+    prisma.landlord.findUnique({ where: { email }, select: { id: true, email: true } }),
+    prisma.landlord.findUnique({ where: { phone }, select: { id: true, email: true } }),
+  ]);
+
+  const target = adminByEmail || adminByPhone;
+  const admin = target
+    ? await prisma.landlord.update({
+        where: { id: target.id },
+        data: {
+          name,
+          passwordHash,
+          plan: 'ENTERPRISE',
+          isAdmin: true,
+        },
+        select: { id: true, email: true },
+      })
+    : await prisma.landlord.create({
+        data: {
+          name,
+          phone,
+          email,
+          passwordHash,
+          plan: 'ENTERPRISE',
+          isAdmin: true,
+        },
+        select: { id: true, email: true },
+      });
+
+  if (adminByEmail && adminByPhone && adminByEmail.id !== adminByPhone.id) {
+    logger.warn('Super admin bootstrap found separate landlord records for the requested email and phone; using the email record as canonical.', {
+      email,
+      phone,
+      emailRecordId: adminByEmail.id,
+      phoneRecordId: adminByPhone.id,
+    });
   }
 
-  const passwordHash = await bcrypt.hash(password, 12);
-  const admin = await prisma.landlord.upsert({
-    where: { email },
-    update: {
-      name,
-      phone,
-      passwordHash,
-      plan: 'ENTERPRISE',
-      isAdmin: true,
-    },
-    create: {
-      name,
-      phone,
-      email,
-      passwordHash,
-      plan: 'ENTERPRISE',
-      isAdmin: true,
-    },
-    select: { id: true, email: true },
-  });
+  await prisma.landlord.updateMany({
+    where: { isAdmin: true, id: { not: admin.id } },
+    data: { isAdmin: false },
+  }).catch(() => {});
 
   await prisma.systemLog.create({
     data: {

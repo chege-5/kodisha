@@ -1,10 +1,25 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const prisma = require('../utils/prismaClient');
 const { body, validationResult } = require('express-validator');
 const { generateTokens, rotateRefreshToken, setAuthCookies, clearAuthCookies, readCookie } = require('../middleware/auth');
 const logger = require('../utils/logger');
 const { authenticate } = require('../middleware/auth');
+
+async function writeAuthLog({ userId, role, action, details, req }) {
+  if (!userId || !role || !action) return;
+  await prisma.systemLog.create({
+    data: {
+      userId,
+      userRole: role,
+      action,
+      resource: 'auth',
+      details,
+      ipAddress: req.ip,
+    },
+  }).catch(() => {});
+}
 
 // ─── Landlord Register ───────────────────────────────────────────────────────
 
@@ -36,6 +51,7 @@ router.post('/register',
       });
 
       setAuthCookies(res, tokens);
+      await writeAuthLog({ userId: landlord.id, role, action: 'LOGIN', details: { method: 'smart-login', identifier }, req });
 
       logger.info('Landlord registered', { landlordId: landlord.id });
       res.status(201).json({ landlord, role: 'LANDLORD' });
@@ -71,6 +87,7 @@ router.post('/smart-login',
         });
         setAuthCookies(res, tokens);
         const { passwordHash: _, ...user } = landlord;
+        await writeAuthLog({ userId: landlord.id, role, action: 'LOGIN', details: { method: 'smart-login', identifier }, req });
         return res.json({ user, role });
       }
 
@@ -86,6 +103,7 @@ router.post('/smart-login',
         });
         setAuthCookies(res, tokens);
         const { passwordHash: _, ...user } = caretaker;
+        await writeAuthLog({ userId: caretaker.id, role: 'CARETAKER', action: 'LOGIN', details: { method: 'smart-login', identifier }, req });
         return res.json({ user, role: 'CARETAKER' });
       }
 
@@ -106,6 +124,7 @@ router.post('/smart-login',
         });
         setAuthCookies(res, tokens);
         const { passwordHash: _, idNumber: __, ...user } = tenant;
+        await writeAuthLog({ userId: tenant.id, role: 'TENANT', action: 'LOGIN', details: { method: 'smart-login', identifier }, req });
         return res.json({ user, role: 'TENANT' });
       }
 
@@ -122,8 +141,20 @@ router.post('/refresh', rotateRefreshToken);
 // ─── Logout ──────────────────────────────────────────────────────────────────
 router.post('/logout', async (req, res, next) => {
   const refreshToken = req.body?.refreshToken || readCookie(req, 'refreshToken');
+  let sessionUser = null;
+  const accessToken = readCookie(req, 'accessToken');
+  if (accessToken) {
+    try {
+      sessionUser = jwt.verify(accessToken, process.env.JWT_SECRET);
+    } catch (error) {
+      sessionUser = null;
+    }
+  }
   if (refreshToken) {
     await prisma.refreshToken.deleteMany({ where: { token: refreshToken } }).catch(() => {});
+  }
+  if (sessionUser?.id && sessionUser?.role) {
+    await writeAuthLog({ userId: sessionUser.id, role: sessionUser.role, action: 'LOGOUT', details: { method: 'logout' }, req });
   }
   clearAuthCookies(res);
   res.json({ message: 'Logged out' });
@@ -152,6 +183,8 @@ router.post('/change-password', authenticate,
       await prisma.refreshToken.deleteMany({
         where: model === 'landlord' ? { landlordId: req.user.id } : model === 'caretaker' ? { caretakerId: req.user.id } : { tenantId: req.user.id },
       });
+
+      await writeAuthLog({ userId: req.user.id, role: req.user.role, action: 'PASSWORD_CHANGED', details: { scope: model }, req });
 
       clearAuthCookies(res);
       res.json({ message: 'Password updated. Please sign in again.' });
