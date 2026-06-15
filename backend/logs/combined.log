@@ -6,3 +6,10 @@
 {"level":"info","message":"Cron jobs scheduled","timestamp":"2026-06-15T10:17:07.641Z"}
 {"level":"info","message":"Kodisha API running on port 5000 [development]","timestamp":"2026-06-15T10:17:07.642Z"}
 {"level":"info","message":"Database connected","timestamp":"2026-06-15T10:17:50.168Z"}
+{"adminId":"6c322020-b296-4ad8-83a9-f0745abcc97c","email":"admin@proppulse.ke","level":"info","message":"Super admin account bootstrapped","timestamp":"2026-06-15T10:17:55.253Z"}
+{"level":"info","message":"Cron jobs scheduled","timestamp":"2026-06-15T10:17:55.276Z"}
+{"level":"info","message":"Kodisha API running on port 5000 [development]","timestamp":"2026-06-15T10:17:55.276Z"}
+{"level":"info","message":"Database connected","timestamp":"2026-06-15T11:43:55.145Z"}
+{"adminId":"6c322020-b296-4ad8-83a9-f0745abcc97c","email":"admin@proppulse.ke","level":"info","message":"Super admin account bootstrapped","timestamp":"2026-06-15T11:44:02.607Z"}
+{"level":"info","message":"Cron jobs scheduled","timestamp":"2026-06-15T11:44:02.691Z"}
+{"level":"info","message":"Kodisha API running on port 5000 [development]","timestamp":"2026-06-15T11:44:02.691Z"}

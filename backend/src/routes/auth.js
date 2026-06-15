@@ -51,10 +51,10 @@ router.post('/register',
       });
 
       setAuthCookies(res, tokens);
-      await writeAuthLog({ userId: landlord.id, role, action: 'LOGIN', details: { method: 'smart-login', identifier }, req });
+      await writeAuthLog({ userId: landlord.id, role: 'LANDLORD', action: 'REGISTER', details: { method: 'register', email, phone }, req });
 
       logger.info('Landlord registered', { landlordId: landlord.id });
-      res.status(201).json({ landlord, role: 'LANDLORD' });
+      res.status(201).json({ landlord, role: 'LANDLORD', accessToken: tokens.accessToken });
     } catch (err) {
       next(err);
     }
@@ -88,7 +88,7 @@ router.post('/smart-login',
         setAuthCookies(res, tokens);
         const { passwordHash: _, ...user } = landlord;
         await writeAuthLog({ userId: landlord.id, role, action: 'LOGIN', details: { method: 'smart-login', identifier }, req });
-        return res.json({ user, role });
+        return res.json({ user, role, accessToken: tokens.accessToken });
       }
 
       // 2. Try Caretaker
@@ -104,7 +104,7 @@ router.post('/smart-login',
         setAuthCookies(res, tokens);
         const { passwordHash: _, ...user } = caretaker;
         await writeAuthLog({ userId: caretaker.id, role: 'CARETAKER', action: 'LOGIN', details: { method: 'smart-login', identifier }, req });
-        return res.json({ user, role: 'CARETAKER' });
+        return res.json({ user, role: 'CARETAKER', accessToken: tokens.accessToken });
       }
 
       // 3. Try Tenant
@@ -125,7 +125,7 @@ router.post('/smart-login',
         setAuthCookies(res, tokens);
         const { passwordHash: _, idNumber: __, ...user } = tenant;
         await writeAuthLog({ userId: tenant.id, role: 'TENANT', action: 'LOGIN', details: { method: 'smart-login', identifier }, req });
-        return res.json({ user, role: 'TENANT' });
+        return res.json({ user, role: 'TENANT', accessToken: tokens.accessToken });
       }
 
       return res.status(401).json({ error: 'Invalid credentials' });

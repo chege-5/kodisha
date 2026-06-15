@@ -1,5 +1,5 @@
 import { createContext, createElement, useContext, useState, useEffect, useCallback } from 'react';
-import api from '../utils/apiClient';
+import api, { clearSessionAccessToken, setSessionAccessToken } from '../utils/apiClient';
 
 const AuthContext = createContext(null);
 
@@ -27,6 +27,7 @@ export function AuthProvider({ children }) {
     const { data } = await api.post('/auth/smart-login', { identifier, password });
     const sessionRole = data.role || data.user?.role || null;
     const sessionUser = sessionRole ? { ...data.user, role: sessionRole } : data.user;
+    setSessionAccessToken(data.accessToken);
     localStorage.setItem('user', JSON.stringify(sessionUser));
     localStorage.setItem('role', sessionRole);
     setUser(sessionUser);
@@ -36,6 +37,7 @@ export function AuthProvider({ children }) {
 
   const logout = useCallback(async () => {
     await api.post('/auth/logout', {}).catch(() => {});
+    clearSessionAccessToken();
     localStorage.removeItem('user');
     localStorage.removeItem('role');
     setUser(null);

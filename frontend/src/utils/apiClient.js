@@ -10,6 +10,16 @@ const api = axios.create({
   withCredentials: true,
 });
 
+let sessionAccessToken = null;
+
+export function setSessionAccessToken(token) {
+  sessionAccessToken = token || null;
+}
+
+export function clearSessionAccessToken() {
+  sessionAccessToken = null;
+}
+
 export function getFriendlyError(err, fallback = 'We could not complete that request. Please try again.') {
   if (err.response?.data?.error) return err.response.data.error;
   if (err.code === 'ECONNABORTED') return 'The request took too long. Please check your connection and try again.';
@@ -51,7 +61,11 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        await axios.post(`${baseURL}/auth/refresh`, {}, { withCredentials: true });
+        const refreshResponse = await axios.post(`${baseURL}/auth/refresh`, {}, { withCredentials: true });
+        const refreshedAccessToken = refreshResponse.data?.accessToken;
+        if (refreshedAccessToken) {
+          sessionAccessToken = refreshedAccessToken;
+        }
         isRefreshing = false;
         processQueue(null, true);
         return api(original);
@@ -67,5 +81,13 @@ api.interceptors.response.use(
     return Promise.reject(err);
   }
 );
+
+api.interceptors.request.use((config) => {
+  if (sessionAccessToken && !config.headers?.Authorization) {
+    config.headers = config.headers || {};
+    config.headers.Authorization = `Bearer ${sessionAccessToken}`;
+  }
+  return config;
+});
 
 export default api;
