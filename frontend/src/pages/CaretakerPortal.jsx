@@ -173,7 +173,11 @@ export default function CaretakerPortal() {
             key={id}
             onClick={() => setTab(id)}
             className={`flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold transition-all ${
+<<<<<<< HEAD
               tab === id ? 'bg-kodi-accent text-white shadow-kodi-accent-30' : 'text-kodi-text-muted hover:text-kodi-text-primary'
+=======
+              tab === id ? 'btn-subtle-active' : 'btn-soft-hover border border-transparent text-kodi-text-muted'
+>>>>>>> f5b4ed203937dd83f1f0993e59b52abdfb064e75
             }`}
           >
             <Icon className="h-4 w-4" /> {label}

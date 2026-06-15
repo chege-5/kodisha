@@ -38,7 +38,7 @@ function AddPropertyModal({ onClose }) {
           </div>
           <div className="flex gap-2 pt-2">
             <button type="button" onClick={onClose} className="btn-secondary flex-1 justify-center">Cancel</button>
-            <button type="submit" disabled={addProperty.isPending} className="btn-primary flex-1 justify-center">{addProperty.isPending ? 'Saving…' : 'Add Property'}</button>
+            <button type="submit" disabled={addProperty.isPending} className="btn-primary flex-1 justify-center">{addProperty.isPending ? 'Saving...' : 'Add Property'}</button>
           </div>
         </form>
       </div>
@@ -73,7 +73,7 @@ function AddUnitModal({ propertyId, onClose }) {
           </div>
           <div className="flex gap-2 pt-2">
             <button type="button" onClick={onClose} className="btn-secondary flex-1 justify-center">Cancel</button>
-            <button type="submit" disabled={addUnit.isPending} className="btn-primary flex-1 justify-center">{addUnit.isPending ? 'Saving…' : 'Add Unit'}</button>
+            <button type="submit" disabled={addUnit.isPending} className="btn-primary flex-1 justify-center">{addUnit.isPending ? 'Saving...' : 'Add Unit'}</button>
           </div>
         </form>
       </div>
@@ -115,7 +115,7 @@ export default function Properties() {
             <div className="flex items-start justify-between">
               <div>
                 <h2 className="text-lg font-bold text-kodi-dark">{p.name}</h2>
-                <p className="text-sm text-kodi-text-muted">{p.address}, {p.county} · {p.type}</p>
+                <p className="text-sm text-kodi-text-muted">{p.address}, {p.county} - {p.type}</p>
                 <div className="flex gap-4 mt-2 text-sm text-kodi-text-secondary">
                   <span>{p.units.length} units</span>
                   <span>{occupiedCount} occupied</span>

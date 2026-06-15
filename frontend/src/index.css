@@ -164,8 +164,33 @@
     hover:bg-emerald-400 transition-all duration-200 shadow-kodi-emerald-20;
   }
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 px-4 py-2 text-kodi-text-secondary text-sm font-medium rounded-xl
-    hover:bg-white/10 hover:text-white transition-all duration-200;
+    @apply inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium text-kodi-text-secondary
+    transition-colors duration-150 hover:text-kodi-text-primary;
+  }
+  .btn-ghost:hover {
+    background: var(--button-soft-hover-bg);
+  }
+  .btn-tone {
+    background: var(--button-primary-bg);
+    border-color: var(--button-primary-border);
+    color: #fff;
+    box-shadow: 0 1px 2px var(--button-primary-shadow);
+  }
+  .btn-tone:hover {
+    background: var(--button-primary-hover-bg);
+    border-color: rgb(var(--kodi-emerald-rgb) / 0.35);
+    box-shadow: 0 1px 2px var(--button-primary-hover-shadow);
+  }
+  .btn-soft-hover:hover {
+    background: var(--button-soft-hover-bg);
+    border-color: rgb(var(--kodi-border-rgb) / 1);
+    color: rgb(var(--kodi-text-primary-rgb) / 1);
+  }
+  .btn-subtle-active {
+    background: rgb(var(--kodi-slate-rgb) / 0.12);
+    border-color: rgb(var(--kodi-border-rgb) / 1);
+    color: rgb(var(--kodi-text-primary-rgb) / 1);
+    box-shadow: inset 0 0 0 1px rgb(var(--kodi-border-rgb) / 1);
   }
 
   .glass-card {
@@ -193,7 +218,7 @@
   .input {
     @apply w-full bg-kodi-card border border-kodi-border rounded-xl px-4 py-3 text-sm text-kodi-text-primary
     placeholder:text-kodi-text-muted focus:outline-none focus:ring-4 focus:ring-kodi-accent/10 focus:border-kodi-accent/50
-    transition-all duration-300 hover:border-kodi-accent/30;
+    transition-colors duration-150 hover:border-kodi-accent/30;
   }
   .label {
     @apply block text-sm font-medium text-kodi-text-secondary mb-1.5;
@@ -201,7 +226,7 @@
   .select {
     @apply w-full bg-kodi-card border border-kodi-border rounded-xl px-4 py-3 text-sm text-kodi-text-primary
     placeholder:text-kodi-text-muted focus:outline-none focus:ring-2 focus:ring-kodi-accent/50 focus:border-kodi-accent/50
-    transition-all duration-200 appearance-none cursor-pointer;
+    cursor-pointer transition-colors duration-150;
   }
 
   .badge {
@@ -280,22 +305,14 @@
     will-change: transform, box-shadow;
   }
   .saas-card::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.55), transparent);
-    opacity: 0;
-    transform: translateX(-45%);
-    transition: opacity 400ms ease, transform 500ms ease;
+    content: none;
   }
   .saas-card:hover {
-    transform: translateY(-6px) scale(1.01);
-    border-color: rgba(var(--tint), 0.35);
-    box-shadow: 0 26px 60px rgba(15, 23, 42, 0.16);
+    border-color: rgba(var(--tint), 0.38);
+    background: rgba(var(--tint), 0.035);
   }
   .saas-card:hover::after {
-    opacity: 1;
-    transform: translateX(45%);
+    content: none;
   }
   .saas-card--emerald { --tint: 16, 185, 129; }
   .saas-card--amber { --tint: 245, 158, 11; }
@@ -307,6 +324,14 @@
   .saas-card--slate { --tint: 71, 85, 105; }
   .saas-card--teal { --tint: 20, 184, 166; }
   .saas-card--pink { --tint: 236, 72, 153; }
+  .bg-slate-900 .saas-card {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: none;
+  }
+  .bg-slate-900 .saas-card::after {
+    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+  }
   .saas-chip {
     border-radius: 999px;
     border: 1px solid rgba(148, 163, 184, 0.4);
@@ -322,19 +347,18 @@
   .page-stage .glass-card-hover,
   .page-stage .stat-card,
   .page-stage .page-surface {
-    animation: riseIn 0.65s ease-out both;
+    animation: riseIn 0.24s ease-out both;
   }
   .page-stage .card:hover,
   .page-stage .glass-card:hover,
   .page-stage .stat-card:hover,
   .page-stage .page-surface:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 22px 50px rgba(15, 23, 42, 0.12);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
   }
   .reveal {
     opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 600ms ease, transform 600ms ease;
+    transform: translateY(10px);
+    transition: opacity 260ms ease, transform 260ms ease;
   }
   .reveal-visible {
     opacity: 1;
@@ -416,19 +440,15 @@
 }
 
 .animate-fade-in {
-  animation: fadeInUp 0.55s ease-out forwards;
+  animation: fadeInUp 0.24s ease-out forwards;
 }
 
 .animate-fade-up {
-  animation: fadeInUp 0.75s ease-out forwards;
-}
-
-.animate-float {
-  animation: float 10s ease-in-out infinite;
+  animation: fadeInUp 0.24s ease-out forwards;
 }
 
 .animate-in {
-  animation: fadeInUp 0.45s ease-out forwards;
+  animation: fadeInUp 0.2s ease-out forwards;
 }
 
 .stagger-1 { animation-delay: 0.05s; }
@@ -534,13 +554,9 @@
   }
 }
 
-@keyframes float {
-  0%,
+@keyframes shimmer {
   100% {
-    transform: translate3d(0, 0, 0);
-  }
-  50% {
-    transform: translate3d(0, -10px, 0);
+    transform: translateX(100%);
   }
 }
 

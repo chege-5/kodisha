@@ -84,13 +84,22 @@ export default function Layout({ caretakerMode }) {
       {/* Logo */}
       <div className={`px-5 py-6 border-b sidebar-divider ${collapsed ? 'px-3' : ''}`}>
         <div className="flex items-center gap-3">
+<<<<<<< HEAD
           <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-kodi-accent to-kodi-emerald shadow-kodi-accent-20">
+=======
+          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-white/10">
+>>>>>>> f5b4ed203937dd83f1f0993e59b52abdfb064e75
             <Building2 className="h-5 w-5 text-white" />
           </div>
           {!collapsed && (
             <div className="animate-fade-in">
+<<<<<<< HEAD
               <h1 className="text-lg font-bold tracking-tight sidebar-text-title">Kodishaa</h1>
               <p className="text-[10px] font-medium uppercase tracking-[0.28em] sidebar-text-secondary">Rent OS</p>
+=======
+              <h1 className="text-lg font-bold tracking-tight text-white">Kodishaa</h1>
+              <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-blue-100">Rent OS</p>
+>>>>>>> f5b4ed203937dd83f1f0993e59b52abdfb064e75
             </div>
           )}
         </div>
@@ -105,10 +114,15 @@ export default function Layout({ caretakerMode }) {
             end={exact}
             onClick={() => setMobileOpen(false)}
             className={({ isActive }) =>
-              `flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm font-medium transition-all ${
+              `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
                 isActive
+<<<<<<< HEAD
                   ? 'sidebar-nav-link-active border shadow-lg shadow-black/5'
                   : 'sidebar-nav-link-inactive'
+=======
+                  ? 'bg-white/12 text-white border border-white/15'
+                  : 'text-slate-200/80 hover:bg-white/10 hover:text-white'
+>>>>>>> f5b4ed203937dd83f1f0993e59b52abdfb064e75
               } ${collapsed ? 'justify-center' : ''}`
             }
           >
@@ -121,7 +135,7 @@ export default function Layout({ caretakerMode }) {
       <div className="px-3 py-4 border-t sidebar-divider">
         {!collapsed && (
           <div className="flex items-center gap-3 px-3 py-2 mb-2">
-            <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-kodi-purple to-kodi-accent text-sm font-bold text-white">
+            <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-white/10 text-sm font-bold text-white">
               {user?.name?.[0] || 'U'}
             </div>
             <div className="min-w-0">
@@ -132,7 +146,11 @@ export default function Layout({ caretakerMode }) {
         )}
         <button
           onClick={handleLogout}
+<<<<<<< HEAD
           className={`flex w-full items-center gap-3 px-3 py-2.5 rounded-2xl text-sm sidebar-nav-link-inactive transition-all ${collapsed ? 'justify-center' : ''}`}
+=======
+          className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-200/75 transition-colors hover:bg-white/10 hover:text-white ${collapsed ? 'justify-center' : ''}`}
+>>>>>>> f5b4ed203937dd83f1f0993e59b52abdfb064e75
         >
           <LogOut className="w-[18px] h-[18px]" />
           {!collapsed && 'Sign out'}
@@ -143,16 +161,24 @@ export default function Layout({ caretakerMode }) {
 
   return (
     <div className="flex h-screen bg-kodi-navy overflow-hidden text-kodi-text-primary relative isolate">
+<<<<<<< HEAD
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,_rgba(29,78,216,0.07),_transparent_36%),linear-gradient(315deg,_rgba(16,185,129,0.07),_transparent_32%)]" />
       
+=======
+>>>>>>> f5b4ed203937dd83f1f0993e59b52abdfb064e75
       {/* Mobile overlay */}
       {mobileOpen && (
         <div className="fixed inset-0 bg-black/60 z-40 lg:hidden" onClick={() => setMobileOpen(false)} />
       )}
 
       {/* Mobile sidebar */}
+<<<<<<< HEAD
       <aside className={`fixed inset-y-0 left-0 z-50 w-64 sidebar-landlord border-r sidebar-divider flex flex-col transform transition-transform duration-300 lg:hidden ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <button onClick={() => setMobileOpen(false)} className="absolute right-4 top-4 sidebar-text-secondary hover:sidebar-text-title transition-all">
+=======
+      <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-kodi-dark border-r border-white/10 flex flex-col transform transition-transform duration-300 lg:hidden ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <button onClick={() => setMobileOpen(false)} className="absolute right-4 top-4 text-slate-300 transition-colors hover:text-white">
+>>>>>>> f5b4ed203937dd83f1f0993e59b52abdfb064e75
           <X className="w-5 h-5" />
         </button>
         {sidebarContent}
@@ -163,7 +189,11 @@ export default function Layout({ caretakerMode }) {
         {sidebarContent}
         <button
           onClick={() => setCollapsed(!collapsed)}
+<<<<<<< HEAD
           className="absolute bottom-20 -right-3 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-kodi-card border border-kodi-border text-kodi-text-muted hover:text-kodi-accent hover:border-kodi-accent/50 transition-all"
+=======
+          className="btn-soft-hover absolute bottom-20 -right-3 z-10 flex h-7 w-7 items-center justify-center rounded-full border border-kodi-border bg-white text-kodi-text-muted transition-colors"
+>>>>>>> f5b4ed203937dd83f1f0993e59b52abdfb064e75
           style={{ left: collapsed ? '58px' : '264px' }}
         >
           {collapsed ? <ChevronRight className="w-3 h-3" /> : <ChevronLeft className="w-3 h-3" />}
@@ -173,29 +203,41 @@ export default function Layout({ caretakerMode }) {
       {/* Main content */}
       <div className="relative z-10 flex flex-1 flex-col overflow-hidden">
         {/* Top bar */}
-        <header className="flex h-18 flex-shrink-0 items-center justify-between border-b border-kodi-border/50 bg-kodi-card/40 px-4 shadow-sm backdrop-blur-2xl lg:px-8 z-30 sticky top-0">
+        <header className="flex h-18 flex-shrink-0 items-center justify-between border-b border-kodi-border bg-kodi-card px-4 lg:px-8 z-30 sticky top-0">
           <div className="flex items-center gap-4">
+<<<<<<< HEAD
             <button onClick={() => setMobileOpen(true)} className="flex h-10 w-10 items-center justify-center rounded-xl border border-kodi-border bg-kodi-card text-kodi-text-muted hover:text-kodi-accent lg:hidden">
+=======
+            <button onClick={() => setMobileOpen(true)} className="btn-soft-hover flex h-10 w-10 items-center justify-center rounded-lg border border-transparent bg-kodi-navy text-kodi-text-muted lg:hidden">
+>>>>>>> f5b4ed203937dd83f1f0993e59b52abdfb064e75
               <Menu className="w-5 h-5" />
             </button>
-            <div className="hidden items-center gap-2 rounded-2xl border border-kodi-border/60 bg-kodi-card/50 px-4 py-2 text-xs font-semibold tracking-wide text-kodi-text-muted shadow-sm lg:flex">
-              <div className="h-1.5 w-1.5 rounded-full bg-kodi-emerald animate-pulse" />
+            <div className="hidden items-center gap-2 rounded-lg border border-kodi-border bg-kodi-navy px-4 py-2 text-xs font-semibold tracking-wide text-kodi-text-muted lg:flex">
+              <div className="h-1.5 w-1.5 rounded-full bg-kodi-emerald" />
               {new Date().toLocaleDateString('en-KE', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}
             </div>
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="flex items-center p-1 rounded-2xl bg-kodi-navy/50 border border-kodi-border/40 backdrop-blur-md">
+            <div className="flex items-center rounded-lg border border-kodi-border bg-kodi-navy p-1">
               <button
                 onClick={() => setTheme('light')}
+<<<<<<< HEAD
                 className={`p-2 rounded-xl transition-all ${theme === 'light' ? 'bg-white text-kodi-accent shadow-md scale-105' : 'text-kodi-text-muted hover:text-kodi-accent'}`}
+=======
+                className={`rounded-md p-2 transition-colors ${theme === 'light' ? 'btn-subtle-active' : 'btn-soft-hover border border-transparent text-kodi-text-muted'}`}
+>>>>>>> f5b4ed203937dd83f1f0993e59b52abdfb064e75
                 title="Light Mode"
               >
                 <SunMedium className="h-4 w-4" />
               </button>
               <button
                 onClick={() => setTheme('dark')}
+<<<<<<< HEAD
                 className={`p-2 rounded-xl transition-all ${theme === 'dark' ? 'bg-kodi-card text-kodi-emerald shadow-md scale-105' : 'text-kodi-text-muted hover:text-kodi-accent'}`}
+=======
+                className={`rounded-md p-2 transition-colors ${theme === 'dark' ? 'btn-subtle-active' : 'btn-soft-hover border border-transparent text-kodi-text-muted'}`}
+>>>>>>> f5b4ed203937dd83f1f0993e59b52abdfb064e75
                 title="Dark Mode"
               >
                 <MoonStar className="h-4 w-4" />
@@ -203,11 +245,11 @@ export default function Layout({ caretakerMode }) {
             </div>
             <button
               onClick={() => navigate(caretakerMode ? '/caretaker/notifications' : '/dashboard/notifications')}
-              className="relative rounded-xl p-2.5 text-kodi-text-muted hover:bg-kodi-navy hover:text-kodi-accent transition-all"
+              className="btn-soft-hover relative rounded-lg border border-transparent p-2.5 text-kodi-text-muted transition-colors"
             >
               <Bell className="w-5 h-5" />
               {unreadCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-kodi-rose text-white text-[10px] font-bold rounded-full flex items-center justify-center animate-pulse">
+                <span className="absolute -top-0.5 -right-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-kodi-rose text-[10px] font-bold text-white">
                   {unreadCount > 9 ? '9+' : unreadCount}
                 </span>
               )}
