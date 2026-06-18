@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import api from '../utils/apiClient';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import api, { getFriendlyError } from '../utils/apiClient';
+import toast from 'react-hot-toast';
 import {
   ArrowUpRight,
   BarChart3,
@@ -14,7 +15,9 @@ import {
   Gauge,
   LogIn,
   LogOut,
+  Search,
   Shield,
+  UserPlus,
   Users,
   Wallet,
 } from 'lucide-react';
@@ -89,8 +92,26 @@ function formatMoney(amount) {
   return `KSh ${Number(amount || 0).toLocaleString('en-KE')}`;
 }
 
+function formatLogDetails(details) {
+  if (!details) return 'No extra details';
+  if (typeof details === 'string') return details;
+  return Object.entries(details)
+    .map(([key, value]) => `${key}: ${typeof value === 'object' ? JSON.stringify(value) : value}`)
+    .join(' · ');
+}
+
 export default function AdminDashboard() {
+  const qc = useQueryClient();
   const [activeTab, setActiveTab] = useState('overview');
+  const [userSearch, setUserSearch] = useState('');
+  const [roleFilter, setRoleFilter] = useState('');
+  const [landlordForm, setLandlordForm] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    password: '',
+    plan: 'FREE',
+  });
 
   const statsQuery = useQuery({
     queryKey: ['admin-stats'],
@@ -117,8 +138,10 @@ export default function AdminDashboard() {
   });
 
   const usersQuery = useQuery({
-    queryKey: ['admin-users'],
-    queryFn: () => api.get('/admin/users?limit=20').then((response) => response.data),
+    queryKey: ['admin-users', userSearch, roleFilter],
+    queryFn: () => api.get('/admin/users', {
+      params: { limit: 50, search: userSearch || undefined, role: roleFilter || undefined },
+    }).then((response) => response.data),
     refetchInterval: 30000,
   });
 
@@ -138,6 +161,33 @@ export default function AdminDashboard() {
   const activeUsers = useMemo(() => users.filter((user) => user.isActive !== false), [users]);
   const topProperty = properties[0];
 
+  const createLandlord = useMutation({
+    mutationFn: (payload) => api.post('/admin/landlords', payload).then((response) => response.data),
+    onSuccess: () => {
+      toast.success('Landlord account created');
+      setLandlordForm({ name: '', phone: '', email: '', password: '', plan: 'FREE' });
+      qc.invalidateQueries({ queryKey: ['admin-users'] });
+      qc.invalidateQueries({ queryKey: ['admin-stats'] });
+      qc.invalidateQueries({ queryKey: ['admin-logs'] });
+    },
+    onError: (error) => toast.error(getFriendlyError(error, 'Could not create landlord')),
+  });
+
+  const toggleAdmin = useMutation({
+    mutationFn: ({ id, isAdmin }) => api.patch(`/admin/users/${id}/admin`, { isAdmin }).then((response) => response.data),
+    onSuccess: () => {
+      toast.success('Admin access updated');
+      qc.invalidateQueries({ queryKey: ['admin-users'] });
+      qc.invalidateQueries({ queryKey: ['admin-logs'] });
+    },
+    onError: (error) => toast.error(getFriendlyError(error, 'Could not update admin access')),
+  });
+
+  function handleCreateLandlord(event) {
+    event.preventDefault();
+    createLandlord.mutate(landlordForm);
+  }
+
   if (statsQuery.isLoading && analyticsQuery.isLoading) {
     return (
       <div className="p-6 lg:p-8">
@@ -154,7 +204,6 @@ export default function AdminDashboard() {
   const accessSeries = analytics.series?.logins || [];
   const logoutSeries = analytics.series?.logouts || [];
   const revenueSeries = analytics.series?.revenue || [];
-  const userEventSeries = analytics.series?.userEvents || [];
 
   return (
     <div className="min-h-[calc(100vh-3rem)] bg-[radial-gradient(circle_at_top,_rgba(34,211,238,0.16),_transparent_32%),linear-gradient(180deg,_#0a0f1c_0%,_#060914_100%)] px-4 py-4 text-white sm:px-6 lg:px-8">
@@ -294,7 +343,7 @@ export default function AdminDashboard() {
                           <p className="text-sm font-semibold text-white">{log.action}</p>
                           <span className="text-[11px] text-kodi-text-muted">{new Date(log.createdAt).toLocaleTimeString('en-KE', { hour: '2-digit', minute: '2-digit' })}</span>
                         </div>
-                        <p className="mt-1 text-xs text-kodi-text-muted">{log.resource || 'system'} · {log.details || 'platform event recorded'}</p>
+                        <p className="mt-1 text-xs text-kodi-text-muted">{log.resource || 'system'} · {formatLogDetails(log.details) || 'platform event recorded'}</p>
                       </div>
                     ))}
                   </div>
@@ -407,45 +456,92 @@ export default function AdminDashboard() {
           )}
 
           {activeTab === 'users' && (
-            <section className="rounded-[32px] border border-white/10 bg-[#0c1324]/85 p-5">
-              <div className="flex items-center justify-between gap-4">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.22em] text-kodi-text-muted">User registry</p>
-                  <h3 className="mt-1 text-2xl font-black text-white">Platform accounts</h3>
+            <section className="grid gap-6 xl:grid-cols-[0.8fr_1.2fr]">
+              <form onSubmit={handleCreateLandlord} className="rounded-[32px] border border-white/10 bg-[#0c1324]/85 p-5">
+                <div className="flex items-center gap-2 text-kodi-text-muted">
+                  <UserPlus className="h-4 w-4 text-cyan-300" />
+                  <span className="text-sm uppercase tracking-[0.2em]">Create landlord</span>
                 </div>
-                <div className="rounded-2xl bg-white/5 px-4 py-2 text-sm text-kodi-text-muted">{users.length} records</div>
-              </div>
-              <div className="mt-6 overflow-x-auto">
-                <table className="w-full min-w-[760px] border-separate border-spacing-y-3">
-                  <thead>
-                    <tr className="text-left text-xs uppercase tracking-[0.2em] text-kodi-text-muted">
-                      <th className="pb-2 font-medium">Name</th>
-                      <th className="pb-2 font-medium">Role</th>
-                      <th className="pb-2 font-medium">Contact</th>
-                      <th className="pb-2 font-medium">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {users.slice(0, 12).map((user) => (
-                      <tr key={user.id} className="rounded-2xl bg-white/5">
-                        <td className="rounded-l-2xl px-4 py-4">
-                          <div className="flex items-center gap-3">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-cyan-400/15 text-sm font-black text-cyan-200">
-                              {(user.name || user.email || 'U').slice(0, 1).toUpperCase()}
-                            </div>
-                            <div>
-                              <p className="font-semibold text-white">{user.name || 'Unnamed user'}</p>
-                              <p className="text-xs text-kodi-text-muted">ID {user.id}</p>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-4 py-4"><span className="rounded-full bg-black/20 px-3 py-1 text-xs text-white">{user.role}</span></td>
-                        <td className="px-4 py-4 text-sm text-kodi-text-muted">{user.email || user.phone || 'No contact'}</td>
-                        <td className="rounded-r-2xl px-4 py-4 text-sm text-emerald-300">{user.isActive === false ? 'Disabled' : 'Active'}</td>
+                <div className="mt-5 grid gap-3">
+                  <input className="input" placeholder="Full name" value={landlordForm.name} onChange={(e) => setLandlordForm({ ...landlordForm, name: e.target.value })} required />
+                  <input className="input" placeholder="+254712345678" value={landlordForm.phone} onChange={(e) => setLandlordForm({ ...landlordForm, phone: e.target.value })} required />
+                  <input className="input" type="email" placeholder="email@example.com" value={landlordForm.email} onChange={(e) => setLandlordForm({ ...landlordForm, email: e.target.value })} required />
+                  <input className="input" type="password" placeholder="Initial password" value={landlordForm.password} onChange={(e) => setLandlordForm({ ...landlordForm, password: e.target.value })} required />
+                  <select className="input" value={landlordForm.plan} onChange={(e) => setLandlordForm({ ...landlordForm, plan: e.target.value })}>
+                    {['FREE', 'STARTER', 'PRO', 'ENTERPRISE'].map((plan) => <option key={plan}>{plan}</option>)}
+                  </select>
+                </div>
+                <button className="btn-primary mt-4 w-full" disabled={createLandlord.isPending}>
+                  <UserPlus className="h-4 w-4" /> {createLandlord.isPending ? 'Creating...' : 'Create landlord'}
+                </button>
+              </form>
+
+              <div className="rounded-[32px] border border-white/10 bg-[#0c1324]/85 p-5">
+                <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.22em] text-kodi-text-muted">User registry</p>
+                    <h3 className="mt-1 text-2xl font-black text-white">Platform accounts</h3>
+                  </div>
+                  <div className="flex flex-col gap-2 sm:flex-row">
+                    <label className="flex items-center gap-2 rounded-2xl border border-white/10 bg-black/20 px-3">
+                      <Search className="h-4 w-4 text-kodi-text-muted" />
+                      <input className="min-w-0 bg-transparent py-2 text-sm text-white outline-none" placeholder="Search users" value={userSearch} onChange={(e) => setUserSearch(e.target.value)} />
+                    </label>
+                    <select className="rounded-2xl border border-white/10 bg-black/20 px-3 py-2 text-sm text-white outline-none" value={roleFilter} onChange={(e) => setRoleFilter(e.target.value)}>
+                      <option value="">All roles</option>
+                      <option value="LANDLORD">Landlords</option>
+                      <option value="CARETAKER">Caretakers</option>
+                      <option value="TENANT">Tenants</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="mt-6 overflow-x-auto">
+                  <table className="w-full min-w-[860px] border-separate border-spacing-y-3">
+                    <thead>
+                      <tr className="text-left text-xs uppercase tracking-[0.2em] text-kodi-text-muted">
+                        <th className="pb-2 font-medium">Name</th>
+                        <th className="pb-2 font-medium">Role</th>
+                        <th className="pb-2 font-medium">Contact</th>
+                        <th className="pb-2 font-medium">Status</th>
+                        <th className="pb-2 font-medium">Action</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {users.map((user) => (
+                        <tr key={`${user.role}-${user.id}`} className="rounded-2xl bg-white/5">
+                          <td className="rounded-l-2xl px-4 py-4">
+                            <div className="flex items-center gap-3">
+                              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-cyan-400/15 text-sm font-black text-cyan-200">
+                                {(user.name || user.email || 'U').slice(0, 1).toUpperCase()}
+                              </div>
+                              <div>
+                                <p className="font-semibold text-white">{user.name || 'Unnamed user'}</p>
+                                <p className="text-xs text-kodi-text-muted">ID {user.id}</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-4 py-4"><span className="rounded-full bg-black/20 px-3 py-1 text-xs text-white">{user.role}</span></td>
+                          <td className="px-4 py-4 text-sm text-kodi-text-muted">{user.email || user.phone || 'No contact'}</td>
+                          <td className={`px-4 py-4 text-sm ${user.isActive === false ? 'text-rose-300' : 'text-emerald-300'}`}>{user.isActive === false ? 'Disabled' : 'Active'}</td>
+                          <td className="rounded-r-2xl px-4 py-4">
+                            {(user.role === 'LANDLORD' || user.role === 'ADMIN') ? (
+                              <button
+                                type="button"
+                                onClick={() => toggleAdmin.mutate({ id: user.id, isAdmin: user.role !== 'ADMIN' })}
+                                disabled={toggleAdmin.isPending}
+                                className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs font-semibold text-white transition hover:bg-white/10"
+                              >
+                                {user.role === 'ADMIN' ? 'Remove admin' : 'Make admin'}
+                              </button>
+                            ) : (
+                              <span className="text-xs text-kodi-text-muted">No admin action</span>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </section>
           )}
@@ -463,7 +559,7 @@ export default function AdminDashboard() {
                       <div className="flex items-start justify-between gap-4">
                         <div>
                           <p className="text-sm font-semibold text-white">{log.action}</p>
-                          <p className="mt-1 text-xs text-kodi-text-muted">{log.resource || 'system'} · {log.details || 'No extra details'}</p>
+                          <p className="mt-1 text-xs text-kodi-text-muted">{log.resource || 'system'} · {formatLogDetails(log.details)}</p>
                         </div>
                         <span className="text-xs text-kodi-text-muted">{new Date(log.createdAt).toLocaleString('en-KE')}</span>
                       </div>

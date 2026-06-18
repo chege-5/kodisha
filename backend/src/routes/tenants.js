@@ -22,6 +22,23 @@ async function getScopedLandlordId(req) {
   return null;
 }
 
+async function requireCaretakerPermission(req, res, permission) {
+  if (req.user.role !== 'CARETAKER') return true;
+  const caretaker = await prisma.caretaker.findUnique({
+    where: { id: req.user.id },
+    select: { isActive: true, permissions: true },
+  });
+  if (!caretaker?.isActive) {
+    res.status(403).json({ error: 'Caretaker account is inactive.' });
+    return false;
+  }
+  if (!caretaker.permissions.includes(permission)) {
+    res.status(403).json({ error: `Missing caretaker permission: ${permission}` });
+    return false;
+  }
+  return true;
+}
+
 // ─── List tenants ─────────────────────────────────────────────────────────────
 
 router.get('/', requireRole('LANDLORD', 'CARETAKER', 'ADMIN'), async (req, res, next) => {
@@ -29,6 +46,7 @@ router.get('/', requireRole('LANDLORD', 'CARETAKER', 'ADMIN'), async (req, res, 
   const skip = (parseInt(page) - 1) * parseInt(limit);
 
   try {
+    if (!await requireCaretakerPermission(req, res, 'VIEW_UNITS')) return;
     const landlordId = await getScopedLandlordId(req);
     if (!landlordId) return res.status(403).json({ error: 'You do not have access to these tenants.' });
 
@@ -105,6 +123,7 @@ router.post('/', requireRole('LANDLORD', 'CARETAKER'), async (req, res, next) =>
   }
 
   try {
+    if (!await requireCaretakerPermission(req, res, 'MANAGE_TENANTS')) return;
     const landlordId = await getScopedLandlordId(req);
     if (!landlordId) return res.status(403).json({ error: 'You do not have access to add tenants.' });
 
@@ -208,6 +227,7 @@ router.post('/:id/payments', requireRole('LANDLORD', 'CARETAKER'), async (req, r
   if (!amount || !channel) return res.status(400).json({ error: 'amount and channel required' });
 
   try {
+    if (!await requireCaretakerPermission(req, res, 'LOG_PAYMENTS')) return;
     const landlordId = await getScopedLandlordId(req);
     const tenant = await prisma.tenant.findFirst({ where: { id: req.params.id, unit: { property: { landlordId } } }, include: { unit: true } });
     if (!tenant) return res.status(404).json({ error: 'Tenant not found' });

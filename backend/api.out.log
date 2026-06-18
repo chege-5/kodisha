@@ -1,0 +1,11 @@
+
+> kodisha-backend@1.0.0 start
+> node src/server.js
+
+[32minfo[39m: Database connected {"timestamp":"2026-06-18T09:42:50.705Z"}
+[32minfo[39m: Super admin account bootstrapped {"adminId":"6c322020-b296-4ad8-83a9-f0745abcc97c","email":"admin@proppulse.ke","timestamp":"2026-06-18T09:42:55.244Z"}
+[32minfo[39m: Cron jobs scheduled {"timestamp":"2026-06-18T09:42:55.285Z"}
+[32minfo[39m: Kodisha API running on port 5000 [development] {"timestamp":"2026-06-18T09:42:55.286Z"}
+[32mhttp[39m: ::1 - - [18/Jun/2026:09:43:27 +0000] "GET /health HTTP/1.1" 200 133 "-" "Mozilla/5.0 (Windows NT 10.0; Microsoft Windows 10.0.26200; en-US) PowerShell/7.6.3" {"timestamp":"2026-06-18T09:43:27.583Z"}
+[32mhttp[39m: ::1 - - [18/Jun/2026:09:43:29 +0000] "POST /auth/smart-login HTTP/1.1" 200 689 "-" "Mozilla/5.0 (Windows NT 10.0; Microsoft Windows 10.0.26200; en-US) PowerShell/7.6.3" {"timestamp":"2026-06-18T09:43:29.711Z"}
+[32mhttp[39m: ::1 - - [18/Jun/2026:09:43:33 +0000] "GET /caretakers/portal HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 10.0; Microsoft Windows 10.0.26200; en-US) PowerShell/7.6.3" {"timestamp":"2026-06-18T09:43:33.166Z"}

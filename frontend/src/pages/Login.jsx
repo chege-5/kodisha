@@ -20,6 +20,7 @@ export default function Login() {
       const data = await login(identifier, password);
       if (data.role === 'TENANT') navigate('/tenant');
       else if (data.role === 'CARETAKER') navigate('/caretaker');
+      else if (data.role === 'ADMIN') navigate('/dashboard/admin');
       else navigate('/dashboard');
     } catch (err) {
       toast.error(err.response?.data?.error || 'Login failed');

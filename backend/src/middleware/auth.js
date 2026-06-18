@@ -94,7 +94,12 @@ async function rotateRefreshToken(req, res, next) {
     // Rotate: delete old, issue new pair
     await prisma.refreshToken.deleteMany({ where: { token: refreshToken } });
 
-    const newPayload = { id: payload.id, role: payload.role, phone: payload.phone };
+    const newPayload = {
+      id: payload.id,
+      role: payload.role,
+      phone: payload.phone,
+      ...(payload.landlordId && { landlordId: payload.landlordId }),
+    };
     const tokens = generateTokens(newPayload);
 
     const expiresAt = new Date();
@@ -109,7 +114,7 @@ async function rotateRefreshToken(req, res, next) {
 
     setAuthCookies(res, tokens);
 
-    res.json({ message: 'Refreshed' });
+    res.json({ message: 'Refreshed', accessToken: tokens.accessToken, role: newPayload.role });
   } catch (err) {
     logger.warn('Refresh token rotation failed', { error: err.name });
     return res.status(401).json({ error: 'Invalid refresh token' });

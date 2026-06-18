@@ -15,6 +15,23 @@ async function getScopedLandlordId(req) {
   return null;
 }
 
+async function requireCaretakerPermission(req, res, permission) {
+  if (req.user.role !== 'CARETAKER') return true;
+  const caretaker = await prisma.caretaker.findUnique({
+    where: { id: req.user.id },
+    select: { isActive: true, permissions: true },
+  });
+  if (!caretaker?.isActive) {
+    res.status(403).json({ error: 'Caretaker account is inactive.' });
+    return false;
+  }
+  if (!caretaker.permissions.includes(permission)) {
+    res.status(403).json({ error: `Missing caretaker permission: ${permission}` });
+    return false;
+  }
+  return true;
+}
+
 // ─── List caretakers (landlord view) ─────────────────────────────────────────
 
 router.get('/', requireRole('LANDLORD', 'ADMIN'), async (req, res, next) => {
@@ -52,6 +69,7 @@ router.get('/portal', requireRole('CARETAKER'), async (req, res, next) => {
   try {
     const caretaker = await prisma.caretaker.findUnique({ where: { id: req.user.id } });
     if (!caretaker?.isActive) return res.status(403).json({ error: 'Caretaker account is inactive.' });
+    if (!caretaker.permissions.includes('VIEW_UNITS')) return res.status(403).json({ error: 'Missing caretaker permission: VIEW_UNITS' });
     const units = await prisma.unit.findMany({
       where: { property: { landlordId: caretaker.landlordId } },
       include: {
@@ -74,7 +92,7 @@ router.get('/portal', requireRole('CARETAKER'), async (req, res, next) => {
       },
     });
 
-    res.json({ caretaker: { id: caretaker.id, name: caretaker.name }, units });
+    res.json({ caretaker: { id: caretaker.id, name: caretaker.name, permissions: caretaker.permissions }, units });
   } catch (err) { next(err); }
 });
 
@@ -82,6 +100,7 @@ router.get('/portal', requireRole('CARETAKER'), async (req, res, next) => {
 
 router.get('/tickets', requireRole('CARETAKER'), async (req, res, next) => {
   try {
+    if (!await requireCaretakerPermission(req, res, 'MANAGE_TICKETS')) return;
     const caretaker = await prisma.caretaker.findUnique({ where: { id: req.user.id } });
     if (!caretaker?.isActive) return res.status(403).json({ error: 'Caretaker account is inactive.' });
     const tickets = await prisma.maintenanceTicket.findMany({
@@ -104,6 +123,7 @@ router.get('/tickets', requireRole('CARETAKER'), async (req, res, next) => {
 router.patch('/tickets/:ticketId', requireRole('CARETAKER', 'LANDLORD'), async (req, res, next) => {
   const { status, assignedTo } = req.body;
   try {
+    if (!await requireCaretakerPermission(req, res, 'MANAGE_TICKETS')) return;
     const landlordId = await getScopedLandlordId(req);
     const ticketWhere = req.user.role === 'CARETAKER'
       ? { id: req.params.ticketId, unit: { property: { landlordId } } }

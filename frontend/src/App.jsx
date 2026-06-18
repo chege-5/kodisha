@@ -29,6 +29,7 @@ import Loading from './components/Loading';
 function getHomePath(role) {
   if (role === 'TENANT') return '/tenant';
   if (role === 'CARETAKER') return '/caretaker';
+  if (role === 'ADMIN') return '/dashboard/admin';
   return '/dashboard';
 }
 
@@ -78,7 +79,7 @@ function AppContent() {
           <Route path="meter-readings" element={<Billing />} />
           <Route path="insights" element={<Dashboard />} />
           <Route path="trust-passport" element={<TrustPassport />} />
-          <Route path="admin" element={<AdminDashboard />} />
+          <Route path="admin" element={<PrivateRoute roles={['ADMIN']}><AdminDashboard /></PrivateRoute>} />
         </Route>
 
         {/* Caretaker portal */}

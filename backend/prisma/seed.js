@@ -50,7 +50,7 @@ async function main() {
       name: 'Peter Otieno',
       phone: '+254712000002',
       passwordHash: await bcrypt.hash('caretaker123', 12),
-      permissions: ['LOG_PAYMENTS', 'MANAGE_TICKETS', 'VIEW_UNITS', 'METER_READINGS'],
+      permissions: ['LOG_PAYMENTS', 'MANAGE_TICKETS', 'VIEW_UNITS', 'METER_READINGS', 'MANAGE_TENANTS'],
     },
   });
   console.log('✅ Caretaker:', caretaker.name);

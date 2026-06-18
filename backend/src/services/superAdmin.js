@@ -4,11 +4,14 @@ const logger = require('../utils/logger');
 
 async function ensureSuperAdmin() {
   const email = process.env.SUPER_ADMIN_EMAIL || 'admin@kodisha.org';
-  const password = process.env.SUPER_ADMIN_PASSWORD || 'Admin123!';
+  const password = process.env.SUPER_ADMIN_PASSWORD;
   const name = process.env.SUPER_ADMIN_NAME || 'Super Admin';
   const phone = process.env.SUPER_ADMIN_PHONE || '+254700000000';
 
-  const passwordHash = await bcrypt.hash(password, 12);
+  if (process.env.NODE_ENV === 'production' && !password) {
+    throw new Error('SUPER_ADMIN_PASSWORD is required in production.');
+  }
+
   const [adminByEmail, adminByPhone] = await Promise.all([
     prisma.landlord.findUnique({ where: { email }, select: { id: true, email: true } }),
     prisma.landlord.findUnique({ where: { phone }, select: { id: true, email: true } }),
@@ -20,7 +23,7 @@ async function ensureSuperAdmin() {
         where: { id: target.id },
         data: {
           name,
-          passwordHash,
+          ...(password && { passwordHash: await bcrypt.hash(password, 12) }),
           plan: 'ENTERPRISE',
           isAdmin: true,
         },
@@ -31,7 +34,7 @@ async function ensureSuperAdmin() {
           name,
           phone,
           email,
-          passwordHash,
+          passwordHash: await bcrypt.hash(password || 'Admin123!', 12),
           plan: 'ENTERPRISE',
           isAdmin: true,
         },

@@ -101,7 +101,7 @@ function TicketCard({ ticket, updateTicket }) {
       {ticket.rating && (
         <p className="flex items-center gap-1.5 text-xs text-kodi-text-muted border-t border-kodi-border/30 pt-2">
           Tenant feedback: {Array.from({ length: ticket.rating }).map((_, index) => <Star key={index} className="h-3.5 w-3.5 fill-current text-kodi-amber" />)} ({ticket.rating}/5)
-          {ticket.ratingComment && <span className="italic text-kodi-text-secondary"> — "{ticket.ratingComment}"</span>}
+          {ticket.ratingComment && <span className="italic text-kodi-text-secondary"> - &quot;{ticket.ratingComment}&quot;</span>}
         </p>
       )}
 

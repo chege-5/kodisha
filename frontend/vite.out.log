@@ -1,29 +1,11 @@
 
 > kodisha-frontend@1.0.0 dev
-> vite --host 127.0.0.1
+> vite --host 0.0.0.0
 
-Port 3000 is in use, trying another one...
-Port 3001 is in use, trying another one...
 
-  [32m[1mVITE[22m v5.4.21[39m  [2mready in [0m[1m343[22m[2m[0m ms[22m
+  [32m[1mVITE[22m v5.4.21[39m  [2mready in [0m[1m446[22m[2m[0m ms[22m
 
-  [32m➜[39m  [1mLocal[22m:   [36mhttp://127.0.0.1:[1m3002[22m/[39m
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m3000[22m/[39m
+  [32m➜[39m  [1mNetwork[22m: [36mhttp://169.254.89.202:[1m3000[22m/[39m
+  [32m➜[39m  [1mNetwork[22m: [36mhttp://172.16.0.101:[1m3000[22m/[39m
 [2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
-[2m11:49:20 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css[22m
-[2m11:49:31 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css[22m
-[2m11:49:39 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/Broadcast.jsx, /src/pages/Reports.jsx, /src/pages/Billing.jsx, /src/pages/Tenants.jsx, /src/pages/Properties.jsx, /src/pages/TenantDetail.jsx, /src/pages/Notifications.jsx, /src/pages/Payments.jsx, /src/pages/Units.jsx, /src/pages/Dashboard.jsx, /src/pages/CaretakerPortal.jsx, /src/pages/TenantPortal.jsx, /src/components/TicketQueue.jsx, /src/components/TrustScoreBadge.jsx, /src/components/UnitGrid.jsx, /src/components/CreditPassport.jsx[22m
-[2m11:49:48 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/Layout.jsx, /src/index.css[22m
-[2m11:49:56 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/SiteFooter.jsx, /src/index.css[22m
-[2m11:50:04 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/AIAssistant.jsx, /src/index.css[22m
-[2m11:50:20 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/CreditPassport.jsx, /src/index.css[22m
-[2m11:50:37 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/TicketQueue.jsx, /src/index.css[22m
-[2m11:50:50 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/UnitGrid.jsx, /src/index.css[22m
-[2m11:51:04 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/iTaxExporter.jsx, /src/index.css[22m
-[2m11:51:31 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Login.jsx, /src/index.css[22m
-[2m11:52:04 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Landing.jsx, /src/index.css[22m
-[2m12:01:05 AM[22m [36m[1m[vite][22m[39m [32m.env changed, restarting server...[39m
-[2m12:01:05 AM[22m [36m[1m[vite][22m[39m server restarted.
-[2m12:01:25 AM[22m [36m[1m[vite][22m[39m [32m.env changed, restarting server...[39m
-[2m12:01:25 AM[22m [36m[1m[vite][22m[39m server restarted.
-[2m12:21:51 AM[22m [36m[1m[vite][22m[39m [32m.env changed, restarting server...[39m
-[2m12:21:51 AM[22m [36m[1m[vite][22m[39m server restarted.
