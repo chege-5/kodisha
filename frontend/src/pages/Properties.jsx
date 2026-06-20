@@ -3,6 +3,7 @@ import { useProperties, useAddProperty, useAddUnit } from '../hooks/usePropertie
 import UnitGrid from '../components/UnitGrid';
 import { formatCurrency } from '../utils/formatters';
 import { PlusIcon, BuildingOfficeIcon } from '@heroicons/react/24/outline';
+import toast from 'react-hot-toast';
 import Loading from '../components/Loading';
 
 function AddPropertyModal({ onClose }) {
