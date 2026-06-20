@@ -181,6 +181,7 @@ function Sidebar({ activePage, setActivePage, user, tenant, onLogout, mobileOpen
               type="button"
               aria-label="Close menu"
               onClick={() => setMobileOpen(false)}
+              className="absolute right-4 top-4 rounded-xl p-2 sidebar-text-muted transition-all hover:bg-white/10 hover:sidebar-text-title"
             >
               <X className="h-5 w-5" />
             </button>
